@@ -4,7 +4,7 @@
 using System;
 using System.IO;
 //using System.Collections;
-//using System.Drawing;
+using System.Drawing;
 using System.Windows.Forms;
  
 public class GUI : Form
@@ -58,9 +58,17 @@ public class GUI : Form
 	tv = new TreeView();
 	tv.Dock = DockStyle.Fill;
 	tv.ShowNodeToolTips = true;
+	tv.AllowDrop = true;
 	tv.Nodes.Add("Documents");
 	tv.Nodes.Add("Style sheets");
 	tv.Nodes.Add("Scripts");
+	tv.Nodes[0].NodeFont = new Font(tv.Font, FontStyle.Bold);
+	tv.Nodes[1].NodeFont = new Font(tv.Font, FontStyle.Bold);
+	tv.Nodes[2].NodeFont = new Font(tv.Font, FontStyle.Bold);
+	tv.KeyDown += new KeyEventHandler(TreeView_KeyDown);
+	tv.ItemDrag += new ItemDragEventHandler(TreeView_ItemDrag);
+	tv.DragEnter += new DragEventHandler(TreeView_DragEnter);
+	tv.DragDrop += new DragEventHandler(TreeView_DragDrop);
 	this.Controls.Add(tv);
 
 	setupMenu();
@@ -178,6 +186,69 @@ public class GUI : Form
 	if (saveDlg.ShowDialog() == DialogResult.OK)
 	{
 	    MessageBox.Show(saveDlg.FileName);
+	}
+    }
+
+    private void TreeView_KeyDown(object sender, KeyEventArgs e)
+    {
+	if (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete)
+	{
+	    if (tv.SelectedNode != null && tv.SelectedNode.Parent != null)
+	    {
+		tv.SelectedNode.Remove();
+	    }
+	}
+    }
+
+    private void TreeView_ItemDrag(object sender, ItemDragEventArgs e)
+    {
+	TreeNode node = (TreeNode) e.Item;
+
+	if (node.Parent != null && e.Button == MouseButtons.Left)
+	{
+	    tv.SelectedNode = node;
+
+	    DoDragDrop(e.Item, DragDropEffects.Move);
+	}
+    }
+    
+    private void TreeView_DragEnter(object sender, DragEventArgs e)
+    {
+	e.Effect = e.AllowedEffect;
+    }
+
+    private void TreeView_DragDrop(object sender, DragEventArgs e)
+    {
+	Point targetPoint = tv.PointToClient(new Point(e.X, e.Y));
+	TreeNode targetNode = tv.GetNodeAt(targetPoint);
+	TreeNode draggedNode = (TreeNode) e.Data.GetData(typeof(TreeNode));
+
+	if (targetNode == draggedNode)
+	{
+	    // nothing to do here
+	}
+	else if (targetNode.Parent == null)
+	{
+	    draggedNode.Remove();
+	    targetNode.Nodes.Insert(0, draggedNode);
+	    tv.SelectedNode = draggedNode;
+	}
+	else
+	{
+	    int offset = 0;
+
+	    if (targetNode.Parent == draggedNode.Parent)
+	    {
+		if (targetNode.Index > draggedNode.Index) offset = 1;
+	    }
+	    else
+	    {
+		if (targetNode.Parent.Index > draggedNode.Parent.Index) offset = 1;
+	    }
+
+	    draggedNode.Remove();
+	    targetNode.Parent.Nodes.Insert(targetNode.Index+offset, draggedNode);
+	    tv.SelectedNode = draggedNode;
 	}
     }
     
