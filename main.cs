@@ -47,10 +47,10 @@ public class GUI : Form
 	// TreeView for files
 	tv = new TreeView();
 	tv.Dock = DockStyle.Fill;
+	tv.ShowNodeToolTips = true;
 	tv.Nodes.Add("Documents");
 	tv.Nodes.Add("Style sheets");
 	tv.Nodes.Add("Scripts");
-	tv.ExpandAll();
 	this.Controls.Add(tv);
 
 	setupMenu();
@@ -62,7 +62,9 @@ public class GUI : Form
 	MenuStrip ms = new MenuStrip();
 	ms.Dock = DockStyle.Top;
 
+	// File menu
 	ToolStripMenuItem fileMenu = new ToolStripMenuItem("File");
+	ms.Items.Add(fileMenu);
 
 	ToolStripMenuItem openItem = new ToolStripMenuItem("&Open...", null,
 	    new EventHandler(Menu_Open), Keys.Control | Keys.O);
@@ -73,8 +75,18 @@ public class GUI : Form
 	fileMenu.DropDownItems.Add(openItem);
 	fileMenu.DropDownItems.Add(exitItem);
 
-	ms.Items.Add(fileMenu);
+	// Convert menu
+	ToolStripMenuItem convertMenu = new ToolStripMenuItem("Convert");
+	ms.Items.Add(convertMenu);
 
+	ToolStripMenuItem goItem = new ToolStripMenuItem("&Go", null,
+	    new EventHandler(Menu_Go));
+
+	goItem.Enabled = false;
+
+	convertMenu.DropDownItems.Add(goItem);
+
+	// Add menu to form
 	this.Controls.Add(ms);
     }
 
@@ -98,24 +110,31 @@ public class GUI : Form
 	this.Controls.Add(statusStrip);
     }
 
-    private void OpenFile(String s)
+    private void OpenFile(String path)
     {
-	string ext = Path.GetExtension(s);
+	string fileName = Path.GetFileName(path);
+	string ext = Path.GetExtension(path);
+
+	TreeNode node = new TreeNode(fileName);
+	node.ToolTipText = path;
 
 	if (ext.Equals(".css", StringComparison.OrdinalIgnoreCase))
 	{
 	    // Style sheet
-	    tv.Nodes[1].Nodes.Add(s);
+	    tv.Nodes[1].Nodes.Add(node);
+	    tv.Nodes[1].Expand();
 	}
 	else if (ext.Equals(".js", StringComparison.OrdinalIgnoreCase))
 	{
 	    // Script
-	    tv.Nodes[2].Nodes.Add(s);
+	    tv.Nodes[2].Nodes.Add(node);
+	    tv.Nodes[2].Expand();
 	}
 	else
 	{
 	    // Document
-	    tv.Nodes[0].Nodes.Add(s);
+	    tv.Nodes[0].Nodes.Add(node);
+	    tv.Nodes[0].Expand();
 	}
     }
 
@@ -135,6 +154,10 @@ public class GUI : Form
 	Close();
     }
 
+    private void Menu_Go(object sender, EventArgs e)
+    {
+    }
+    
     private void Form_DragEnter(object sender, DragEventArgs e)
     {
 	if (e.Data.GetDataPresent(DataFormats.FileDrop))
