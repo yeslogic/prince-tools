@@ -2,6 +2,7 @@
 // All rights reserved.
 
 using System;
+using System.IO;
 //using System.Collections;
 //using System.Drawing;
 using System.Windows.Forms;
@@ -12,7 +13,7 @@ public class GUI : Form
     private delegate void AsyncOpenFile(String s);
     private AsyncOpenFile asyncOpenFile;
     private OpenFileDialog openDlg;
-    private ListView lv1;
+    private TreeView tv;
 
     [STAThreadAttribute]
     static public void Main ()
@@ -37,16 +38,20 @@ public class GUI : Form
 	openDlg = new OpenFileDialog();
 	openDlg.Multiselect = true;
 	openDlg.Filter = 
-	    "Documents (*.html,*.htm,*.xml)|*.html;*.htm;*.xht;*.xhtml;*.xml|"+
-	    "Style sheets (*.css)|*.css|"+
+	    "All web content|*.html;*.htm;*.svg;*.xht;*.xhtml;*.xml;*.css;*.js|"+
+	    "Documents (HTML, XML, SVG)|*.html;*.htm;*.svg;*.xht;*.xhtml;*.xml|"+
+	    "Style sheets (CSS)|*.css|"+
 	    "Scripts (*.js)|*.js|"+
 	    "All files (*.*)|*.*";
 
-	// Listview for files
-	lv1 = new ListView();
-	lv1.View = View.List;
-	lv1.Dock = DockStyle.Fill;
-	this.Controls.Add(lv1);
+	// TreeView for files
+	tv = new TreeView();
+	tv.Dock = DockStyle.Fill;
+	tv.Nodes.Add("Documents");
+	tv.Nodes.Add("Style sheets");
+	tv.Nodes.Add("Scripts");
+	tv.ExpandAll();
+	this.Controls.Add(tv);
 
 	setupMenu();
 	setupStatusStrip();
@@ -95,7 +100,23 @@ public class GUI : Form
 
     private void OpenFile(String s)
     {
-	lv1.Items.Add(new ListViewItem(s));
+	string ext = Path.GetExtension(s);
+
+	if (ext.Equals(".css", StringComparison.OrdinalIgnoreCase))
+	{
+	    // Style sheet
+	    tv.Nodes[1].Nodes.Add(s);
+	}
+	else if (ext.Equals(".js", StringComparison.OrdinalIgnoreCase))
+	{
+	    // Script
+	    tv.Nodes[2].Nodes.Add(s);
+	}
+	else
+	{
+	    // Document
+	    tv.Nodes[0].Nodes.Add(s);
+	}
     }
 
     private void Menu_Open(object sender, EventArgs e)
