@@ -13,6 +13,8 @@ public class GUI : Form
     private delegate void AsyncOpenFile(String s);
     private AsyncOpenFile asyncOpenFile;
     private OpenFileDialog openDlg;
+    private SaveFileDialog saveDlg;
+    private ToolStripMenuItem goItem;
     private TreeView tv;
 
     [STAThreadAttribute]
@@ -34,7 +36,7 @@ public class GUI : Form
 	this.DragEnter += new DragEventHandler(Form_DragEnter);
 	this.DragDrop += new DragEventHandler(Form_DragDrop);
 	
-	// Setup open file dialog
+	// Open file dialog
 	openDlg = new OpenFileDialog();
 	openDlg.Multiselect = true;
 	openDlg.Filter = 
@@ -42,6 +44,14 @@ public class GUI : Form
 	    "Documents (HTML, XML, SVG)|*.html;*.htm;*.svg;*.xht;*.xhtml;*.xml|"+
 	    "Style sheets (CSS)|*.css|"+
 	    "Scripts (*.js)|*.js|"+
+	    "All files (*.*)|*.*";
+	
+	// Save file dialog
+	saveDlg = new SaveFileDialog();
+	saveDlg.OverwritePrompt = false;
+	saveDlg.DefaultExt = "pdf";
+	saveDlg.Filter =
+	    "PDF files|*.pdf|"+
 	    "All files (*.*)|*.*";
 
 	// TreeView for files
@@ -79,7 +89,7 @@ public class GUI : Form
 	ToolStripMenuItem convertMenu = new ToolStripMenuItem("Convert");
 	ms.Items.Add(convertMenu);
 
-	ToolStripMenuItem goItem = new ToolStripMenuItem("&Go", null,
+	goItem = new ToolStripMenuItem("&Go", null,
 	    new EventHandler(Menu_Go));
 
 	goItem.Enabled = false;
@@ -135,6 +145,9 @@ public class GUI : Form
 	    // Document
 	    tv.Nodes[0].Nodes.Add(node);
 	    tv.Nodes[0].Expand();
+
+	    // at least one input document
+	    goItem.Enabled = true;
 	}
     }
 
@@ -156,6 +169,16 @@ public class GUI : Form
 
     private void Menu_Go(object sender, EventArgs e)
     {
+	string path = tv.Nodes[0].Nodes[0].ToolTipText;
+
+	path = Path.ChangeExtension(path, ".pdf");
+
+	saveDlg.FileName = path;
+
+	if (saveDlg.ShowDialog() == DialogResult.OK)
+	{
+	    MessageBox.Show(saveDlg.FileName);
+	}
     }
     
     private void Form_DragEnter(object sender, DragEventArgs e)
