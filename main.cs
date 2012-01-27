@@ -99,7 +99,7 @@ public class GUI : Form
 	ms.Dock = DockStyle.Top;
 
 	// File menu
-	ToolStripMenuItem fileMenu = new ToolStripMenuItem("File");
+	ToolStripMenuItem fileMenu = new ToolStripMenuItem("&File");
 	ms.Items.Add(fileMenu);
 
 	ToolStripMenuItem openItem = new ToolStripMenuItem("&Open...", null,
@@ -112,7 +112,7 @@ public class GUI : Form
 	fileMenu.DropDownItems.Add(exitItem);
 
 	// Convert menu
-	ToolStripMenuItem convertMenu = new ToolStripMenuItem("Convert");
+	ToolStripMenuItem convertMenu = new ToolStripMenuItem("&Convert");
 	ms.Items.Add(convertMenu);
 
 	goItem = new ToolStripMenuItem("&Go", null,
