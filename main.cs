@@ -3,7 +3,7 @@
 
 using System;
 using System.IO;
-//using System.Collections;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
  
@@ -177,6 +177,44 @@ public class GUI : Form
 	}
     }
 
+    private void ExecProcess(String exePath, String args)
+    {
+	ProcessStartInfo startInfo =
+	    new ProcessStartInfo(exePath, args);
+	
+	startInfo.CreateNoWindow = true;
+	startInfo.UseShellExecute = false;
+	startInfo.RedirectStandardInput = true;
+	startInfo.RedirectStandardOutput = true;
+	startInfo.RedirectStandardError = true;
+
+	try
+	{
+	    Process proc = new Process();
+	    proc.StartInfo = startInfo;
+
+	    proc.Start();
+	}
+	catch (System.ComponentModel.Win32Exception ex)
+	{
+	    MessageBox.Show(ex.Message);
+	}
+    }
+
+    private void RunPrince()
+    {
+	string exePath = Path.GetDirectoryName(Application.ExecutablePath);
+
+	exePath += Path.DirectorySeparatorChar;
+	exePath += "Engine";
+	exePath += Path.DirectorySeparatorChar;
+	exePath += "bin";
+	exePath += Path.DirectorySeparatorChar;
+	exePath += "prince.exe";
+
+	ExecProcess(exePath, "");
+    }
+
     private void Menu_Open(object sender, EventArgs e)
     {
 	if (openDlg.ShowDialog() == DialogResult.OK)
@@ -232,41 +270,65 @@ public class GUI : Form
     
     private void TreeView_DragEnter(object sender, DragEventArgs e)
     {
-	e.Effect = e.AllowedEffect;
+	if (e.Data.GetDataPresent(DataFormats.FileDrop))
+	{
+	    e.Effect = DragDropEffects.Copy;
+	}
+	else
+	{
+	    e.Effect = e.AllowedEffect;
+	}
     }
 
     private void TreeView_DragDrop(object sender, DragEventArgs e)
     {
-	Point targetPoint = tv.PointToClient(new Point(e.X, e.Y));
-	TreeNode targetNode = tv.GetNodeAt(targetPoint);
-	TreeNode draggedNode = (TreeNode) e.Data.GetData(typeof(TreeNode));
+	if (e.Data.GetDataPresent(DataFormats.FileDrop))
+	{
+	    string[] FileNames = (string[]) e.Data.GetData(DataFormats.FileDrop, false);
 
-	if (targetNode == draggedNode)
-	{
-	    // nothing to do here
-	}
-	else if (targetNode.Parent == null)
-	{
-	    draggedNode.Remove();
-	    targetNode.Nodes.Insert(0, draggedNode);
-	    tv.SelectedNode = draggedNode;
+	    if (FileNames != null)
+	    {
+		foreach (string FileName in FileNames)
+		{
+		    this.BeginInvoke(asyncOpenFile, new Object[] {FileName});
+		}
+
+		this.Activate();
+	    }
 	}
 	else
 	{
-	    int offset = 0;
+	    Point targetPoint = tv.PointToClient(new Point(e.X, e.Y));
+	    TreeNode targetNode = tv.GetNodeAt(targetPoint);
+	    TreeNode draggedNode = (TreeNode) e.Data.GetData(typeof(TreeNode));
 
-	    if (targetNode.Parent == draggedNode.Parent)
+	    if (targetNode == draggedNode)
 	    {
-		if (targetNode.Index > draggedNode.Index) offset = 1;
+		// nothing to do here
+	    }
+	    else if (targetNode.Parent == null)
+	    {
+		draggedNode.Remove();
+		targetNode.Nodes.Insert(0, draggedNode);
+		tv.SelectedNode = draggedNode;
 	    }
 	    else
 	    {
-		if (targetNode.Parent.Index > draggedNode.Parent.Index) offset = 1;
-	    }
+		int offset = 0;
 
-	    draggedNode.Remove();
-	    targetNode.Parent.Nodes.Insert(targetNode.Index+offset, draggedNode);
-	    tv.SelectedNode = draggedNode;
+		if (targetNode.Parent == draggedNode.Parent)
+		{
+		    if (targetNode.Index > draggedNode.Index) offset = 1;
+		}
+		else
+		{
+		    if (targetNode.Parent.Index > draggedNode.Parent.Index) offset = 1;
+		}
+
+		draggedNode.Remove();
+		targetNode.Parent.Nodes.Insert(targetNode.Index+offset, draggedNode);
+		tv.SelectedNode = draggedNode;
+	    }
 	}
     }
     
