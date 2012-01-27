@@ -16,6 +16,7 @@ public class GUI : Form
     private SaveFileDialog saveDlg;
     private ToolStripMenuItem goItem;
     private TreeView tv;
+    private ListView lv;
 
     [STAThreadAttribute]
     static public void Main ()
@@ -53,7 +54,7 @@ public class GUI : Form
 	saveDlg.Filter =
 	    "PDF files|*.pdf|"+
 	    "All files (*.*)|*.*";
-
+	
 	// TreeView for files
 	tv = new TreeView();
 	tv.Dock = DockStyle.Fill;
@@ -69,7 +70,24 @@ public class GUI : Form
 	tv.ItemDrag += new ItemDragEventHandler(TreeView_ItemDrag);
 	tv.DragEnter += new DragEventHandler(TreeView_DragEnter);
 	tv.DragDrop += new DragEventHandler(TreeView_DragDrop);
-	this.Controls.Add(tv);
+
+	// ListView for output log
+	lv = new ListView();
+	lv.Dock = DockStyle.Fill;
+	lv.View = View.Details;
+	lv.Columns.Add("Status", -2);
+	lv.Columns.Add("Location", -2);
+	lv.Columns.Add("Message", -2);
+	
+	// Split
+	SplitContainer split = new SplitContainer();
+	split.Dock = DockStyle.Fill;
+	split.FixedPanel = FixedPanel.Panel2;
+	split.Orientation = Orientation.Horizontal;
+	split.Panel1.Controls.Add(tv);
+	split.Panel2.Controls.Add(lv);
+
+	this.Controls.Add(split);
 
 	setupMenu();
 	setupStatusStrip();
