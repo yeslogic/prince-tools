@@ -11,7 +11,9 @@ public class GUI : Form
 {
     private StatusStrip statusStrip;
     private delegate void AsyncOpenFile(String s);
+    private delegate void AsyncOpenFiles(int filterIndex);
     private AsyncOpenFile asyncOpenFile;
+    private AsyncOpenFiles asyncOpenFiles;
     private OpenFileDialog openDlg;
     private SaveFileDialog saveDlg;
     private ToolStripMenuItem goItem;
@@ -31,6 +33,7 @@ public class GUI : Form
 	
 	// Delegate used by drag and drop
 	asyncOpenFile = new AsyncOpenFile(this.OpenFile);
+	asyncOpenFiles = new AsyncOpenFiles(this.OpenFiles);
 
 	// Accept files dropped from Explorer
 	this.AllowDrop = true;
@@ -67,6 +70,7 @@ public class GUI : Form
 	tv.Nodes[1].NodeFont = new Font(tv.Font, FontStyle.Bold);
 	tv.Nodes[2].NodeFont = new Font(tv.Font, FontStyle.Bold);
 	tv.KeyDown += new KeyEventHandler(TreeView_KeyDown);
+	tv.AfterSelect += new TreeViewEventHandler(TreeView_AfterSelect);
 	tv.ItemDrag += new ItemDragEventHandler(TreeView_ItemDrag);
 	tv.DragEnter += new DragEventHandler(TreeView_DragEnter);
 	tv.DragDrop += new DragEventHandler(TreeView_DragDrop);
@@ -201,7 +205,7 @@ public class GUI : Form
 	}
     }
 
-    private void RunPrince()
+    private void RunPrince(string pdfPath)
     {
 	string exePath = Path.GetDirectoryName(Application.ExecutablePath);
 
@@ -215,8 +219,10 @@ public class GUI : Form
 	ExecProcess(exePath, "");
     }
 
-    private void Menu_Open(object sender, EventArgs e)
+    private void OpenFiles(int filterIndex)
     {
+	openDlg.FilterIndex = filterIndex;
+
 	if (openDlg.ShowDialog() == DialogResult.OK)
 	{
 	    foreach (string FileName in openDlg.FileNames)
@@ -224,6 +230,11 @@ public class GUI : Form
 		OpenFile(FileName);
 	    }
 	}
+    }
+
+    private void Menu_Open(object sender, EventArgs e)
+    {
+	OpenFiles(1);
     }
     
     private void Menu_Exit(object sender, EventArgs e)
@@ -241,7 +252,7 @@ public class GUI : Form
 
 	if (saveDlg.ShowDialog() == DialogResult.OK)
 	{
-	    MessageBox.Show(saveDlg.FileName);
+	    RunPrince(saveDlg.FileName);
 	}
     }
 
@@ -252,6 +263,25 @@ public class GUI : Form
 	    if (tv.SelectedNode != null && tv.SelectedNode.Parent != null)
 	    {
 		tv.SelectedNode.Remove();
+	    }
+	}
+    }
+
+    private void TreeView_AfterSelect(object sender, TreeViewEventArgs e)
+    {
+	if (e.Action == TreeViewAction.ByMouse)
+	{
+	    if (e.Node.Text == "Documents")
+	    {
+		this.BeginInvoke(asyncOpenFiles, new Object[] {2});
+	    }
+	    else if (e.Node.Text == "Style sheets")
+	    {
+		this.BeginInvoke(asyncOpenFiles, new Object[] {3});
+	    }
+	    else if (e.Node.Text == "Scripts")
+	    {
+		this.BeginInvoke(asyncOpenFiles, new Object[] {4});
 	    }
 	}
     }

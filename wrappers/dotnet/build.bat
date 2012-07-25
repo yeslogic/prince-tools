@@ -1,0 +1,1 @@
+C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\vbc /target:library /out:Prince /imports:Microsoft.visualbasic /reference:Microsoft.visualbasic.dll,System.dll,System.data.dll,System.Drawing.dll,System.Windows.Forms.dll,System.XML.dll Prince.vb AssemblyInfo.vb /keyfile:prince.snk
