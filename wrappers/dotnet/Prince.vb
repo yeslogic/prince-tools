@@ -13,6 +13,8 @@ Public Interface IPrince
                        ByVal disallowAnnotate As Boolean)
     Sub AddStyleSheet(ByVal cssPath As String)
     Sub ClearStyleSheets()
+    Sub AddJavaScript(ByVal jsPath As String)
+    Sub ClearJavaScripts()
     Sub SetLicenseFile(ByVal file As String)
     Sub SetLicenseKey(ByVal key As String)
     Sub SetHTML(ByVal html As Boolean)
@@ -118,6 +120,7 @@ Public Class Prince
 
     Private mPrincePath As String
     Private mStyleSheets As String
+    Private mJavaScripts As String
     Private mLicenseFile As String
     Private mLicenseKey As String
     Private mHTML As Boolean
@@ -137,6 +140,7 @@ Public Class Prince
     Public Sub New()
         Me.mPrincePath = ""
         Me.mStyleSheets = ""
+        Me.mJavaScripts = ""
         Me.mLicenseFile = ""
         Me.mLicenseKey = ""
         Me.mHTML = False
@@ -157,6 +161,7 @@ Public Class Prince
     Public Sub New(ByVal princePath As String)
         Me.mPrincePath = princePath
         Me.mStyleSheets = ""
+        Me.mJavaScripts = ""
         Me.mHTML = False
         Me.mJavaScript = False
         Me.mHttpUser = ""
@@ -277,10 +282,18 @@ Public Class Prince
         Implements IPrince.ClearStyleSheets
         mStyleSheets = ""
     End Sub
+    Public Sub AddJavaScript(ByVal jsPath As String) _
+        Implements IPrince.AddJavaScript
+        mJavaScripts = mJavaScripts + "--script " + """" + jsPath + """" + " "
+    End Sub
+    Public Sub ClearJavaScripts() _
+        Implements IPrince.ClearJavaScripts
+        mJavaScripts = ""
+    End Sub
     Private Function getArgs() As String
         Dim args As String
 
-        args = "--server " + mStyleSheets
+        args = "--server " + mStyleSheets + mJavaScripts
 
         If mEncrypt Then
             args = args + mEncryptInfo
@@ -290,9 +303,9 @@ Public Class Prince
             args = args + "-i html "
         End If
 
-        if mJavaScript then
+        If mJavaScript Then
             args = args + "--javascript "
-        end if
+        End If
 
         If mHttpUser <> "" Then
             args = args + "--http-user=""" + mHttpUser + """ "
@@ -594,3 +607,4 @@ Public Class Prince
         Return result
     End Function
 End Class
+
