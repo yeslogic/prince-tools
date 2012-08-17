@@ -28,6 +28,7 @@ Public Interface IPrince
     Sub SetFileRoot(ByVal fileroot As String)
     Sub SetXInclude(ByVal xinclude As Boolean)
     Sub SetEmbedFonts(ByVal embed As Boolean)
+    Sub SetEmbedSubsetFonts(ByVal embedSubset As Boolean)
     Sub SetCompress(ByVal compress As Boolean)
     Sub SetEncrypt(ByVal encrypt As Boolean)
     Function Convert(ByVal xmlPath As String) As Boolean
@@ -134,6 +135,7 @@ Public Class Prince
     Private mFileRoot As String
     Private mXInclude As Boolean
     Private mEmbedFonts As Boolean
+    Private mEmbedSubsetFonts As Boolean
     Private mCompress As Boolean
     Private mEncrypt As Boolean
     Private mEncryptInfo As String
@@ -154,6 +156,7 @@ Public Class Prince
         Me.mFileRoot = ""
         Me.mXInclude = True
         Me.mEmbedFonts = True
+        Me.mEmbedSubsetFonts = True
         Me.mCompress = True
         Me.mEncrypt = False
         Me.mEncryptInfo = ""
@@ -173,6 +176,7 @@ Public Class Prince
         Me.mFileRoot = ""
         Me.mXInclude = True
         Me.mEmbedFonts = True
+        Me.mEmbedSubsetFonts = True
         Me.mCompress = True
         Me.mEncrypt = False
         Me.mEncryptInfo = ""
@@ -228,6 +232,10 @@ Public Class Prince
     Public Sub SetEmbedFonts(ByVal embed As Boolean) _
         Implements IPrince.SetEmbedFonts
         mEmbedFonts = embed
+    End Sub
+    Public Sub SetEmbedSubsetFonts(ByVal embedSubset As Boolean) _
+        Implements IPrince.SetEmbedSubsetFonts
+        mEmbedSubsetFonts = embedSubset
     End Sub
     Public Sub SetCompress(ByVal compress As Boolean) _
         Implements IPrince.SetCompress
@@ -349,6 +357,10 @@ Public Class Prince
 
         If Not mEmbedFonts Then
             args = args + "--no-embed-fonts "
+        End If
+
+        If Not mEmbedSubsetFonts Then
+            args = args + "--no-subset-fonts "
         End If
 
         If Not mCompress Then
