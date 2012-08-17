@@ -1,13 +1,15 @@
 <?php
 
 // Prince - PHP interface
-// Copyright 2005-2009 YesLogic Pty. Ltd.
+// Copyright 2005-2012 YesLogic Pty. Ltd.
 // http://www.princexml.com
 
 class Prince
 {
     private $exePath;
     private $styleSheets;
+    private $scripts;
+    private $javascript;
     private $isHTML;
     private $baseURL;
     private $doXInclude;
@@ -15,6 +17,7 @@ class Prince
     private $httpPassword;
     private $logFile;
     private $embedFonts;
+    private $subsetFonts;
     private $compress;
     private $encrypt;
     private $encryptInfo;
@@ -23,6 +26,8 @@ class Prince
     {
 	$this->exePath = $exePath;
 	$this->styleSheets = '';
+	$this->scripts = '';
+	$this->javascript = false;
 	$this->isHTML = false;
 	$this->baseURL = '';
 	$this->doXInclude = true;
@@ -30,6 +35,7 @@ class Prince
 	$this->httpPassword = '';
 	$this->logFile = '';
 	$this->embedFonts = true;
+	$this->subsetFonts = true;
 	$this->compress = true;
 	$this->encrypt = false;
 	$this->encryptInfo = '';
@@ -46,6 +52,26 @@ class Prince
     public function clearStyleSheets()
     {
 	$this->styleSheets = '';
+    }
+
+    // Add a JavaScript script that will be run before conversion.
+    // jsPath: The filename of the script.
+    public function addScript($jsPath)
+    {
+	$this->scripts .= '--script "' . $jsPath . '" ';
+    }
+
+    // Clear all of the scripts.
+    public function clearScripts()
+    {
+	$this->scripts = '';
+    }
+
+    // Specify whether JavaScript found in documents should be run. 
+    // js: True if document scripts should be run.
+    public function setJavaScript($js)
+    {
+	$this->javascript = $js;
     }
 
     // Specify whether documents should be parsed as HTML or XML/XHTML.
@@ -99,6 +125,14 @@ class Prince
     public function setEmbedFonts($embedFonts)
     {
 	$this->embedFonts = $embedFonts;
+    }
+
+    // Specify whether embedded fonts should be subset.
+    // Fonts will be subset by default unless explicitly disabled.
+    // subsetFonts: False to disable PDF font subsetting.
+    public function setSubsetFonts($subsetFonts)
+    {
+	$this->subsetFonts = $subsetFonts;
     }
 
     // Specify whether compression should be applied to the output PDF file.
@@ -195,6 +229,18 @@ class Prince
         return $this->convert_internal_file_to_file($pathAndArgs, $msgs);
     }
     
+    // Convert an XML or HTML file to a PDF file, which will be passed
+    // through to the output of the current PHP page.
+    // xmlPath: The filename of the input XML or HTML document.
+    // Returns true if a PDF file was generated successfully.
+    public function convert_file_to_passthru($xmlPath)
+    {
+	$pathAndArgs = $this->getCommandLine();
+	$pathAndArgs .= '--silent "' . $xmlPath . '" -o -';
+	    
+        return $this->convert_internal_file_to_passthru($pathAndArgs);
+    }
+    
     // Convert an XML or HTML string to a PDF file, which will be passed
     // through to the output of the current PHP page.
     // xmlString: A string containing an XML or HTML document.
@@ -240,11 +286,16 @@ class Prince
 
     private function getCommandLine()
     {
-	$cmdline = $this->exePath . ' --server ' . $this->styleSheets;
+	$cmdline = $this->exePath . ' --server ' . $this->styleSheets . $this->scripts;
 
 	if ($this->isHTML)
 	{
 	    $cmdline .= '--input=html ';
+	}
+
+	if ($this->javascript)
+	{
+	    $cmdline .= '--javascript ';
 	}
 
 	if ($this->baseURL != '')
@@ -275,6 +326,11 @@ class Prince
 	if ($this->embedFonts == false)
 	{
 	    $cmdline .= '--no-embed-fonts ';
+	}
+
+	if ($this->subsetFonts == false)
+	{
+	    $cmdline .= '--no-subset-fonts ';
 	}
 
 	if ($this->compress == false)
@@ -332,6 +388,36 @@ class Prince
 	{
 	    fwrite($pipes[0], $xmlString);
 	    fclose($pipes[0]);
+	    fclose($pipes[1]);
+
+	    $result = $this->readMessages($pipes[2], $msgs);
+	    
+	    fclose($pipes[2]);
+	
+	    proc_close($process);
+
+	    return ($result == 'success');
+	}
+	else
+	{
+	    throw new Exception("Failed to execute $pathAndArgs");
+	}
+    }
+
+    private function convert_internal_file_to_passthru($pathAndArgs)
+    {
+	$descriptorspec = array(
+			    0 => array("pipe", "r"),
+			    1 => array("pipe", "w"),
+			    2 => array("pipe", "w")
+			    );
+	
+	$process = proc_open($pathAndArgs, $descriptorspec, $pipes);
+	
+	if (is_resource($process))
+	{
+	    fclose($pipes[0]);
+	    fpassthru($pipes[1]);
 	    fclose($pipes[1]);
 
 	    $result = $this->readMessages($pipes[2], $msgs);
