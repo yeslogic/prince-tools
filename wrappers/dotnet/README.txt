@@ -24,7 +24,7 @@ Public Interface IPrince
     Sub SetFileRoot(ByVal fileroot As String)
     Sub SetXInclude(ByVal xinclude As Boolean)
     Sub SetEmbedFonts(ByVal embed As Boolean)
-    Sub SetEmbedSubsetFonts(ByVal embedSubset As Boolean)
+    Sub SetSubsetFonts(ByVal embedSubset As Boolean)
     Sub SetCompress(ByVal compress As Boolean)
     Sub SetEncrypt(ByVal encrypt As Boolean)
     Function Convert(ByVal xmlPath As String) As Boolean
