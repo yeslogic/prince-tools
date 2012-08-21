@@ -13,8 +13,8 @@ Public Interface IPrince
                        ByVal disallowAnnotate As Boolean)
     Sub AddStyleSheet(ByVal cssPath As String)
     Sub ClearStyleSheets()
-    Sub AddJavaScript(ByVal jsPath As String)
-    Sub ClearJavaScripts()
+    Sub AddScript(ByVal jsPath As String)
+    Sub ClearScripts()
     Sub SetLicenseFile(ByVal file As String)
     Sub SetLicenseKey(ByVal key As String)
     Sub SetHTML(ByVal html As Boolean)
@@ -262,8 +262,8 @@ Public Class Prince
         Else
             mEncryptInfo = "--encrypt " + _
                     " --key-bits " + Str(keyBits) + _
-                    " --user-password=" + """" + userPassword + """" + _
-                    " --owner-password=" + """" + ownerPassword + """" + " "
+                    " --user-password=" + """" + cmdline_arg_escape_2(cmdline_arg_escape_1(userPassword)) + """" + _
+                    " --owner-password=" + """" + cmdline_arg_escape_2(cmdline_arg_escape_1(ownerPassword)) + """" + " "
 
             If disallowPrint Then
                 mEncryptInfo = mEncryptInfo + "--disallow-print "
@@ -290,12 +290,12 @@ Public Class Prince
         Implements IPrince.ClearStyleSheets
         mStyleSheets = ""
     End Sub
-    Public Sub AddJavaScript(ByVal jsPath As String) _
-        Implements IPrince.AddJavaScript
+    Public Sub AddScript(ByVal jsPath As String) _
+        Implements IPrince.AddScript
         mJavaScripts = mJavaScripts + "--script " + """" + jsPath + """" + " "
     End Sub
-    Public Sub ClearJavaScripts() _
-        Implements IPrince.ClearJavaScripts
+    Public Sub ClearScripts() _
+        Implements IPrince.ClearScripts
         mJavaScripts = ""
     End Sub
     Private Function getArgs() As String
@@ -316,11 +316,11 @@ Public Class Prince
         End If
 
         If mHttpUser <> "" Then
-            args = args + "--http-user=""" + mHttpUser + """ "
+            args = args + "--http-user=""" + cmdline_arg_escape_2(cmdline_arg_escape_1(mHttpUser)) + """ "
         End If
 
         If mHttpPassword <> "" Then
-            args = args + "--http-password=""" + mHttpPassword + """ "
+            args = args + "--http-password=""" + cmdline_arg_escape_2(cmdline_arg_escape_1(mHttpPassword)) + """ "
         End If
 
         If mHttpProxy <> "" Then
@@ -617,6 +617,74 @@ Public Class Prince
         Loop
         stdErrFromPr.Close()
         Return result
+    End Function
+    Private Function cmdline_arg_escape_1(ByVal arg As String) As String
+        Dim pos As Integer
+        Dim numSlashes As Integer
+        Dim rightSubstring As String
+        Dim leftSubstring As String
+        Dim middleSubstring As String
+
+
+        If arg.Length = 0 Then
+            'return empty string
+            Return arg
+        Else
+
+            'chr(34) is character double quote ( " ), chr(92) is character backslash ( \ )
+            For pos = (arg.Length - 1) To 0 Step -1
+
+                If arg(pos) = Chr(34) Then
+                    'if there is a double quote in the arg string
+                    'find number of backslashes preceding the double quote ( " )
+                    numSlashes = 0
+                    Do While ((pos - 1 - numSlashes) >= 0)
+                        If arg(pos - 1 - numSlashes) = Chr(92) Then
+                            numSlashes += 1
+                        Else
+                            Exit Do
+                        End If
+                    Loop
+
+                    rightSubstring = arg.Substring(pos + 1)
+                    leftSubstring = arg.Substring(0, (pos - numSlashes))
+
+                    middleSubstring = Chr(92)
+                    For i As Integer = 1 To numSlashes Step 1
+                        middleSubstring = middleSubstring + Chr(92) + Chr(92)
+                    Next
+
+                    middleSubstring = middleSubstring + Chr(34)
+
+                    Return cmdline_arg_escape_1(leftSubstring) + middleSubstring + rightSubstring
+
+                End If
+            Next
+
+            'no double quote found, return string itself
+            Return arg
+
+        End If
+    End Function
+    Private Function cmdline_arg_escape_2(ByVal arg As String) As String
+        Dim pos As Integer
+        Dim numEndingSlashes As Integer
+
+        numEndingSlashes = 0
+        For pos = (arg.Length - 1) To 0 Step -1
+            If arg(pos) = Chr(92) Then
+                numEndingSlashes += 1
+            Else
+                Exit For
+            End If
+        Next
+
+        For i As Integer = 1 To numEndingSlashes Step 1
+            arg = arg + Chr(92)
+        Next
+
+        Return arg
+
     End Function
 End Class
 
