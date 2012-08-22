@@ -1,4 +1,3 @@
-
 Public Interface IPrince
     Sub SetEncryptInfo(ByVal keyBits As Integer, _
                        ByVal userPassword As String, _
@@ -34,8 +33,10 @@ Public Interface IPrince
     Function Convert(ByVal xmlInput As Stream, ByVal pdfOutput As Stream) As Boolean
     Function ConvertMemoryStream(ByVal xmlInput As MemoryStream, ByVal pdfOutput As Stream) As Boolean
     Function ConvertString(ByVal xmlInput As String, ByVal pdfOutput As Stream) As Boolean
+    Function ConvertMultiple(ByVal xmlPaths As String(), ByVal pdfPath As String) As Boolean
 
 End Interface
+
 
 
 

@@ -38,6 +38,7 @@ Public Interface IPrince
     Function Convert(ByVal xmlInput As Stream, ByVal pdfOutput As Stream) As Boolean
     Function ConvertMemoryStream(ByVal xmlInput As MemoryStream, ByVal pdfOutput As Stream) As Boolean
     Function ConvertString(ByVal xmlInput As String, ByVal pdfOutput As Stream) As Boolean
+    Function ConvertMultiple(ByVal xmlPaths As String(), ByVal pdfPath As String) As Boolean
 
 End Interface
 
@@ -373,7 +374,7 @@ Public Class Prince
         Implements IPrince.Convert
         Dim args As String
 
-        args = getArgs() + """" + xmlPath + """"
+        args = getArgs() + Chr(34) + xmlPath + Chr(34)
 
         Return Convert1(args)
     End Function
@@ -381,7 +382,22 @@ Public Class Prince
         Implements IPrince.convert
         Dim args As String
 
-        args = getArgs() + """" + xmlPath + """ -o """ + pdfPath + """"
+        args = getArgs() + Chr(34) + xmlPath + Chr(34) + " -o " + Chr(34) + pdfPath + Chr(34)
+
+        Return Convert1(args)
+    End Function
+    Public Function ConvertMultiple(ByVal xmlPaths As String(), ByVal pdfPath As String) As Boolean _
+       Implements IPrince.ConvertMultiple
+        Dim args As String
+        Dim doc As String
+        Dim docPaths As String
+
+        docPaths = ""
+        For Each doc In xmlPaths
+            docPaths = docPaths + Chr(34) + doc + Chr(34) + " "
+        Next
+
+        args = getArgs() + docPaths + " -o " + Chr(34) + pdfPath + Chr(34)
 
         Return Convert1(args)
     End Function
