@@ -136,7 +136,7 @@ Public Class Prince
     Private mFileRoot As String
     Private mXInclude As Boolean
     Private mEmbedFonts As Boolean
-    Private mEmbedSubsetFonts As Boolean
+    Private mSubsetFonts As Boolean
     Private mCompress As Boolean
     Private mEncrypt As Boolean
     Private mEncryptInfo As String
@@ -157,7 +157,7 @@ Public Class Prince
         Me.mFileRoot = ""
         Me.mXInclude = True
         Me.mEmbedFonts = True
-        Me.mEmbedSubsetFonts = True
+        Me.mSubsetFonts = True
         Me.mCompress = True
         Me.mEncrypt = False
         Me.mEncryptInfo = ""
@@ -177,7 +177,7 @@ Public Class Prince
         Me.mFileRoot = ""
         Me.mXInclude = True
         Me.mEmbedFonts = True
-        Me.mEmbedSubsetFonts = True
+        Me.mSubsetFonts = True
         Me.mCompress = True
         Me.mEncrypt = False
         Me.mEncryptInfo = ""
@@ -234,9 +234,9 @@ Public Class Prince
         Implements IPrince.SetEmbedFonts
         mEmbedFonts = embed
     End Sub
-    Public Sub SetSubsetFonts(ByVal embedSubset As Boolean) _
-        Implements IPrince.SetEmbedSubsetFonts
-        mEmbedSubsetFonts = embedSubset
+    Public Sub SetSubsetFonts(ByVal subset As Boolean) _
+        Implements IPrince.SetSubsetFonts
+        mSubsetFonts = subset
     End Sub
     Public Sub SetCompress(ByVal compress As Boolean) _
         Implements IPrince.SetCompress
@@ -360,7 +360,7 @@ Public Class Prince
             args = args + "--no-embed-fonts "
         End If
 
-        If Not mEmbedSubsetFonts Then
+        If Not mSubsetFonts Then
             args = args + "--no-subset-fonts "
         End If
 
@@ -650,12 +650,12 @@ Public Class Prince
             'chr(34) is character double quote ( " ), chr(92) is character backslash ( \ )
             For pos = (arg.Length - 1) To 0 Step -1
 
-                If arg(pos) = Chr(34) Then
+                If arg.Chars(pos) = Chr(34) Then
                     'if there is a double quote in the arg string
                     'find number of backslashes preceding the double quote ( " )
                     numSlashes = 0
                     Do While ((pos - 1 - numSlashes) >= 0)
-                        If arg(pos - 1 - numSlashes) = Chr(92) Then
+                        If arg.Chars(pos - 1 - numSlashes) = Chr(92) Then
                             numSlashes += 1
                         Else
                             Exit Do
@@ -688,7 +688,7 @@ Public Class Prince
 
         numEndingSlashes = 0
         For pos = (arg.Length - 1) To 0 Step -1
-            If arg(pos) = Chr(92) Then
+            If arg.Chars(pos) = Chr(92) Then
                 numEndingSlashes += 1
             Else
                 Exit For
