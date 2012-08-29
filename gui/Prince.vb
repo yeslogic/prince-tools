@@ -1,6 +1,6 @@
-Imports System.Diagnostics
-Imports System.io
-Imports System.text
+﻿Imports System.Diagnostics
+Imports System.IO
+Imports System.Text
 Imports System
 
 Public Interface IPrince
@@ -28,6 +28,7 @@ Public Interface IPrince
     Sub SetFileRoot(ByVal fileroot As String)
     Sub SetXInclude(ByVal xinclude As Boolean)
     Sub SetEmbedFonts(ByVal embed As Boolean)
+    Sub SetEmbedSubsetFonts(ByVal embedSubset As Boolean)
     Sub SetCompress(ByVal compress As Boolean)
     Sub SetEncrypt(ByVal encrypt As Boolean)
     Function Convert(ByVal xmlPath As String) As Boolean
@@ -37,6 +38,7 @@ Public Interface IPrince
     Function Convert(ByVal xmlInput As Stream, ByVal pdfOutput As Stream) As Boolean
     Function ConvertMemoryStream(ByVal xmlInput As MemoryStream, ByVal pdfOutput As Stream) As Boolean
     Function ConvertString(ByVal xmlInput As String, ByVal pdfOutput As Stream) As Boolean
+    Function ConvertMultiple(ByVal xmlPaths As String(), ByVal pdfPath As String) As Boolean
 
 End Interface
 
@@ -134,6 +136,7 @@ Public Class Prince
     Private mFileRoot As String
     Private mXInclude As Boolean
     Private mEmbedFonts As Boolean
+    Private mEmbedSubsetFonts As Boolean
     Private mCompress As Boolean
     Private mEncrypt As Boolean
     Private mEncryptInfo As String
@@ -154,6 +157,7 @@ Public Class Prince
         Me.mFileRoot = ""
         Me.mXInclude = True
         Me.mEmbedFonts = True
+        Me.mEmbedSubsetFonts = True
         Me.mCompress = True
         Me.mEncrypt = False
         Me.mEncryptInfo = ""
@@ -173,6 +177,7 @@ Public Class Prince
         Me.mFileRoot = ""
         Me.mXInclude = True
         Me.mEmbedFonts = True
+        Me.mEmbedSubsetFonts = True
         Me.mCompress = True
         Me.mEncrypt = False
         Me.mEncryptInfo = ""
@@ -228,6 +233,10 @@ Public Class Prince
     Public Sub SetEmbedFonts(ByVal embed As Boolean) _
         Implements IPrince.SetEmbedFonts
         mEmbedFonts = embed
+    End Sub
+    Public Sub SetEmbedSubsetFonts(ByVal embedSubset As Boolean) _
+        Implements IPrince.SetEmbedSubsetFonts
+        mEmbedSubsetFonts = embedSubset
     End Sub
     Public Sub SetCompress(ByVal compress As Boolean) _
         Implements IPrince.SetCompress
@@ -351,6 +360,10 @@ Public Class Prince
             args = args + "--no-embed-fonts "
         End If
 
+        If Not mEmbedSubsetFonts Then
+            args = args + "--no-subset-fonts "
+        End If
+
         If Not mCompress Then
             args = args + "--no-compress "
         End If
@@ -361,7 +374,7 @@ Public Class Prince
         Implements IPrince.Convert
         Dim args As String
 
-        args = getArgs() + """" + xmlPath + """"
+        args = getArgs() + Chr(34) + xmlPath + Chr(34)
 
         Return Convert1(args)
     End Function
@@ -369,7 +382,23 @@ Public Class Prince
         Implements IPrince.convert
         Dim args As String
 
-        args = getArgs() + """" + xmlPath + """ -o """ + pdfPath + """"
+        'args = getArgs() + """" + xmlPath + """ -o """ + pdfPath + """"
+        args = getArgs() + Chr(34) + xmlPath + Chr(34) + " -o " + Chr(34) + pdfPath + Chr(34)
+
+        Return Convert1(args)
+    End Function
+    Public Function ConvertMultiple(ByVal xmlPaths As String(), ByVal pdfPath As String) As Boolean _
+        Implements IPrince.ConvertMultiple
+        Dim args As String
+        Dim doc As String
+        Dim docPaths As String
+
+        docPaths = ""
+        For Each doc In xmlPaths
+            docPaths = docPaths + Chr(34) + doc + Chr(34) + " "
+        Next
+
+        args = getArgs() + docPaths + " -o " + Chr(34) + pdfPath + Chr(34)
 
         Return Convert1(args)
     End Function
@@ -711,4 +740,5 @@ Public Class Prince
         Form1.ConvPrgrsBar.Value = iprgrs
     End Sub
 End Class
+
 
