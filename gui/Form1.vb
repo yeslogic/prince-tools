@@ -104,6 +104,8 @@
         'set PDF encrypt info
         setPDFEncryptInfo()
 
+        lvwLog.Items.Clear()
+        ConvPrgrsBar.Value = 0
         ConvPrgrsBar.Visible = True
         If ChBoxMerge.Checked Then
 
@@ -116,31 +118,77 @@
                     docItem = lvwDoc.Items(i)
                     multipleDocs(i) = docItem.SubItems(1).Text + "\" + docItem.Text + " "
                 Next
-
-                If pr.ConvertMultiple(multipleDocs, outputPath) Then
-                    For Each docItem In lvwDoc.Items
-                        docItem.SubItems(3).Text = "Converted"
-                    Next
-                Else
-                    For Each docItem In lvwDoc.Items
-                        docItem.SubItems(3).Text = "Unsuccessful"
-                    Next
-                End If
+                Try
+                    If pr.ConvertMultiple(multipleDocs, outputPath) Then
+                        For Each docItem In lvwDoc.Items
+                            docItem.SubItems(3).Text = "Converted"
+                        Next
+                    Else
+                        For Each docItem In lvwDoc.Items
+                            docItem.SubItems(3).Text = "Unsuccessful"
+                        Next
+                    End If
+                Catch ex As ApplicationException
+                    MsgBox(ex.Message + ": " + System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + "\engine\bin")
+                End Try
             End If
         Else
             For Each docItem In lvwDoc.Items
-                pathAndFileName = docItem.SubItems(1).Text + "\" + docItem.Text
-                If pr.Convert(pathAndFileName) Then
-                    docItem.SubItems(3).Text = "Converted"
+                If docItem.SubItems(1).Text <> "" Then
+                    pathAndFileName = docItem.SubItems(1).Text + "\" + docItem.Text
+                    Try
+                        If pr.Convert(pathAndFileName) Then
+                            docItem.SubItems(3).Text = "Converted"
+                        Else
+                            docItem.SubItems(3).Text = "Unsuccessful"
+                        End If
+                    Catch ex As ApplicationException
+                        MsgBox(ex.Message + ": " + System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + "\engine\bin")
+                        Exit For
+                    End Try
                 Else
-                    docItem.SubItems(3).Text = "Unsuccessful"
+                    If docItem.Tag Is Nothing Then
+                        outputPath = GetOutputPath()
+                        If outputPath <> "" Then
+                            docItem.Tag = outputPath
+                        End If
+                    Else
+                        outputPath = docItem.Tag
+                    End If
+
+                    pathAndFileName = docItem.Text
+
+                    Try
+                        If outputPath <> "" Then
+                            If pr.Convert(pathAndFileName, outputPath) Then
+                                docItem.SubItems(3).Text = "Converted"
+                            Else
+                                docItem.SubItems(3).Text = "Unsuccessful"
+                            End If
+                        End If
+                    Catch ex As ApplicationException
+                        MsgBox(ex.Message + ": " + System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + "\engine\bin")
+                        Exit For
+                    End Try
                 End If
             Next
         End If
         ConvPrgrsBar.Visible = False
 
-
     End Sub
+    Private Function GetOutputPath() As String
+        'SaveFileDialog setting
+        SaveFD.InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+        SaveFD.FileName = "output"
+        SaveFD.Filter = "PDF Files (*.pdf)|*.pdf|" + "All Files (*.*)|*.*"
+
+        If SaveFD.ShowDialog() = DialogResult.OK Then
+            Return SaveFD.FileName
+        Else
+            Return ""
+        End If
+
+    End Function
 
     Private Sub addCss_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addCss.Click
         Dim pathAndFile As String
@@ -302,6 +350,11 @@
         If lvwDoc.Items.Count > 0 Then
             lvwDoc.Items.Clear()
         End If
+
+        If (lvwLog.Items.Count > 0) Then
+            lvwLog.Items.Clear()
+        End If
+
     End Sub
 
     Private Sub comboDoctype_DropDownClosed(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles comboDoctype.DropDownClosed
@@ -374,14 +427,13 @@
         End If
     End Sub
     Private Sub addURL_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addURL.Click
-        'Form2.Show()
+        Form2.Show()
     End Sub
 
     Private Function GetUserPass() As String
         Dim userPass As String = ""
 
         userPass = textBoxUserPass.Text
-        'userPass = cmdline_arg_escape_1(userPass)
         userPass = cmdline_arg_escape_2(cmdline_arg_escape_1(userPass))
 
         Return userPass
@@ -391,7 +443,6 @@
         Dim ownerPass As String = ""
 
         ownerPass = textBoxOwnerPass.Text
-        'ownerPass = cmdline_arg_escape_1(ownerPass)
         ownerPass = cmdline_arg_escape_2(cmdline_arg_escape_1(ownerPass))
 
         Return ownerPass
@@ -515,4 +566,89 @@
 
     End Function
 
+    Private Sub Form1_Resize(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Resize
+        Dim yStretch As Integer
+        Dim xStretch As Integer
+
+        If Me.Height > 680 Then
+            yStretch = Me.Height - 680
+
+            GBMain.Height = 571 + yStretch
+            lvwDoc.Height = 240 + yStretch / 2
+            ChBoxMerge.Location = New Point(24, (304 + yStretch / 2))
+            lblSaveOutput.Location = New Point(21, (334 + yStretch / 2))
+            textBoxSave.Location = New Point(110, (332 + yStretch / 2))
+            bttnOpenFolder.Location = New Point(396, (330 + yStretch / 2))
+            conv.Location = New Point(512, (320 + yStretch / 2))
+            lvwLog.Location = New Point(16, (376 + yStretch / 2))
+            lvwLog.Height = 176 + yStretch / 2
+        End If
+
+        If Me.Width > 1256 Then
+            xStretch = Me.Width - 1256
+            GBMain.Width = 680 + xStretch
+            optionTabs.Location = New Point((720 + xStretch), 16)
+
+            lvwDoc.Width = 584 + xStretch
+            lvwLog.Width = 640 + xStretch
+        End If
+
+    End Sub
+
+    Private Sub removeCss_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles removeCss.Click
+        If lvwCSS.Items.Count > 0 Then
+            For Each cssItem As ListViewItem In lvwCSS.SelectedItems
+                lvwCSS.Items.Remove(cssItem)
+            Next
+        End If
+    End Sub
+
+    Private Sub removeJS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles removeJS.Click
+        If lvwJS.Items.Count > 0 Then
+            For Each jsItem As ListViewItem In lvwJS.SelectedItems
+                lvwJS.Items.Remove(jsItem)
+            Next
+        End If
+    End Sub
+
+    Private Sub editCss_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles editCss.Click
+        Dim cssPath As String
+
+        If lvwCSS.Items.Count > 0 Then
+            If lvwCSS.SelectedItems.Count > 0 Then
+                cssPath = Chr(34) + lvwCSS.SelectedItems(0).SubItems(1).Text + "\" + lvwCSS.SelectedItems(0).Text + Chr(34)
+
+                Try
+                    System.Diagnostics.Process.Start("notepad.exe", cssPath)
+                Catch ex As System.ComponentModel.Win32Exception
+                    MsgBox("Could not run Notepad.")
+                    lvwCSS.Focus()
+                End Try
+
+            End If
+        End If
+
+    End Sub
+
+    Private Sub editJS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles editJS.Click
+        Dim jsPath As String
+
+        If lvwJS.Items.Count > 0 Then
+            If lvwJS.SelectedItems.Count > 0 Then
+                jsPath = Chr(34) + lvwJS.SelectedItems(0).SubItems(1).Text + "\" + lvwJS.SelectedItems(0).Text + Chr(34)
+
+                Try
+                    System.Diagnostics.Process.Start("notepad.exe", jsPath)
+                Catch ex As System.ComponentModel.Win32Exception
+                    MsgBox("Could not run Notepad.")
+                    lvwJS.Focus()
+                End Try
+
+            End If
+        End If
+    End Sub
+
+    Private Sub bttnAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnAbout.Click
+        Form3.Show()
+    End Sub
 End Class

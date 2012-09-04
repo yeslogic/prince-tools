@@ -24,6 +24,10 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.GBMain = New System.Windows.Forms.GroupBox()
+        Me.bttnLicense = New System.Windows.Forms.Button()
+        Me.bttnAbout = New System.Windows.Forms.Button()
+        Me.GBLine2 = New System.Windows.Forms.GroupBox()
+        Me.GBLine1 = New System.Windows.Forms.GroupBox()
         Me.conv = New System.Windows.Forms.Button()
         Me.bttnOpenFolder = New System.Windows.Forms.Button()
         Me.textBoxSave = New System.Windows.Forms.TextBox()
@@ -71,6 +75,7 @@ Partial Class Form1
         Me.folderBD = New System.Windows.Forms.FolderBrowserDialog()
         Me.ConvPrgrsBar = New System.Windows.Forms.ProgressBar()
         Me.comboDoctype = New System.Windows.Forms.ComboBox()
+        Me.SaveFD = New System.Windows.Forms.SaveFileDialog()
         Me.lvwDoc = New prince_gui.UListView()
         Me.GBMain.SuspendLayout()
         Me.optionTabs.SuspendLayout()
@@ -86,6 +91,10 @@ Partial Class Form1
         'GBMain
         '
         Me.GBMain.AutoSize = True
+        Me.GBMain.Controls.Add(Me.bttnLicense)
+        Me.GBMain.Controls.Add(Me.bttnAbout)
+        Me.GBMain.Controls.Add(Me.GBLine2)
+        Me.GBMain.Controls.Add(Me.GBLine1)
         Me.GBMain.Controls.Add(Me.lvwDoc)
         Me.GBMain.Controls.Add(Me.conv)
         Me.GBMain.Controls.Add(Me.bttnOpenFolder)
@@ -102,6 +111,40 @@ Partial Class Form1
         Me.GBMain.Size = New System.Drawing.Size(680, 571)
         Me.GBMain.TabIndex = 0
         Me.GBMain.TabStop = False
+        '
+        'bttnLicense
+        '
+        Me.bttnLicense.Location = New System.Drawing.Point(519, 16)
+        Me.bttnLicense.Name = "bttnLicense"
+        Me.bttnLicense.Size = New System.Drawing.Size(80, 32)
+        Me.bttnLicense.TabIndex = 15
+        Me.bttnLicense.Text = "License"
+        Me.bttnLicense.UseVisualStyleBackColor = True
+        '
+        'bttnAbout
+        '
+        Me.bttnAbout.Location = New System.Drawing.Point(428, 16)
+        Me.bttnAbout.Name = "bttnAbout"
+        Me.bttnAbout.Size = New System.Drawing.Size(80, 32)
+        Me.bttnAbout.TabIndex = 14
+        Me.bttnAbout.Text = "About"
+        Me.bttnAbout.UseVisualStyleBackColor = True
+        '
+        'GBLine2
+        '
+        Me.GBLine2.Location = New System.Drawing.Point(610, 7)
+        Me.GBLine2.Name = "GBLine2"
+        Me.GBLine2.Size = New System.Drawing.Size(2, 45)
+        Me.GBLine2.TabIndex = 13
+        Me.GBLine2.TabStop = False
+        '
+        'GBLine1
+        '
+        Me.GBLine1.Location = New System.Drawing.Point(420, 7)
+        Me.GBLine1.Name = "GBLine1"
+        Me.GBLine1.Size = New System.Drawing.Size(2, 45)
+        Me.GBLine1.TabIndex = 12
+        Me.GBLine1.TabStop = False
         '
         'conv
         '
@@ -153,7 +196,7 @@ Partial Class Form1
         '
         'clearAll
         '
-        Me.clearAll.Location = New System.Drawing.Point(460, 16)
+        Me.clearAll.Location = New System.Drawing.Point(326, 16)
         Me.clearAll.Name = "clearAll"
         Me.clearAll.Size = New System.Drawing.Size(80, 32)
         Me.clearAll.TabIndex = 5
@@ -162,7 +205,7 @@ Partial Class Form1
         '
         'removeFile
         '
-        Me.removeFile.Location = New System.Drawing.Point(320, 16)
+        Me.removeFile.Location = New System.Drawing.Point(225, 16)
         Me.removeFile.Name = "removeFile"
         Me.removeFile.Size = New System.Drawing.Size(80, 32)
         Me.removeFile.TabIndex = 4
@@ -171,7 +214,7 @@ Partial Class Form1
         '
         'addURL
         '
-        Me.addURL.Location = New System.Drawing.Point(184, 16)
+        Me.addURL.Location = New System.Drawing.Point(124, 16)
         Me.addURL.Name = "addURL"
         Me.addURL.Size = New System.Drawing.Size(80, 32)
         Me.addURL.TabIndex = 3
@@ -180,7 +223,7 @@ Partial Class Form1
         '
         'addFile
         '
-        Me.addFile.Location = New System.Drawing.Point(56, 16)
+        Me.addFile.Location = New System.Drawing.Point(24, 16)
         Me.addFile.Name = "addFile"
         Me.addFile.Size = New System.Drawing.Size(80, 32)
         Me.addFile.TabIndex = 2
@@ -530,7 +573,7 @@ Partial Class Form1
         'ChEncrypt
         '
         Me.ChEncrypt.AutoSize = True
-        Me.ChEncrypt.Location = New System.Drawing.Point(12, -2)
+        Me.ChEncrypt.Location = New System.Drawing.Point(12, -1)
         Me.ChEncrypt.Name = "ChEncrypt"
         Me.ChEncrypt.Size = New System.Drawing.Size(105, 17)
         Me.ChEncrypt.TabIndex = 0
@@ -582,7 +625,7 @@ Partial Class Form1
         Me.Controls.Add(Me.optionTabs)
         Me.Controls.Add(Me.GBMain)
         Me.Name = "Form1"
-        Me.Text = "Form1"
+        Me.Text = "Prince"
         Me.GBMain.ResumeLayout(False)
         Me.GBMain.PerformLayout()
         Me.optionTabs.ResumeLayout(False)
@@ -648,5 +691,10 @@ Partial Class Form1
     Friend WithEvents editCss As System.Windows.Forms.Button
     Friend WithEvents removeCss As System.Windows.Forms.Button
     Friend WithEvents lvwDoc As prince_gui.UListView
+    Friend WithEvents GBLine2 As System.Windows.Forms.GroupBox
+    Friend WithEvents GBLine1 As System.Windows.Forms.GroupBox
+    Friend WithEvents bttnLicense As System.Windows.Forms.Button
+    Friend WithEvents bttnAbout As System.Windows.Forms.Button
+    Friend WithEvents SaveFD As System.Windows.Forms.SaveFileDialog
 
 End Class
