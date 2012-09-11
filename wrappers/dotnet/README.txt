@@ -10,6 +10,8 @@ Public Interface IPrince
     Sub ClearStyleSheets()
     Sub AddScript(ByVal jsPath As String)
     Sub ClearScripts()
+    Sub AddFileAttachment(ByVal filePath As String)
+    Sub ClearFileAttachments()
     Sub SetLicenseFile(ByVal file As String)
     Sub SetLicenseKey(ByVal key As String)
     Sub SetHTML(ByVal html As Boolean)

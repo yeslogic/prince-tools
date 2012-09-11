@@ -15,6 +15,8 @@ Public Interface IPrince
     Sub ClearStyleSheets()
     Sub AddScript(ByVal jsPath As String)
     Sub ClearScripts()
+    Sub AddFileAttachment(ByVal filePath As String)
+    Sub ClearFileAttachments()
     Sub SetLicenseFile(ByVal file As String)
     Sub SetLicenseKey(ByVal key As String)
     Sub SetHTML(ByVal html As Boolean)
@@ -123,6 +125,7 @@ Public Class Prince
     Private mPrincePath As String
     Private mStyleSheets As String
     Private mJavaScripts As String
+    Private mFileAttachments As String
     Private mLicenseFile As String
     Private mLicenseKey As String
     Private mHTML As Boolean
@@ -144,6 +147,7 @@ Public Class Prince
         Me.mPrincePath = ""
         Me.mStyleSheets = ""
         Me.mJavaScripts = ""
+        Me.mFileAttachments = ""
         Me.mLicenseFile = ""
         Me.mLicenseKey = ""
         Me.mHTML = False
@@ -166,6 +170,9 @@ Public Class Prince
         Me.mPrincePath = princePath
         Me.mStyleSheets = ""
         Me.mJavaScripts = ""
+        Me.mFileAttachments = ""
+        Me.mLicenseFile = ""
+        Me.mLicenseKey = ""
         Me.mHTML = False
         Me.mJavaScript = False
         Me.mHttpUser = ""
@@ -298,6 +305,14 @@ Public Class Prince
     Public Sub ClearScripts() _
         Implements IPrince.ClearScripts
         mJavaScripts = ""
+    End Sub
+    Public Sub AddFileAttachment(ByVal filePath As String) _
+          Implements IPrince.AddFileAttachment
+        mFileAttachments = mFileAttachments + "--attach=" + Chr(34) + filePath + Chr(34) + " "
+    End Sub
+    Public Sub ClearFileAttachments() _
+         Implements IPrince.ClearFileAttachments
+        mFileAttachments = ""
     End Sub
     Private Function getArgs() As String
         Dim args As String
