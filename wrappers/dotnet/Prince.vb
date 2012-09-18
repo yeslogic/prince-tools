@@ -19,6 +19,7 @@ Public Interface IPrince
     Sub ClearFileAttachments()
     Sub SetLicenseFile(ByVal file As String)
     Sub SetLicenseKey(ByVal key As String)
+    Sub SetInputType(ByVal inputType As String)
     Sub SetHTML(ByVal html As Boolean)
     Sub SetJavaScript(ByVal js As Boolean)
     Sub SetHttpUser(ByVal user As String)
@@ -128,7 +129,7 @@ Public Class Prince
     Private mFileAttachments As String
     Private mLicenseFile As String
     Private mLicenseKey As String
-    Private mHTML As Boolean
+    Private mInputType As String
     Private mJavaScript As Boolean
     Private mHttpUser As String
     Private mHttpPassword As String
@@ -150,7 +151,7 @@ Public Class Prince
         Me.mFileAttachments = ""
         Me.mLicenseFile = ""
         Me.mLicenseKey = ""
-        Me.mHTML = False
+        Me.mInputType = "auto"
         Me.mJavaScript = False
         Me.mHttpUser = ""
         Me.mHttpPassword = ""
@@ -173,7 +174,7 @@ Public Class Prince
         Me.mFileAttachments = ""
         Me.mLicenseFile = ""
         Me.mLicenseKey = ""
-        Me.mHTML = False
+        Me.mInputType = "auto"
         Me.mJavaScript = False
         Me.mHttpUser = ""
         Me.mHttpPassword = ""
@@ -199,7 +200,15 @@ Public Class Prince
     End Sub
     Public Sub SetHTML(ByVal html As Boolean) _
         Implements IPrince.SetHTML
-        mHTML = html
+        If html Then
+            mInputType = "html"
+        Else
+            mInputType = "xml"
+        End If
+    End Sub
+    Public Sub SetInputType(ByVal inputType As String) _
+         Implements IPrince.SetInputType
+        mInputType = inputType
     End Sub
     Public Sub SetJavaScript(ByVal js As Boolean) _
         Implements IPrince.SetJavaScript
@@ -317,14 +326,16 @@ Public Class Prince
     Private Function getArgs() As String
         Dim args As String
 
-        args = "--server " + mStyleSheets + mJavaScripts
+        args = "--server " + mStyleSheets + mJavaScripts + mFileAttachments
 
         If mEncrypt Then
             args = args + mEncryptInfo
         End If
 
-        If mHTML Then
-            args = args + "-i html "
+        If mInputType = "auto" Then
+
+        Else
+            args = args + "-i " + Chr(34) + mInputType + Chr(34) + " "
         End If
 
         If mJavaScript Then

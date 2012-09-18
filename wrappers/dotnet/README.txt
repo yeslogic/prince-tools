@@ -14,6 +14,7 @@ Public Interface IPrince
     Sub ClearFileAttachments()
     Sub SetLicenseFile(ByVal file As String)
     Sub SetLicenseKey(ByVal key As String)
+    Sub SetInputType(ByVal inputType As String)
     Sub SetHTML(ByVal html As Boolean)
     Sub SetJavaScript(ByVal js As Boolean)
     Sub SetHttpUser(ByVal user As String)
