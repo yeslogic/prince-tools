@@ -3,6 +3,14 @@
     Private pr As Prince
     Private docItem As ListViewItem
     Private docSubitem As ListViewItem.ListViewSubItem
+    Private saveFdInitDir As String
+    Private openFdInitDocDir As String
+    Private openFdInitCssDir As String
+    Private openFdInitJsDir As String
+    Private openfdInitAttachDir As String
+    Private folderBdInitDir As String
+
+
 
     Private Sub addFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addFile.Click
         Dim pathAndFile As String
@@ -11,7 +19,7 @@
         Dim itm As ListViewItem
 
         'Open file dialog settings:
-        openFD.InitialDirectory() = Application.StartupPath
+        openFD.InitialDirectory() = openFdInitDocDir
         openFD.FileName = String.Empty
         openFD.Filter() = "XML Files (*.xml, *.xhtml, *.xht, *.html, *.htm)|*.xml;*.xhtml;*.xht;*.html;*.htm|" + _
                         "XHTML files (*.xhtml, *.xht)|*.xhtml;*.xht|" + _
@@ -24,6 +32,9 @@
                 fileName = System.IO.Path.GetFileName(pathAndFile)
                 path = System.IO.Path.GetDirectoryName(pathAndFile)
 
+                'remember path
+                openFdInitDocDir = path
+
                 itm = New ListViewItem
 
                 itm.Text = fileName
@@ -34,6 +45,7 @@
                 lvwDoc.Items.Add(itm)
             Next
 
+
             If lvwDoc.Items.Count > 1 Then
                 ChBoxMerge.Enabled = True
             End If
@@ -43,10 +55,6 @@
     End Sub
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-
-        'lvwDoc.BackgroundImage.FromFile("C:\mywork\gui\prince-gui-1\background-1.bmp")
-        'SetListViewBackgroundImage(lvwDoc, "C:\mywork\gui\prince-gui-1\background-1.bmp")
-        'Dim lvwDocBkImg As Bitmap = New Bitmap("C:\mywork\gui\prince-gui-2-bk-img\PrinceLogoGUI-tranparent.png")
 
         lvwDoc.Columns.Add("Documents", 220, HorizontalAlignment.Left)
         lvwDoc.Columns.Add("Location", 220, HorizontalAlignment.Left)
@@ -70,9 +78,12 @@
         lvwAttachment.Columns.Add("Documents", 174, HorizontalAlignment.Left)
         lvwAttachment.Columns.Add("Location", 174, HorizontalAlignment.Left)
 
-        'lvwDoc.WatermarkAlpha = 200
-        'lvwDoc.WatermarkImage = lvwDocBkImg
-
+        saveFdInitDir = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+        openFdInitDocDir = Application.StartupPath
+        openFdInitCssDir = Application.StartupPath
+        openFdInitJsDir = Application.StartupPath
+        openfdInitAttachDir = Application.StartupPath
+        folderBdInitDir = Environment.SpecialFolder.MyComputer
     End Sub
 
     Private Sub conv_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles conv.Click
@@ -98,11 +109,29 @@
             pr.AddJavaScript(jsItem.SubItems(1).Text + "\" + jsItem.Text)
         Next
 
+        'add file attachements
+        For Each attachItem In lvwAttachment.Items
+            pr.AddFileAttachment(attachItem.Subitems(1).text + "\" + attachItem.text)
+        Next
+
         'set javaScript to TRUE
         pr.SetJavaScript(True)
 
         'set PDF encrypt info
         setPDFEncryptInfo()
+
+        'embed fonts or embed subset fonts
+        If ChEmbedFontFile.Checked Then
+            pr.SetEmbedFonts(True)
+        Else
+            pr.SetEmbedFonts(False)
+        End If
+
+        If ChEmbedSubsetFontFile.Checked Then
+            pr.SetEmbedSubsetFonts(True)
+        Else
+            pr.SetEmbedSubsetFonts(False)
+        End If
 
         lvwLog.Items.Clear()
         ConvPrgrsBar.Value = 0
@@ -116,7 +145,11 @@
 
                 For i As Integer = 0 To (lvwDoc.Items.Count - 1) Step 1
                     docItem = lvwDoc.Items(i)
-                    multipleDocs(i) = docItem.SubItems(1).Text + "\" + docItem.Text + " "
+                    If docItem.SubItems(1).Text <> "" Then
+                        multipleDocs(i) = docItem.SubItems(1).Text + "\" + docItem.Text + " "
+                    Else
+                        multipleDocs(i) = docItem.Text + " "
+                    End If
                 Next
                 Try
                     If pr.ConvertMultiple(multipleDocs, outputPath) Then
@@ -136,6 +169,9 @@
             For Each docItem In lvwDoc.Items
                 If docItem.SubItems(1).Text <> "" Then
                     pathAndFileName = docItem.SubItems(1).Text + "\" + docItem.Text
+                    'set input type for the document
+                    pr.SetInputType(docItem.SubItems(2).Text)
+
                     Try
                         If pr.Convert(pathAndFileName) Then
                             docItem.SubItems(3).Text = "Converted"
@@ -157,6 +193,8 @@
                     End If
 
                     pathAndFileName = docItem.Text
+                    'set input type for the document
+                    pr.SetInputType(docItem.SubItems(2).Text)
 
                     Try
                         If outputPath <> "" Then
@@ -178,11 +216,12 @@
     End Sub
     Private Function GetOutputPath() As String
         'SaveFileDialog setting
-        SaveFD.InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+        SaveFD.InitialDirectory = saveFdInitDir
         SaveFD.FileName = "output"
         SaveFD.Filter = "PDF Files (*.pdf)|*.pdf|" + "All Files (*.*)|*.*"
 
         If SaveFD.ShowDialog() = DialogResult.OK Then
+            saveFdInitDir = System.IO.Path.GetDirectoryName(SaveFD.FileName)
             Return SaveFD.FileName
         Else
             Return ""
@@ -197,7 +236,7 @@
         Dim itm As ListViewItem
 
         'open file dialog settings:
-        openFD.InitialDirectory() = Application.StartupPath
+        openFD.InitialDirectory() = openFdInitCssDir
         openFD.FileName = String.Empty
         openFD.Filter() = "Stylesheet Files (*.css)|*.css|" + "All Files (*.*)|*.*"
         openFD.Title = "Select Stylesheet File(s)"
@@ -207,6 +246,9 @@
             For Each pathAndFile In openFD.FileNames
                 fileName = System.IO.Path.GetFileName(pathAndFile)
                 path = System.IO.Path.GetDirectoryName(pathAndFile)
+
+                'remember path
+                openFdInitCssDir = path
 
                 itm = New ListViewItem
 
@@ -226,7 +268,7 @@
         Dim itm As ListViewItem
 
         'open file dialog settings:
-        openFD.InitialDirectory() = Application.StartupPath
+        openFD.InitialDirectory() = openFdInitJsDir
         openFD.FileName = String.Empty
         openFD.Filter() = "JavaScript Files (*.js)|*.js|" + "All Files (*.*)|*.*"
         openFD.Title = "Select JavaScript File(s)"
@@ -236,6 +278,9 @@
             For Each pathAndFile In openFD.FileNames
                 fileName = System.IO.Path.GetFileName(pathAndFile)
                 path = System.IO.Path.GetDirectoryName(pathAndFile)
+
+                'remember path
+                openFdInitJsDir = path
 
                 itm = New ListViewItem
 
@@ -344,6 +389,12 @@
 
         lvwDoc.Refresh()
         comboDoctype.Visible = False
+
+        If lvwDoc.Items.Count < 2 Then
+            ChBoxMerge.Checked = False
+            ChBoxMerge.Enabled = False
+        End If
+
     End Sub
 
     Private Sub clearAll_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles clearAll.Click
@@ -355,6 +406,8 @@
             lvwLog.Items.Clear()
         End If
 
+        ChBoxMerge.Checked = False
+        ChBoxMerge.Enabled = False
     End Sub
 
     Private Sub comboDoctype_DropDownClosed(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles comboDoctype.DropDownClosed
@@ -394,7 +447,7 @@
     Private Sub bttnOpenFolder_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnOpenFolder.Click
 
         'Folder browser dialog settings:
-        folderBD.RootFolder = Environment.SpecialFolder.MyComputer
+        folderBD.RootFolder = folderBdInitDir
         folderBD.Description = "Select Output Folder"
 
         If folderBD.ShowDialog = Windows.Forms.DialogResult.OK Then
@@ -403,6 +456,9 @@
             Else
                 textBoxSave.Text = folderBD.SelectedPath + "\output.pdf"
             End If
+
+            'remember output folder for folder browser
+            folderBdInitDir = folderBD.SelectedPath
         End If
     End Sub
 
@@ -413,7 +469,11 @@
             textBoxSave.Enabled = True
             textBoxSave.BackColor = Color.White
             If lvwDoc.Items.Count > 0 Then
-                textBoxSave.Text = lvwDoc.Items(0).SubItems(1).Text + "\output.pdf"
+                If lvwDoc.Items(0).SubItems(1).Text <> "" Then
+                    textBoxSave.Text = lvwDoc.Items(0).SubItems(1).Text + "\output.pdf"
+                Else
+                    textBoxSave.Text = My.Computer.FileSystem.SpecialDirectories.MyDocuments + "\output.pdf"
+                End If
             Else
                 textBoxSave.Text = My.Computer.FileSystem.SpecialDirectories.MyDocuments + "\output.pdf"
             End If
@@ -650,5 +710,201 @@
 
     Private Sub bttnAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnAbout.Click
         Form3.Show()
+    End Sub
+
+    Private Sub BttnAddAttach_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BttnAddAttach.Click
+        Dim pathAndFile As String
+        Dim path As String
+        Dim fileName As String
+        Dim itm As ListViewItem
+
+        'open file dialog settings:
+        openFD.InitialDirectory() = openfdInitAttachDir
+        openFD.FileName = String.Empty
+        openFD.Filter() = "All Files (*.*)|*.*"
+        openFD.Title = "Select File(s)"
+        openFD.Multiselect() = True
+
+        If openFD.ShowDialog() = DialogResult.OK Then
+            For Each pathAndFile In openFD.FileNames
+                fileName = System.IO.Path.GetFileName(pathAndFile)
+                path = System.IO.Path.GetDirectoryName(pathAndFile)
+
+                'remember path
+                openfdInitAttachDir = path
+
+                itm = New ListViewItem
+
+                itm.Text = fileName
+                itm.SubItems.Add(path)
+                lvwAttachment.Items.Add(itm)
+            Next
+
+        End If
+    End Sub
+
+    Private Sub BttnRemoveAttach_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BttnRemoveAttach.Click
+        If lvwAttachment.Items.Count > 0 Then
+            For Each attItem As ListViewItem In lvwAttachment.SelectedItems
+                lvwAttachment.Items.Remove(attItem)
+            Next
+        End If
+    End Sub
+
+    Private Sub ChEmbedFontFile_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ChEmbedFontFile.CheckedChanged
+        If ChEmbedFontFile.Checked Then
+            ChEmbedSubsetFontFile.Enabled = True
+        Else
+            ChEmbedSubsetFontFile.Enabled = False
+        End If
+    End Sub
+
+    Private Sub bttnLicense_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnLicense.Click
+        Form4.Show()
+    End Sub
+
+    Private Sub lvwDoc_DragEnter(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles lvwDoc.DragEnter
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            e.Effect = DragDropEffects.All
+        End If
+    End Sub
+
+    Private Sub lvwDoc_DragDrop(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles lvwDoc.DragDrop
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            Dim fileArray() As String
+            Dim i As Integer
+            Dim path As String
+            Dim fileName As String
+            Dim itm As ListViewItem
+
+            ' Assign the files to an array.
+            fileArray = e.Data.GetData(DataFormats.FileDrop)
+            ' Loop through the array and add the files to the listview
+            For i = 0 To fileArray.Length - 1
+                fileName = System.IO.Path.GetFileName(fileArray(i))
+                path = System.IO.Path.GetDirectoryName(fileArray(i))
+
+                itm = New ListViewItem
+
+                itm.Text = fileName
+                itm.SubItems.Add(path)
+                itm.SubItems.Add("AUTO")
+                itm.SubItems.Add("Unconverted")
+
+                lvwDoc.Items.Add(itm)
+            Next
+
+            If lvwDoc.Items.Count > 1 Then
+                ChBoxMerge.Enabled = True
+            End If
+        End If
+    End Sub
+
+    Private Sub bttnDocUp_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnDocUp.Click
+        If lvwDoc.Items.Count > 0 Then
+            If lvwDoc.SelectedItems.Count > 0 Then
+                If lvwDoc.SelectedIndices(0) > 0 Then
+                    Dim itm As ListViewItem = lvwDoc.SelectedItems(0)
+                    Dim newIndex As Integer = lvwDoc.SelectedIndices(0) - 1
+
+                    lvwDoc.Items.Remove(itm)
+                    lvwDoc.Items.Insert(newIndex, itm)
+
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub lvwCSS_DragEnter(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles lvwCSS.DragEnter
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            e.Effect = DragDropEffects.All
+        End If
+    End Sub
+
+    Private Sub lvwCSS_DragDrop(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles lvwCSS.DragDrop
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            Dim fileArray() As String
+            Dim i As Integer
+            Dim path As String
+            Dim fileName As String
+            Dim itm As ListViewItem
+
+            ' Assign the files to an array.
+            fileArray = e.Data.GetData(DataFormats.FileDrop)
+            ' Loop through the array and add the files to the listview
+            For i = 0 To fileArray.Length - 1
+                fileName = System.IO.Path.GetFileName(fileArray(i))
+                path = System.IO.Path.GetDirectoryName(fileArray(i))
+
+                itm = New ListViewItem
+
+                itm.Text = fileName
+                itm.SubItems.Add(path)
+
+                lvwCSS.Items.Add(itm)
+            Next
+        End If
+    End Sub
+
+    Private Sub lvwJS_DragEnter(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles lvwJS.DragEnter
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            e.Effect = DragDropEffects.All
+        End If
+    End Sub
+
+    Private Sub lvwJS_DragDrop(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles lvwJS.DragDrop
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            Dim fileArray() As String
+            Dim i As Integer
+            Dim path As String
+            Dim fileName As String
+            Dim itm As ListViewItem
+
+            ' Assign the files to an array.
+            fileArray = e.Data.GetData(DataFormats.FileDrop)
+            ' Loop through the array and add the files to the listview
+            For i = 0 To fileArray.Length - 1
+                fileName = System.IO.Path.GetFileName(fileArray(i))
+                path = System.IO.Path.GetDirectoryName(fileArray(i))
+
+                itm = New ListViewItem
+
+                itm.Text = fileName
+                itm.SubItems.Add(path)
+
+                lvwJS.Items.Add(itm)
+            Next
+        End If
+    End Sub
+
+    Private Sub lvwAttachment_DragEnter(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles lvwAttachment.DragEnter
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            e.Effect = DragDropEffects.All
+        End If
+    End Sub
+
+    Private Sub lvwAttachment_DragDrop(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles lvwAttachment.DragDrop
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            Dim fileArray() As String
+            Dim i As Integer
+            Dim path As String
+            Dim fileName As String
+            Dim itm As ListViewItem
+
+            ' Assign the files to an array.
+            fileArray = e.Data.GetData(DataFormats.FileDrop)
+            ' Loop through the array and add the files to the listview
+            For i = 0 To fileArray.Length - 1
+                fileName = System.IO.Path.GetFileName(fileArray(i))
+                path = System.IO.Path.GetDirectoryName(fileArray(i))
+
+                itm = New ListViewItem
+
+                itm.Text = fileName
+                itm.SubItems.Add(path)
+
+                lvwAttachment.Items.Add(itm)
+            Next
+        End If
     End Sub
 End Class

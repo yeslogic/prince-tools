@@ -14,6 +14,9 @@
 
             Form1.lvwDoc.Items.Add(itm)
 
+            If Form1.lvwDoc.Items.Count > 1 Then
+                Form1.ChBoxMerge.Enabled = True
+            End If
         End If
 
         Me.Close()

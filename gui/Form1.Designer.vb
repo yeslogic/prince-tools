@@ -24,6 +24,8 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.GBMain = New System.Windows.Forms.GroupBox()
+        Me.bttnDocDown = New System.Windows.Forms.Button()
+        Me.bttnDocUp = New System.Windows.Forms.Button()
         Me.bttnLicense = New System.Windows.Forms.Button()
         Me.bttnAbout = New System.Windows.Forms.Button()
         Me.GBLine2 = New System.Windows.Forms.GroupBox()
@@ -41,11 +43,15 @@ Partial Class Form1
         Me.optionTabs = New System.Windows.Forms.TabControl()
         Me.CssJavaTab = New System.Windows.Forms.TabPage()
         Me.GBJavaScript = New System.Windows.Forms.GroupBox()
+        Me.bttnJsDown = New System.Windows.Forms.Button()
+        Me.bttnJsUp = New System.Windows.Forms.Button()
         Me.editJS = New System.Windows.Forms.Button()
         Me.removeJS = New System.Windows.Forms.Button()
         Me.addJS = New System.Windows.Forms.Button()
         Me.lvwJS = New System.Windows.Forms.ListView()
         Me.GBCss = New System.Windows.Forms.GroupBox()
+        Me.bttnCssDown = New System.Windows.Forms.Button()
+        Me.bttnCssUp = New System.Windows.Forms.Button()
         Me.editCss = New System.Windows.Forms.Button()
         Me.removeCss = New System.Windows.Forms.Button()
         Me.addCss = New System.Windows.Forms.Button()
@@ -91,6 +97,8 @@ Partial Class Form1
         'GBMain
         '
         Me.GBMain.AutoSize = True
+        Me.GBMain.Controls.Add(Me.bttnDocDown)
+        Me.GBMain.Controls.Add(Me.bttnDocUp)
         Me.GBMain.Controls.Add(Me.bttnLicense)
         Me.GBMain.Controls.Add(Me.bttnAbout)
         Me.GBMain.Controls.Add(Me.GBLine2)
@@ -111,6 +119,24 @@ Partial Class Form1
         Me.GBMain.Size = New System.Drawing.Size(680, 571)
         Me.GBMain.TabIndex = 0
         Me.GBMain.TabStop = False
+        '
+        'bttnDocDown
+        '
+        Me.bttnDocDown.Location = New System.Drawing.Point(626, 186)
+        Me.bttnDocDown.Name = "bttnDocDown"
+        Me.bttnDocDown.Size = New System.Drawing.Size(30, 49)
+        Me.bttnDocDown.TabIndex = 17
+        Me.bttnDocDown.Text = "Down"
+        Me.bttnDocDown.UseVisualStyleBackColor = True
+        '
+        'bttnDocUp
+        '
+        Me.bttnDocUp.Location = New System.Drawing.Point(626, 100)
+        Me.bttnDocUp.Name = "bttnDocUp"
+        Me.bttnDocUp.Size = New System.Drawing.Size(30, 49)
+        Me.bttnDocUp.TabIndex = 16
+        Me.bttnDocUp.Text = "Up"
+        Me.bttnDocUp.UseVisualStyleBackColor = True
         '
         'bttnLicense
         '
@@ -264,6 +290,8 @@ Partial Class Form1
         '
         'GBJavaScript
         '
+        Me.GBJavaScript.Controls.Add(Me.bttnJsDown)
+        Me.GBJavaScript.Controls.Add(Me.bttnJsUp)
         Me.GBJavaScript.Controls.Add(Me.editJS)
         Me.GBJavaScript.Controls.Add(Me.removeJS)
         Me.GBJavaScript.Controls.Add(Me.addJS)
@@ -274,6 +302,24 @@ Partial Class Form1
         Me.GBJavaScript.TabIndex = 1
         Me.GBJavaScript.TabStop = False
         Me.GBJavaScript.Text = "JavaScript (JS)"
+        '
+        'bttnJsDown
+        '
+        Me.bttnJsDown.Location = New System.Drawing.Point(380, 161)
+        Me.bttnJsDown.Name = "bttnJsDown"
+        Me.bttnJsDown.Size = New System.Drawing.Size(30, 49)
+        Me.bttnJsDown.TabIndex = 5
+        Me.bttnJsDown.Text = "Down"
+        Me.bttnJsDown.UseVisualStyleBackColor = True
+        '
+        'bttnJsUp
+        '
+        Me.bttnJsUp.Location = New System.Drawing.Point(380, 87)
+        Me.bttnJsUp.Name = "bttnJsUp"
+        Me.bttnJsUp.Size = New System.Drawing.Size(30, 49)
+        Me.bttnJsUp.TabIndex = 4
+        Me.bttnJsUp.Text = "Up"
+        Me.bttnJsUp.UseVisualStyleBackColor = True
         '
         'editJS
         '
@@ -304,6 +350,7 @@ Partial Class Form1
         '
         'lvwJS
         '
+        Me.lvwJS.AllowDrop = True
         Me.lvwJS.FullRowSelect = True
         Me.lvwJS.Location = New System.Drawing.Point(8, 56)
         Me.lvwJS.Name = "lvwJS"
@@ -314,6 +361,8 @@ Partial Class Form1
         '
         'GBCss
         '
+        Me.GBCss.Controls.Add(Me.bttnCssDown)
+        Me.GBCss.Controls.Add(Me.bttnCssUp)
         Me.GBCss.Controls.Add(Me.editCss)
         Me.GBCss.Controls.Add(Me.removeCss)
         Me.GBCss.Controls.Add(Me.addCss)
@@ -324,6 +373,24 @@ Partial Class Form1
         Me.GBCss.TabIndex = 0
         Me.GBCss.TabStop = False
         Me.GBCss.Text = "Cascading Style Sheet (CSS)"
+        '
+        'bttnCssDown
+        '
+        Me.bttnCssDown.Location = New System.Drawing.Point(380, 160)
+        Me.bttnCssDown.Name = "bttnCssDown"
+        Me.bttnCssDown.Size = New System.Drawing.Size(30, 49)
+        Me.bttnCssDown.TabIndex = 5
+        Me.bttnCssDown.Text = "Down"
+        Me.bttnCssDown.UseVisualStyleBackColor = True
+        '
+        'bttnCssUp
+        '
+        Me.bttnCssUp.Location = New System.Drawing.Point(380, 85)
+        Me.bttnCssUp.Name = "bttnCssUp"
+        Me.bttnCssUp.Size = New System.Drawing.Size(30, 49)
+        Me.bttnCssUp.TabIndex = 4
+        Me.bttnCssUp.Text = "Up"
+        Me.bttnCssUp.UseVisualStyleBackColor = True
         '
         'editCss
         '
@@ -354,6 +421,7 @@ Partial Class Form1
         '
         'lvwCSS
         '
+        Me.lvwCSS.AllowDrop = True
         Me.lvwCSS.FullRowSelect = True
         Me.lvwCSS.Location = New System.Drawing.Point(8, 56)
         Me.lvwCSS.Name = "lvwCSS"
@@ -407,6 +475,7 @@ Partial Class Form1
         '
         'lvwAttachment
         '
+        Me.lvwAttachment.AllowDrop = True
         Me.lvwAttachment.FullRowSelect = True
         Me.lvwAttachment.Location = New System.Drawing.Point(18, 19)
         Me.lvwAttachment.Name = "lvwAttachment"
@@ -429,16 +498,20 @@ Partial Class Form1
         'ChEmbedSubsetFontFile
         '
         Me.ChEmbedSubsetFontFile.AutoSize = True
+        Me.ChEmbedSubsetFontFile.Checked = True
+        Me.ChEmbedSubsetFontFile.CheckState = System.Windows.Forms.CheckState.Checked
         Me.ChEmbedSubsetFontFile.Location = New System.Drawing.Point(51, 47)
         Me.ChEmbedSubsetFontFile.Name = "ChEmbedSubsetFontFile"
-        Me.ChEmbedSubsetFontFile.Size = New System.Drawing.Size(138, 17)
+        Me.ChEmbedSubsetFontFile.Size = New System.Drawing.Size(142, 17)
         Me.ChEmbedSubsetFontFile.TabIndex = 1
-        Me.ChEmbedSubsetFontFile.Text = "Embed Subset Font File"
+        Me.ChEmbedSubsetFontFile.Text = "Subset Embedded Fonts"
         Me.ChEmbedSubsetFontFile.UseVisualStyleBackColor = True
         '
         'ChEmbedFontFile
         '
         Me.ChEmbedFontFile.AutoSize = True
+        Me.ChEmbedFontFile.Checked = True
+        Me.ChEmbedFontFile.CheckState = System.Windows.Forms.CheckState.Checked
         Me.ChEmbedFontFile.Location = New System.Drawing.Point(51, 22)
         Me.ChEmbedFontFile.Name = "ChEmbedFontFile"
         Me.ChEmbedFontFile.Size = New System.Drawing.Size(102, 17)
@@ -471,6 +544,7 @@ Partial Class Form1
         '
         Me.textBoxOwnerPass.Location = New System.Drawing.Point(32, 241)
         Me.textBoxOwnerPass.Name = "textBoxOwnerPass"
+        Me.textBoxOwnerPass.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.textBoxOwnerPass.Size = New System.Drawing.Size(387, 20)
         Me.textBoxOwnerPass.TabIndex = 11
         '
@@ -478,6 +552,7 @@ Partial Class Form1
         '
         Me.textBoxUserPass.Location = New System.Drawing.Point(32, 190)
         Me.textBoxUserPass.Name = "textBoxUserPass"
+        Me.textBoxUserPass.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.textBoxUserPass.Size = New System.Drawing.Size(387, 20)
         Me.textBoxUserPass.TabIndex = 10
         '
@@ -589,6 +664,7 @@ Partial Class Form1
         Me.ConvPrgrsBar.Location = New System.Drawing.Point(24, 588)
         Me.ConvPrgrsBar.Name = "ConvPrgrsBar"
         Me.ConvPrgrsBar.Size = New System.Drawing.Size(680, 20)
+        Me.ConvPrgrsBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee
         Me.ConvPrgrsBar.TabIndex = 11
         Me.ConvPrgrsBar.Visible = False
         '
@@ -604,6 +680,7 @@ Partial Class Form1
         '
         'lvwDoc
         '
+        Me.lvwDoc.AllowDrop = True
         Me.lvwDoc.FullRowSelect = True
         Me.lvwDoc.Location = New System.Drawing.Point(16, 58)
         Me.lvwDoc.Name = "lvwDoc"
@@ -696,5 +773,11 @@ Partial Class Form1
     Friend WithEvents bttnLicense As System.Windows.Forms.Button
     Friend WithEvents bttnAbout As System.Windows.Forms.Button
     Friend WithEvents SaveFD As System.Windows.Forms.SaveFileDialog
+    Friend WithEvents bttnDocDown As System.Windows.Forms.Button
+    Friend WithEvents bttnDocUp As System.Windows.Forms.Button
+    Friend WithEvents bttnJsDown As System.Windows.Forms.Button
+    Friend WithEvents bttnJsUp As System.Windows.Forms.Button
+    Friend WithEvents bttnCssDown As System.Windows.Forms.Button
+    Friend WithEvents bttnCssUp As System.Windows.Forms.Button
 
 End Class

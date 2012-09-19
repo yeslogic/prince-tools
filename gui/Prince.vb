@@ -15,8 +15,11 @@ Public Interface IPrince
     Sub ClearStyleSheets()
     Sub AddJavaScript(ByVal jsPath As String)
     Sub ClearJavaScripts()
+    Sub AddFileAttachment(ByVal filePath As String)
+    Sub ClearFileAttachments()
     Sub SetLicenseFile(ByVal file As String)
     Sub SetLicenseKey(ByVal key As String)
+    Sub SetInputType(ByVal inputType As String)
     Sub SetHTML(ByVal html As Boolean)
     Sub SetJavaScript(ByVal js As Boolean)
     Sub SetHttpUser(ByVal user As String)
@@ -123,9 +126,10 @@ Public Class Prince
     Private mPrincePath As String
     Private mStyleSheets As String
     Private mJavaScripts As String
+    Private mFileAttachments As String
     Private mLicenseFile As String
     Private mLicenseKey As String
-    Private mHTML As Boolean
+    Private mInputType As String
     Private mJavaScript As Boolean
     Private mHttpUser As String
     Private mHttpPassword As String
@@ -144,9 +148,10 @@ Public Class Prince
         Me.mPrincePath = ""
         Me.mStyleSheets = ""
         Me.mJavaScripts = ""
+        Me.mFileAttachments = ""
         Me.mLicenseFile = ""
         Me.mLicenseKey = ""
-        Me.mHTML = False
+        Me.mInputType = "auto"
         Me.mJavaScript = False
         Me.mHttpUser = ""
         Me.mHttpPassword = ""
@@ -166,7 +171,10 @@ Public Class Prince
         Me.mPrincePath = princePath
         Me.mStyleSheets = ""
         Me.mJavaScripts = ""
-        Me.mHTML = False
+        Me.mFileAttachments = ""
+        Me.mLicenseFile = ""
+        Me.mLicenseKey = ""
+        Me.mInputType = "auto"
         Me.mJavaScript = False
         Me.mHttpUser = ""
         Me.mHttpPassword = ""
@@ -190,9 +198,17 @@ Public Class Prince
         Implements IPrince.SetLicensekey
         mLicenseKey = key
     End Sub
+    Public Sub SetInputType(ByVal inputType As String) _
+        Implements IPrince.SetInputType
+        mInputType = inputType
+    End Sub
     Public Sub SetHTML(ByVal html As Boolean) _
         Implements IPrince.SetHTML
-        mHTML = html
+        If html Then
+            mInputType = "html"
+        Else
+            mInputType = "xml"
+        End If
     End Sub
     Public Sub SetJavaScript(ByVal js As Boolean) _
         Implements IPrince.SetJavaScript
@@ -299,17 +315,31 @@ Public Class Prince
         Implements IPrince.ClearJavaScripts
         mJavaScripts = ""
     End Sub
+    Public Sub AddFileAttachment(ByVal filePath As String) _
+        Implements IPrince.AddFileAttachment
+        mFileAttachments = mFileAttachments + "--attach=" + Chr(34) + filePath + Chr(34) + " "
+    End Sub
+    Public Sub ClearFileAttachments() _
+        Implements IPrince.ClearFileAttachments
+        mFileAttachments = ""
+    End Sub
     Private Function getArgs() As String
         Dim args As String
 
-        args = "--server " + mStyleSheets + mJavaScripts
+        args = "--server " + mStyleSheets + mJavaScripts + mFileAttachments
 
         If mEncrypt Then
             args = args + mEncryptInfo
         End If
 
-        If mHTML Then
-            args = args + "-i html "
+        'If mHTML Then
+        '    args = args + "-i html "
+        'End If
+
+        If (mInputType = "auto") Or (mInputType = "AUTO") Then
+
+        Else
+            args = args + "-i " + Chr(34) + mInputType + Chr(34) + " "
         End If
 
         If mJavaScript Then
@@ -379,7 +409,7 @@ Public Class Prince
         Return Convert1(args)
     End Function
     Public Function Convert(ByVal xmlPath As String, ByVal pdfPath As String) As Boolean _
-        Implements IPrince.convert
+        Implements IPrince.Convert
         Dim args As String
 
         'args = getArgs() + """" + xmlPath + """ -o """ + pdfPath + """"
@@ -626,7 +656,6 @@ Public Class Prince
         line = ""
         result = ""
 
-
         Do While True
             If stdErrFromPr.Peek() > -1 Then
 
@@ -634,7 +663,7 @@ Public Class Prince
 
                 If line.Substring(0, 4) = "fin|" Then
                     result = line.Substring(4, (line.Length - 4))
-                    Return result
+                    Exit Do
                 End If
 
                 ProcessLine(line)
