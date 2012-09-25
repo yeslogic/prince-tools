@@ -1,4 +1,4 @@
-// Copyright (C) 2005-2006, 2010 YesLogic Pty. Ltd.
+// Copyright (C) 2005-2006, 2010, 2012 YesLogic Pty. Ltd.
 // All rights reserved.
 
 package com.princexml;
@@ -20,11 +20,13 @@ public class Prince
     private PrinceEvents mEvents;
     private String mExePath;
     private ArrayList mStyleSheets;
+    private ArrayList mScripts;
 
     // Input settings
-    private boolean mHTML;
+    private String mInputType;
     private String mBaseURL;
     private String mFileRoot;
+    private boolean mJavaScript;
     private boolean mXInclude;
 
     // Network settings
@@ -78,11 +80,13 @@ public class Prince
 	mEvents = events;
 	mExePath = exePath;
 	mStyleSheets = new ArrayList();
+	mScripts = new ArrayList();
 
 	// Input settings
-	mHTML = false;
+	mInputType = "auto";
 	mBaseURL = null;
 	mFileRoot = null;
+	mJavaScript = false;
 	mXInclude = true;
 
 	// Network settings
@@ -128,6 +132,23 @@ public class Prince
     }
 
     /**
+     * Add a JavaScript script that will be executed before conversion.
+     * @param jsPath The filename of the JavaScript script.
+     */
+    public void addScript(String jsPath)
+    {
+	mScripts.add(jsPath);
+    }
+    
+    /**
+     * Clear all of the JavaScript scripts.
+     */
+    public void clearScripts()
+    {
+        mScripts.clear();
+    }
+
+    /**
      * Specify whether documents should be parsed as HTML or XML/XHTML.
      * By default, all documents will be parsed as XML/XHTML, unless they have
      * a filename extension of ".html" or ".htm" and appear to contain HTML
@@ -143,7 +164,26 @@ public class Prince
      */
     public void setHTML(boolean html)
     {
-	mHTML = html;
+	mInputType = (html ? "html" : "xml");
+    }
+
+    /**
+     * Specify whether documents should be parsed as HTML or XML/XHTML.
+     * By default, all documents will be parsed as XML/XHTML, unless they have
+     * a filename extension of ".html" or ".htm" and appear to contain HTML
+     * rather than XML or XHTML. This method provides a way to override this
+     * autodetection and insist that all documents should be parsed as HTML or
+     * XML.
+     * <p>
+     * This is also necessary if a HTML document is passed to Prince from an
+     * InputStream, as this has no filename and hence Prince will not check
+     * the extension and will always treat it as XML/XHTML unless this method
+     * has been called.
+     * @param inputType "auto", "html", or "xml"
+     */
+    public void setInputType(String inputType)
+    {
+	mInputType = inputType;
     }
 
     /**
@@ -183,6 +223,17 @@ public class Prince
     public void setFileRoot(String fileRoot)
     {
 	mFileRoot = fileRoot;
+    }
+
+    /**
+     * Specify whether JavaScript scripts found in the document should be
+     * executed during document conversion. Scripts will not be executed by
+     * default unless explicitly enabled.
+     * @param javascript True to enable JavaScript script execution.
+     */
+    public void setJavaScript(boolean javascript)
+    {
+	mJavaScript = javascript;
     }
 
     /**
@@ -357,6 +408,70 @@ public class Prince
 	
 	return readMessages(process);
     }
+
+    /**
+     * Convert multiple XML or HTML files to a PDF file.
+     * @param xmlPaths The filenames of the input XML or HTML documents.
+     * @param pdfPath The filename of the output PDF file.
+     * @return True if a PDF file was generated successfully.
+     */
+    public boolean convertMultiple(List xmlPaths, String pdfPath)
+	throws IOException
+    {
+	List cmdline = getCommandLine();
+
+	cmdline.add("--server");
+	cmdline.add("--output="+pdfPath);
+
+	for (int i = 0; i < xmlPaths.size(); ++i)
+	{
+	    String xmlPath = (String) xmlPaths.get(i);
+	    cmdline.add(xmlPath);
+	}
+        
+	Process process = Util.invokeProcess(cmdline);
+	
+	return readMessages(process);
+    }
+
+    /**
+     * Convert an XML or HTML file to a PDF file. This method is useful for
+     * servlets as it allows Prince to write the PDF output directly to the
+     * OutputStream of the servlet response.
+     * <p>
+     * Note that no error/warning messages will be returned via the
+     * PrinceEvents interface when calling this method. This is due to a
+     * limitation of Prince that will be fixed in a future release. In the
+     * meantime, we recommend the use of the <code>setLog()</code> method to
+     * specify a log file that can be used to view error/warning messages from
+     * Prince.
+     * @param xmlPath The filename of the input XML or HTML document.
+     * @param pdfOutput The OutputStream to which Prince will write the PDF
+     * output.
+     * @return True if a PDF file was generated successfully.
+     */
+    public boolean convert(String xmlPath, OutputStream pdfOutput)
+	throws IOException
+    {
+	List cmdline = getCommandLine();
+
+	cmdline.add("--server");
+	cmdline.add("--silent");
+	cmdline.add(xmlPath);
+	cmdline.add("-");
+
+	Process process = Util.invokeProcess(cmdline);
+
+	InputStream outputFromPrince = process.getInputStream();
+
+	// copy the PDF output from Prince stdout
+	Util.copyInputToOutput(outputFromPrince, pdfOutput);
+
+	// close Prince stdout
+        outputFromPrince.close();
+
+	return readMessages(process);
+    }
     
     /**
      * Convert an XML or HTML file to a PDF file. This method is useful for
@@ -425,9 +540,15 @@ public class Prince
 	    cmdline.add("--style=" + cssPath);
 	}
 
-	if (mHTML)
+	for (int i = 0; i < mScripts.size(); ++i)
 	{
-	    cmdline.add("--input=html");
+	    String jsPath = (String) mScripts.get(i);
+	    cmdline.add("--script=" + jsPath);
+	}
+
+	if (mInputType != null && !mInputType.equals("auto"))
+	{
+	    cmdline.add("--input="+mInputType);
 	}
 
 	if (mBaseURL != null)
@@ -438,6 +559,11 @@ public class Prince
 	if (mFileRoot != null)
 	{
 	    cmdline.add("--fileroot="+mFileRoot);
+	}
+
+	if (mJavaScript)
+	{
+	    cmdline.add("--javascript");
 	}
 
 	if (!mXInclude)
