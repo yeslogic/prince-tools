@@ -1,7 +1,7 @@
 #! /bin/sh
 
 src="Prince.java PrinceEvents.java Util.java"
-out="prince-java-r3"
+out="prince-java-r6"
 
 ./build.sh
 ./docs.sh
@@ -22,4 +22,4 @@ cp -r api $out/doc
 
 cp $src $out/src
 
-zip -r prince-java-r3.zip prince-java-r3
+zip -r $out.zip $out
