@@ -37,6 +37,8 @@ public class Prince
 
     // Log settings
     private String mLogFile;
+    private boolean mVerbose;
+    private boolean mDebug;
 
     // PDF settings
     private boolean mEmbedFonts;
@@ -97,6 +99,8 @@ public class Prince
 
 	// Log settings
 	mLogFile = null;
+	mVerbose = false;
+	mDebug = false;
 	
 	// PDF settings
 	mEmbedFonts = true;
@@ -198,6 +202,24 @@ public class Prince
     public void setLog(String logfile)
     {
 	mLogFile = logfile;
+    }
+
+    /**
+     * Enable verbose logging of informative messages.
+     * @param verbose True to enable verbose logging.
+     */
+    public void setVerbose(boolean verbose)
+    {
+	mVerbose = verbose;
+    }
+
+    /**
+     * Enable logging of debug messages.
+     * @param debug True to enable debug logging.
+     */
+    public void setDebug(boolean debug)
+    {
+	mDebug = debug;
     }
 
     /**
@@ -594,6 +616,16 @@ public class Prince
 	if (mLogFile != null)
 	{
 	    cmdline.add("--log="+mLogFile);
+	}
+
+	if (mVerbose)
+	{
+	    cmdline.add("--verbose");
+	}
+
+	if (mDebug)
+	{
+	    cmdline.add("--debug");
 	}
 
 	if (!mEmbedFonts)

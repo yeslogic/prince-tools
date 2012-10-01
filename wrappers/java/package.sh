@@ -1,7 +1,7 @@
 #! /bin/sh
 
 src="Prince.java PrinceEvents.java Util.java"
-out="prince-java-r6"
+out="prince-java-r7"
 
 ./build.sh
 ./docs.sh
