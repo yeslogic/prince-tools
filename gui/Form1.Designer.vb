@@ -82,6 +82,7 @@ Partial Class Form1
         Me.ConvPrgrsBar = New System.Windows.Forms.ProgressBar()
         Me.comboDoctype = New System.Windows.Forms.ComboBox()
         Me.SaveFD = New System.Windows.Forms.SaveFileDialog()
+        Me.lblStatus = New System.Windows.Forms.Label()
         Me.lvwDoc = New prince_gui.UListView()
         Me.GBMain.SuspendLayout()
         Me.optionTabs.SuspendLayout()
@@ -271,6 +272,7 @@ Partial Class Form1
         Me.optionTabs.Controls.Add(Me.CssJavaTab)
         Me.optionTabs.Controls.Add(Me.PdfTab)
         Me.optionTabs.Location = New System.Drawing.Point(720, 16)
+        Me.optionTabs.Multiline = True
         Me.optionTabs.Name = "optionTabs"
         Me.optionTabs.SelectedIndex = 0
         Me.optionTabs.Size = New System.Drawing.Size(480, 592)
@@ -286,7 +288,7 @@ Partial Class Form1
         Me.CssJavaTab.Padding = New System.Windows.Forms.Padding(3)
         Me.CssJavaTab.Size = New System.Drawing.Size(472, 566)
         Me.CssJavaTab.TabIndex = 0
-        Me.CssJavaTab.Text = "CSS & JavaScript"
+        Me.CssJavaTab.Text = "                         CSS & JavaScript                          "
         '
         'GBJavaScript
         '
@@ -441,7 +443,7 @@ Partial Class Form1
         Me.PdfTab.Padding = New System.Windows.Forms.Padding(3)
         Me.PdfTab.Size = New System.Drawing.Size(472, 566)
         Me.PdfTab.TabIndex = 1
-        Me.PdfTab.Text = "PDF Settings"
+        Me.PdfTab.Text = "                         PDF Settings                          "
         '
         'GBAttachment
         '
@@ -661,22 +663,29 @@ Partial Class Form1
         '
         'ConvPrgrsBar
         '
-        Me.ConvPrgrsBar.Location = New System.Drawing.Point(24, 588)
+        Me.ConvPrgrsBar.Location = New System.Drawing.Point(24, 608)
         Me.ConvPrgrsBar.Name = "ConvPrgrsBar"
         Me.ConvPrgrsBar.Size = New System.Drawing.Size(680, 20)
-        Me.ConvPrgrsBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee
         Me.ConvPrgrsBar.TabIndex = 11
-        Me.ConvPrgrsBar.Visible = False
         '
         'comboDoctype
         '
         Me.comboDoctype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.comboDoctype.FormattingEnabled = True
-        Me.comboDoctype.Location = New System.Drawing.Point(105, 614)
+        Me.comboDoctype.Location = New System.Drawing.Point(724, 614)
         Me.comboDoctype.Name = "comboDoctype"
         Me.comboDoctype.Size = New System.Drawing.Size(41, 21)
         Me.comboDoctype.TabIndex = 12
         Me.comboDoctype.Visible = False
+        '
+        'lblStatus
+        '
+        Me.lblStatus.AutoSize = True
+        Me.lblStatus.Location = New System.Drawing.Point(24, 590)
+        Me.lblStatus.Name = "lblStatus"
+        Me.lblStatus.Size = New System.Drawing.Size(0, 13)
+        Me.lblStatus.TabIndex = 13
+        Me.lblStatus.Visible = False
         '
         'lvwDoc
         '
@@ -697,6 +706,7 @@ Partial Class Form1
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(1240, 642)
+        Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.comboDoctype)
         Me.Controls.Add(Me.ConvPrgrsBar)
         Me.Controls.Add(Me.optionTabs)
@@ -779,5 +789,6 @@ Partial Class Form1
     Friend WithEvents bttnJsUp As System.Windows.Forms.Button
     Friend WithEvents bttnCssDown As System.Windows.Forms.Button
     Friend WithEvents bttnCssUp As System.Windows.Forms.Button
+    Friend WithEvents lblStatus As System.Windows.Forms.Label
 
 End Class

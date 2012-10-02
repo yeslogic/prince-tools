@@ -1,5 +1,9 @@
-﻿Public Class Form1
+﻿Imports System.Threading
 
+Delegate Sub SetItemToConvDelegate(ByVal indx As Integer)
+Delegate Sub SaveOutputPathDelegate(ByVal indx As Integer, ByVal outputPath As String)
+
+Public Class Form1
     Private pr As Prince
     Private docItem As ListViewItem
     Private docSubitem As ListViewItem.ListViewSubItem
@@ -9,8 +13,6 @@
     Private openFdInitJsDir As String
     Private openfdInitAttachDir As String
     Private folderBdInitDir As String
-
-
 
     Private Sub addFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addFile.Click
         Dim pathAndFile As String
@@ -90,7 +92,6 @@
         Dim docItem As ListViewItem
         Dim cssItem As ListViewItem
         Dim jsItem As ListViewItem
-        Dim pathAndFileName As String
         Dim outputPath As String
         Dim princePath As String
 
@@ -133,9 +134,10 @@
             pr.SetEmbedSubsetFonts(False)
         End If
 
+        'set mMainForm to Form1
+        pr.SetMainForm(Me)
+
         lvwLog.Items.Clear()
-        ConvPrgrsBar.Value = 0
-        ConvPrgrsBar.Visible = True
         If ChBoxMerge.Checked Then
 
             If lvwDoc.Items.Count > 0 Then
@@ -151,69 +153,91 @@
                         multipleDocs(i) = docItem.Text + " "
                     End If
                 Next
-                Try
-                    If pr.ConvertMultiple(multipleDocs, outputPath) Then
-                        For Each docItem In lvwDoc.Items
-                            docItem.SubItems(3).Text = "Converted"
-                        Next
-                    Else
-                        For Each docItem In lvwDoc.Items
-                            docItem.SubItems(3).Text = "Unsuccessful"
-                        Next
-                    End If
-                Catch ex As ApplicationException
-                    MsgBox(ex.Message + ": " + System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + "\engine\bin")
-                End Try
+
+                pr.SetConvertMultiple(True)
+                pr.ConvertMultiple(multipleDocs, outputPath)
+
             End If
         Else
-            For Each docItem In lvwDoc.Items
-                If docItem.SubItems(1).Text <> "" Then
-                    pathAndFileName = docItem.SubItems(1).Text + "\" + docItem.Text
-                    'set input type for the document
-                    pr.SetInputType(docItem.SubItems(2).Text)
+            If lvwDoc.Items.Count > 0 Then
+                Dim docArray(lvwDoc.Items.Count - 1) As LvwDocItem
+                Dim doc As String
+                Dim saveTo As String
+                Dim docType As String
+                Dim thrdConv As Thread
 
-                    Try
-                        If pr.Convert(pathAndFileName) Then
-                            docItem.SubItems(3).Text = "Converted"
-                        Else
-                            docItem.SubItems(3).Text = "Unsuccessful"
-                        End If
-                    Catch ex As ApplicationException
-                        MsgBox(ex.Message + ": " + System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + "\engine\bin")
-                        Exit For
-                    End Try
-                Else
-                    If docItem.Tag Is Nothing Then
-                        outputPath = GetOutputPath()
-                        If outputPath <> "" Then
-                            docItem.Tag = outputPath
-                        End If
+                For i As Integer = 0 To (lvwDoc.Items.Count - 1) Step 1
+                    docItem = lvwDoc.Items(i)
+                    docType = docItem.SubItems(2).Text
+
+                    If docItem.SubItems(1).Text <> "" Then
+                        doc = docItem.SubItems(1).Text + "\" + docItem.Text
+                        saveTo = ""
                     Else
-                        outputPath = docItem.Tag
+                        doc = docItem.Text
+                        If docItem.Tag IsNot Nothing Then
+                            saveTo = docItem.Tag
+                        Else
+                            saveTo = "URL"
+                        End If
                     End If
 
-                    pathAndFileName = docItem.Text
-                    'set input type for the document
-                    pr.SetInputType(docItem.SubItems(2).Text)
+                    docArray(i) = New LvwDocItem(doc, saveTo, docType)
+                Next
 
-                    Try
-                        If outputPath <> "" Then
-                            If pr.Convert(pathAndFileName, outputPath) Then
-                                docItem.SubItems(3).Text = "Converted"
-                            Else
-                                docItem.SubItems(3).Text = "Unsuccessful"
-                            End If
-                        End If
-                    Catch ex As ApplicationException
-                        MsgBox(ex.Message + ": " + System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + "\engine\bin")
-                        Exit For
-                    End Try
-                End If
-            Next
+
+                thrdConv = New Thread(AddressOf ConvertDocs)
+                thrdConv.SetApartmentState(ApartmentState.STA)
+                thrdConv.IsBackground = True
+                thrdConv.Start(docArray)
+
+            End If
+
         End If
-        ConvPrgrsBar.Visible = False
-
     End Sub
+    Private Sub ConvertDocs(ByVal docArray() As LvwDocItem)
+        Dim arrayItem As LvwDocItem
+        Dim outputPath As String
+
+        For i As Integer = 0 To (docArray.Count - 1) Step 1
+            arrayItem = docArray(i)
+            SetItemToConv(i)
+            pr.SetInputType(arrayItem.docType)
+
+            If arrayItem.outputPath = "" Then   'document is a file
+                pr.Convert(arrayItem.doc)
+            ElseIf arrayItem.outputPath = "URL" Then    'document is a URL, need to get output path
+                outputPath = GetOutputPath()
+                If outputPath <> "" Then
+                    pr.Convert(arrayItem.doc, outputPath)
+                    SaveOutputPath(i, outputPath)
+                End If
+            Else                                        'document is a URL with output path already provided
+                pr.Convert(arrayItem.doc, arrayItem.outputPath)
+            End If
+
+        Next
+    End Sub
+
+    Private Sub SetItemToConv(ByVal indx As Integer)
+        If Me.InvokeRequired Then
+            Dim setItemToConvDel As New SetItemToConvDelegate(AddressOf SetItemToConv)
+            Me.Invoke(setItemToConvDel, New Object() {indx})
+        Else
+            pr.SetItemToConvert(Me.lvwDoc.Items(indx))
+        End If
+    End Sub
+
+    'ensure indx is within range before calling this function
+    Private Sub SaveOutputPath(ByVal indx As Integer, ByVal outputPath As String)
+        If Me.InvokeRequired Then
+            Dim saveOutputPathDel As New SaveOutputPathDelegate(AddressOf SaveOutputPath)
+            Me.Invoke(saveOutputPathDel, New Object() {indx, outputPath})
+        Else
+            Me.lvwDoc.Items(indx).Tag = outputPath
+        End If
+    End Sub
+
     Private Function GetOutputPath() As String
         'SaveFileDialog setting
         SaveFD.InitialDirectory = saveFdInitDir
@@ -627,31 +651,38 @@
     End Function
 
     Private Sub Form1_Resize(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Resize
-        Dim yStretch As Integer
-        Dim xStretch As Integer
+        Dim yStretch As Integer = 0
+        Dim xStretch As Integer = 0
 
         If Me.Height > 680 Then
             yStretch = Me.Height - 680
 
             GBMain.Height = 571 + yStretch
             lvwDoc.Height = 240 + yStretch / 2
+            lvwLog.Height = 176 + yStretch / 2
+            lvwLog.Location = New Point(16, (376 + yStretch / 2))
             ChBoxMerge.Location = New Point(24, (304 + yStretch / 2))
             lblSaveOutput.Location = New Point(21, (334 + yStretch / 2))
             textBoxSave.Location = New Point(110, (332 + yStretch / 2))
             bttnOpenFolder.Location = New Point(396, (330 + yStretch / 2))
             conv.Location = New Point(512, (320 + yStretch / 2))
-            lvwLog.Location = New Point(16, (376 + yStretch / 2))
-            lvwLog.Height = 176 + yStretch / 2
+            ConvPrgrsBar.Location = New Point(24, (608 + yStretch))
+            lblStatus.Location = New Point(24, (590 + yStretch))
         End If
 
         If Me.Width > 1256 Then
             xStretch = Me.Width - 1256
+
             GBMain.Width = 680 + xStretch
+            ConvPrgrsBar.Width = 680 + xStretch
             optionTabs.Location = New Point((720 + xStretch), 16)
 
             lvwDoc.Width = 584 + xStretch
             lvwLog.Width = 640 + xStretch
         End If
+
+        bttnDocUp.Location = New Point((626 + xStretch), (100 + yStretch / 4))
+        bttnDocDown.Location = New Point((626 + xStretch), (186 + yStretch / 4))
 
     End Sub
 
@@ -809,7 +840,7 @@
 
                     lvwDoc.Items.Remove(itm)
                     lvwDoc.Items.Insert(newIndex, itm)
-
+                    lvwDoc.Focus()
                 End If
             End If
         End If
@@ -906,5 +937,16 @@
                 lvwAttachment.Items.Add(itm)
             Next
         End If
+    End Sub
+
+End Class
+Public Class LvwDocItem
+    Public doc As String
+    Public outputPath As String
+    Public docType As String
+    Public Sub New(ByVal doc As String, ByVal outputPath As String, ByVal docType As String)
+        Me.doc = doc
+        Me.outputPath = outputPath
+        Me.docType = docType
     End Sub
 End Class

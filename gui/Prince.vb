@@ -2,6 +2,15 @@
 Imports System.IO
 Imports System.Text
 Imports System
+Imports System.Threading
+
+Delegate Sub ShowProgressDelegate(ByVal Prgrs As String)
+Delegate Sub ShowOutputMessageDelegate(ByVal Msg As String)
+Delegate Sub ShowStatusDelegate(ByVal stat As String)
+Delegate Sub DisableComponentsDelegate()
+Delegate Sub EnableComponentsDelegate()
+Delegate Sub ConversionSuccessDelegate()
+Delegate Sub ConversionFailureDelegate()
 
 Public Interface IPrince
     Sub SetEncryptInfo(ByVal keyBits As Integer, _
@@ -34,14 +43,18 @@ Public Interface IPrince
     Sub SetEmbedSubsetFonts(ByVal embedSubset As Boolean)
     Sub SetCompress(ByVal compress As Boolean)
     Sub SetEncrypt(ByVal encrypt As Boolean)
-    Function Convert(ByVal xmlPath As String) As Boolean
-    Function Convert(ByVal xmlPath As String, ByVal pdfPath As String) As Boolean
+    Sub SetMainForm(ByVal mainForm As Form1)
+    Sub SetItemToConvert(ByVal itemToConvert As ListViewItem)
+    Sub SetConvertMultiple(ByVal convertMultiple As Boolean)
+    Sub Convert(ByVal xmlPath As String)
+    Sub Convert(ByVal xmlPath As String, ByVal pdfPath As String)
+    Sub ConvertMultiple(ByVal xmlPaths As String(), ByVal pdfPath As String)
     Function Convert(ByVal xmlPath As String, ByVal pdfOutput As Stream) As Boolean
     Function Convert(ByVal xmlInput As Stream, ByVal pdfPath As String) As Boolean
     Function Convert(ByVal xmlInput As Stream, ByVal pdfOutput As Stream) As Boolean
     Function ConvertMemoryStream(ByVal xmlInput As MemoryStream, ByVal pdfOutput As Stream) As Boolean
     Function ConvertString(ByVal xmlInput As String, ByVal pdfOutput As Stream) As Boolean
-    Function ConvertMultiple(ByVal xmlPaths As String(), ByVal pdfPath As String) As Boolean
+
 
 End Interface
 
@@ -144,6 +157,10 @@ Public Class Prince
     Private mCompress As Boolean
     Private mEncrypt As Boolean
     Private mEncryptInfo As String
+    Private mMainForm As Form1
+    Private mItemToConvert As ListViewItem
+    Private mConvertMultiple As Boolean
+
     Public Sub New()
         Me.mPrincePath = ""
         Me.mStyleSheets = ""
@@ -166,6 +183,9 @@ Public Class Prince
         Me.mCompress = True
         Me.mEncrypt = False
         Me.mEncryptInfo = ""
+        Me.mMainForm = Nothing
+        Me.mItemToConvert = Nothing
+        Me.mConvertMultiple = False
     End Sub
     Public Sub New(ByVal princePath As String)
         Me.mPrincePath = princePath
@@ -189,6 +209,9 @@ Public Class Prince
         Me.mCompress = True
         Me.mEncrypt = False
         Me.mEncryptInfo = ""
+        Me.mMainForm = Nothing
+        Me.mItemToConvert = Nothing
+        Me.mConvertMultiple = False
     End Sub
     Public Sub SetLicenseFile(ByVal file As String) _
         Implements IPrince.SetLicenseFile
@@ -323,6 +346,19 @@ Public Class Prince
         Implements IPrince.ClearFileAttachments
         mFileAttachments = ""
     End Sub
+    Public Sub SetMainForm(ByVal mainForm As Form1) _
+        Implements IPrince.SetMainForm
+        mMainForm = mainForm
+    End Sub
+    Public Sub SetItemToConvert(ByVal itemToConvert As ListViewItem) _
+        Implements IPrince.SetItemToConvert
+        mItemToConvert = itemToConvert
+    End Sub
+
+    Public Sub SetConvertMultiple(ByVal convertMultiple As Boolean) _
+        Implements IPrince.SetConvertMultiple
+        mConvertMultiple = convertMultiple
+    End Sub
     Private Function getArgs() As String
         Dim args As String
 
@@ -400,28 +436,31 @@ Public Class Prince
 
         Return args
     End Function
-    Public Function Convert(ByVal xmlPath As String) As Boolean _
+
+    Public Sub Convert(ByVal xmlPath As String) _
         Implements IPrince.Convert
         Dim args As String
 
         args = getArgs() + Chr(34) + xmlPath + Chr(34)
 
-        Return Convert1(args)
-    End Function
-    Public Function Convert(ByVal xmlPath As String, ByVal pdfPath As String) As Boolean _
+        Convert1(args)
+    End Sub
+    Public Sub Convert(ByVal xmlPath As String, ByVal pdfPath As String) _
         Implements IPrince.Convert
         Dim args As String
 
         'args = getArgs() + """" + xmlPath + """ -o """ + pdfPath + """"
         args = getArgs() + Chr(34) + xmlPath + Chr(34) + " -o " + Chr(34) + pdfPath + Chr(34)
 
-        Return Convert1(args)
-    End Function
-    Public Function ConvertMultiple(ByVal xmlPaths As String(), ByVal pdfPath As String) As Boolean _
+        Convert1(args)
+
+    End Sub
+    Public Sub ConvertMultiple(ByVal xmlPaths As String(), ByVal pdfPath As String) _
         Implements IPrince.ConvertMultiple
         Dim args As String
         Dim doc As String
         Dim docPaths As String
+        Dim thrdConv1 As Thread
 
         docPaths = ""
         For Each doc In xmlPaths
@@ -430,8 +469,12 @@ Public Class Prince
 
         args = getArgs() + docPaths + " -o " + Chr(34) + pdfPath + Chr(34)
 
-        Return Convert1(args)
-    End Function
+        thrdConv1 = New Thread(AddressOf Convert1)
+        thrdConv1.SetApartmentState(ApartmentState.STA)
+        thrdConv1.IsBackground = True
+        thrdConv1.Start(args)
+
+    End Sub
     Public Function Convert(ByVal xmlPath As String, ByVal pdfOutput As Stream) As Boolean _
         Implements IPrince.Convert
 
@@ -594,20 +637,130 @@ Public Class Prince
         End If
     End Function
 
-    Private Function Convert1(ByVal args As String) As Boolean
-        Dim pr As Process = StartPrince(args)
+    Private Sub Convert1(ByVal args As String)
+        Dim prs As Process
 
-        If Not (pr Is Nothing) Then
-            If ReadMessages(pr) = "success" Then
-                Return True
+        Try
+            prs = StartPrince(args)
+
+            If prs IsNot Nothing Then
+                DisableComponents()
+                If ReadMessages(prs) = "success" Then
+                    ConversionSuccess()
+                Else
+                    ConversionFailure()
+                End If
+                EnableComponents()
             Else
-                Return False
+                ConversionFailure()
             End If
-        Else
-            Return False
-        End If
 
-    End Function
+        Catch ex As ApplicationException
+            MsgBox(ex.Message)
+            ConversionFailure()
+        End Try
+
+    End Sub
+
+    Private Sub DisableComponents()
+        If mMainForm.InvokeRequired Then
+            Dim disableComponentsDel As New DisableComponentsDelegate(AddressOf DisableComponents)
+            mMainForm.Invoke(disableComponentsDel)
+        Else
+            mMainForm.addFile.Enabled = False
+            mMainForm.addURL.Enabled = False
+            mMainForm.removeFile.Enabled = False
+            mMainForm.clearAll.Enabled = False
+            mMainForm.bttnAbout.Enabled = False
+            mMainForm.bttnLicense.Enabled = False
+            mMainForm.ChBoxMerge.Enabled = False
+            mMainForm.lblSaveOutput.Enabled = False
+            mMainForm.textBoxSave.Enabled = False
+            mMainForm.bttnOpenFolder.Enabled = False
+            mMainForm.bttnDocUp.Enabled = False
+            mMainForm.bttnDocDown.Enabled = False
+            mMainForm.conv.Enabled = False
+            mMainForm.lvwDoc.Enabled = False
+            mMainForm.optionTabs.Enabled = False
+
+            'enable progressBar
+            mMainForm.ConvPrgrsBar.Visible = True
+            mMainForm.ConvPrgrsBar.Value = 0
+            mMainForm.ConvPrgrsBar.Style = ProgressBarStyle.Marquee
+
+        End If
+    End Sub
+    Private Sub EnableComponents()
+        If mMainForm.InvokeRequired Then
+            Dim enableComponentsDel As New EnableComponentsDelegate(AddressOf EnableComponents)
+            mMainForm.Invoke(enableComponentsDel)
+        Else
+            mMainForm.addFile.Enabled = True
+            mMainForm.addURL.Enabled = True
+            mMainForm.removeFile.Enabled = True
+            mMainForm.clearAll.Enabled = True
+            mMainForm.bttnAbout.Enabled = True
+            mMainForm.bttnLicense.Enabled = True
+            mMainForm.ChBoxMerge.Enabled = True
+            mMainForm.lblSaveOutput.Enabled = True
+            mMainForm.textBoxSave.Enabled = True
+            mMainForm.bttnOpenFolder.Enabled = True
+            mMainForm.bttnDocUp.Enabled = True
+            mMainForm.bttnDocDown.Enabled = True
+            mMainForm.conv.Enabled = True
+            mMainForm.lvwDoc.Enabled = True
+            mMainForm.optionTabs.Enabled = True
+
+            'disable progressBar
+            mMainForm.ConvPrgrsBar.Value = 0
+            mMainForm.ConvPrgrsBar.Visible = False
+            'disable status label
+            mMainForm.lblStatus.Visible = False
+
+        End If
+    End Sub
+    Private Sub ConversionSuccess()
+        Dim docItem As ListViewItem
+
+        If mMainForm.InvokeRequired Then
+            Dim conversionSuccessDel As New ConversionSuccessDelegate(AddressOf ConversionSuccess)
+            mMainForm.Invoke(conversionSuccessDel)
+        Else
+            If mConvertMultiple Then
+                For Each docItem In mMainForm.lvwDoc.Items
+                    docItem.SubItems(3).Text = "Converted"
+                Next
+                SetConvertMultiple(False)
+
+            ElseIf mItemToConvert IsNot Nothing Then
+                mItemToConvert.SubItems(3).Text = "Converted"
+                SetItemToConvert(Nothing)
+            Else
+
+            End If
+        End If
+    End Sub
+    Private Sub ConversionFailure()
+        Dim docItem As ListViewItem
+
+        If mMainForm.InvokeRequired Then
+            Dim conversionFailureDel As New ConversionFailureDelegate(AddressOf ConversionFailure)
+            mMainForm.Invoke(conversionFailureDel)
+        Else
+            If mConvertMultiple Then
+                For Each docItem In mMainForm.lvwDoc.Items
+                    docItem.SubItems(3).Text = "Unsuccessful"
+                Next
+                SetConvertMultiple(False)
+
+            ElseIf mItemToConvert IsNot Nothing Then
+                mItemToConvert.SubItems(3).Text = "Unsuccessful"
+                SetItemToConvert(Nothing)
+            Else
+
+            End If
+        End If
+    End Sub
     Private Function StartPrince(ByVal args As String) As Process
         Dim ERROR_FILE_NOT_FOUND As Integer = 2
         Dim ERROR_PATH_NOT_FOUND As Integer = 3
@@ -636,11 +789,11 @@ Public Class Prince
             Dim msg As String
             msg = ex.Message
             If ex.NativeErrorCode = ERROR_FILE_NOT_FOUND Then
-                msg = msg + " -- Please verify that Prince.exe is in the directory"
+                msg = msg + " -- Please verify that Prince.exe is in the directory: " + mPrincePath
             ElseIf ex.NativeErrorCode = ERROR_ACCESS_DENIED Then
-                msg = msg + " -- Please check system permission to run Prince."
+                msg = msg + " -- Please check system permission to run Prince: " + mPrincePath
             ElseIf ex.NativeErrorCode = ERROR_PATH_NOT_FOUND Then
-                msg = msg + " -- Please check Prince path."
+                msg = msg + " -- Please check Prince path: " + mPrincePath
             Else
                 ' just use ex.Message
             End If
@@ -667,13 +820,13 @@ Public Class Prince
                 End If
 
                 ProcessLine(line)
-                Application.DoEvents()
+                'Application.DoEvents()
 
             Else
                 If stdErrFromPr.EndOfStream Then
                     Exit Do
                 Else
-                    Application.DoEvents()
+                    'Application.DoEvents()
                 End If
             End If
         Loop
@@ -703,7 +856,7 @@ Public Class Prince
             ShowOutputMessage(Msg)
         ElseIf ID = "sta|" Then
             Stat = Content
-            'ShowStatus(Stat)
+            ShowStatus(Stat)
         ElseIf ID = "lic|" Then
             'Lic = Content
             'ShowLicDetails Lic
@@ -717,46 +870,52 @@ Public Class Prince
     End Sub
 
     Private Sub ShowOutputMessage(ByVal Msg As String)
-        Dim docName As String
-        Dim msgType As String
-        Dim msgBody As String
-        Dim message As String
-        Dim barPos As Integer
-        Dim msgItem As ListViewItem
-
-        msgType = Msg.Substring(0, 4)
-        msgBody = Msg.Substring(4, (Msg.Length - 4))
-
-        If Not msgBody.Contains("|") Then
-            MsgBox("Incorrect Error Format!", vbCritical)
-            Exit Sub
-        End If
-
-        barPos = msgBody.IndexOf("|")
-        docName = msgBody.Substring(0, barPos)
-        message = msgBody.Substring(barPos + 1)
-
-        msgItem = New ListViewItem
-
-        If msgType = "inf|" Then
-            msgItem.Text = "Info"
-            msgItem.SubItems.Add(docName)
-            msgItem.SubItems.Add(message)
-            Form1.lvwLog.Items.Add(msgItem)
-        ElseIf msgType = "wrn|" Then
-            msgItem.Text = "Warning"
-            msgItem.SubItems.Add(docName)
-            msgItem.SubItems.Add(message)
-            Form1.lvwLog.Items.Add(msgItem)
-        ElseIf msgType = "err|" Then
-            msgItem.Text = "Error"
-            msgItem.SubItems.Add(docName)
-            msgItem.SubItems.Add(message)
-            Form1.lvwLog.Items.Add(msgItem)
+        If mMainForm.InvokeRequired Then
+            Dim shMsgDelegate As New ShowOutputMessageDelegate(AddressOf ShowOutputMessage)
+            mMainForm.lvwLog.Invoke(shMsgDelegate, New Object() {Msg})
         Else
-            MsgBox("Unknown Error Type!", vbCritical)
-            Exit Sub
+            Dim docName As String
+            Dim msgType As String
+            Dim msgBody As String
+            Dim message As String
+            Dim barPos As Integer
+            Dim msgItem As ListViewItem
+
+            msgType = Msg.Substring(0, 4)
+            msgBody = Msg.Substring(4, (Msg.Length - 4))
+
+            If Not msgBody.Contains("|") Then
+                MsgBox("Incorrect Error Format!", vbCritical)
+                Exit Sub
+            End If
+
+            barPos = msgBody.IndexOf("|")
+            docName = msgBody.Substring(0, barPos)
+            message = msgBody.Substring(barPos + 1)
+
+            msgItem = New ListViewItem
+
+            If msgType = "inf|" Then
+                msgItem.Text = "Info"
+                msgItem.SubItems.Add(docName)
+                msgItem.SubItems.Add(message)
+                Form1.lvwLog.Items.Add(msgItem)
+            ElseIf msgType = "wrn|" Then
+                msgItem.Text = "Warning"
+                msgItem.SubItems.Add(docName)
+                msgItem.SubItems.Add(message)
+                Form1.lvwLog.Items.Add(msgItem)
+            ElseIf msgType = "err|" Then
+                msgItem.Text = "Error"
+                msgItem.SubItems.Add(docName)
+                msgItem.SubItems.Add(message)
+                mMainForm.lvwLog.Items.Add(msgItem)
+            Else
+                MsgBox("Unknown Error Type!", vbCritical)
+                Exit Sub
+            End If
         End If
+
 
     End Sub
 
@@ -766,7 +925,26 @@ Public Class Prince
         If iprgrs < 0 Then
             iprgrs = 0
         End If
-        Form1.ConvPrgrsBar.Value = iprgrs
+
+        If mMainForm.InvokeRequired Then
+            Dim shPrgrsDelegate As New ShowProgressDelegate(AddressOf ShowProgress)
+            mMainForm.ConvPrgrsBar.Invoke(shPrgrsDelegate, New Object() {Prgrs})
+        Else
+            If mMainForm.ConvPrgrsBar.Style <> ProgressBarStyle.Blocks Then
+                mMainForm.ConvPrgrsBar.Style = ProgressBarStyle.Blocks
+            End If
+            mMainForm.ConvPrgrsBar.Value = iprgrs
+        End If
+    End Sub
+
+    Private Sub ShowStatus(ByVal stat As String)
+        If mMainForm.InvokeRequired Then
+            Dim showStatusDel As New ShowStatusDelegate(AddressOf ShowStatus)
+            mMainForm.Invoke(showStatusDel, New Object() {stat})
+        Else
+            mMainForm.lblStatus.Visible = True
+            mMainForm.lblStatus.Text = stat
+        End If
     End Sub
 End Class
 
