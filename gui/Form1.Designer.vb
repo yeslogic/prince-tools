@@ -22,6 +22,7 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.GBMain = New System.Windows.Forms.GroupBox()
         Me.bttnDocDown = New System.Windows.Forms.Button()
@@ -30,7 +31,9 @@ Partial Class Form1
         Me.bttnAbout = New System.Windows.Forms.Button()
         Me.GBLine2 = New System.Windows.Forms.GroupBox()
         Me.GBLine1 = New System.Windows.Forms.GroupBox()
+        Me.lvwDoc = New prince_gui.UListView()
         Me.conv = New System.Windows.Forms.Button()
+        Me.convImages = New System.Windows.Forms.ImageList(Me.components)
         Me.bttnOpenFolder = New System.Windows.Forms.Button()
         Me.textBoxSave = New System.Windows.Forms.TextBox()
         Me.lblSaveOutput = New System.Windows.Forms.Label()
@@ -43,6 +46,7 @@ Partial Class Form1
         Me.optionTabs = New System.Windows.Forms.TabControl()
         Me.CssJavaTab = New System.Windows.Forms.TabPage()
         Me.GBJavaScript = New System.Windows.Forms.GroupBox()
+        Me.lblGbJsTitle = New System.Windows.Forms.Label()
         Me.bttnJsDown = New System.Windows.Forms.Button()
         Me.bttnJsUp = New System.Windows.Forms.Button()
         Me.editJS = New System.Windows.Forms.Button()
@@ -50,6 +54,7 @@ Partial Class Form1
         Me.addJS = New System.Windows.Forms.Button()
         Me.lvwJS = New System.Windows.Forms.ListView()
         Me.GBCss = New System.Windows.Forms.GroupBox()
+        Me.lblGbCssTitle = New System.Windows.Forms.Label()
         Me.bttnCssDown = New System.Windows.Forms.Button()
         Me.bttnCssUp = New System.Windows.Forms.Button()
         Me.editCss = New System.Windows.Forms.Button()
@@ -83,7 +88,6 @@ Partial Class Form1
         Me.comboDoctype = New System.Windows.Forms.ComboBox()
         Me.SaveFD = New System.Windows.Forms.SaveFileDialog()
         Me.lblStatus = New System.Windows.Forms.Label()
-        Me.lvwDoc = New prince_gui.UListView()
         Me.GBMain.SuspendLayout()
         Me.optionTabs.SuspendLayout()
         Me.CssJavaTab.SuspendLayout()
@@ -115,6 +119,7 @@ Partial Class Form1
         Me.GBMain.Controls.Add(Me.addURL)
         Me.GBMain.Controls.Add(Me.addFile)
         Me.GBMain.Controls.Add(Me.lvwLog)
+        Me.GBMain.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.GBMain.Location = New System.Drawing.Point(24, 12)
         Me.GBMain.Name = "GBMain"
         Me.GBMain.Size = New System.Drawing.Size(680, 571)
@@ -123,64 +128,100 @@ Partial Class Form1
         '
         'bttnDocDown
         '
-        Me.bttnDocDown.Location = New System.Drawing.Point(626, 186)
+        Me.bttnDocDown.FlatAppearance.BorderSize = 0
+        Me.bttnDocDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bttnDocDown.Image = CType(resources.GetObject("bttnDocDown.Image"), System.Drawing.Image)
+        Me.bttnDocDown.Location = New System.Drawing.Point(615, 198)
         Me.bttnDocDown.Name = "bttnDocDown"
-        Me.bttnDocDown.Size = New System.Drawing.Size(30, 49)
+        Me.bttnDocDown.Size = New System.Drawing.Size(40, 40)
         Me.bttnDocDown.TabIndex = 17
-        Me.bttnDocDown.Text = "Down"
         Me.bttnDocDown.UseVisualStyleBackColor = True
         '
         'bttnDocUp
         '
-        Me.bttnDocUp.Location = New System.Drawing.Point(626, 100)
+        Me.bttnDocUp.FlatAppearance.BorderSize = 0
+        Me.bttnDocUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bttnDocUp.Image = CType(resources.GetObject("bttnDocUp.Image"), System.Drawing.Image)
+        Me.bttnDocUp.Location = New System.Drawing.Point(615, 149)
         Me.bttnDocUp.Name = "bttnDocUp"
-        Me.bttnDocUp.Size = New System.Drawing.Size(30, 49)
+        Me.bttnDocUp.Size = New System.Drawing.Size(40, 42)
         Me.bttnDocUp.TabIndex = 16
-        Me.bttnDocUp.Text = "Up"
         Me.bttnDocUp.UseVisualStyleBackColor = True
         '
         'bttnLicense
         '
+        Me.bttnLicense.FlatAppearance.BorderSize = 0
+        Me.bttnLicense.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bttnLicense.Image = CType(resources.GetObject("bttnLicense.Image"), System.Drawing.Image)
         Me.bttnLicense.Location = New System.Drawing.Point(519, 16)
         Me.bttnLicense.Name = "bttnLicense"
-        Me.bttnLicense.Size = New System.Drawing.Size(80, 32)
+        Me.bttnLicense.Size = New System.Drawing.Size(76, 70)
         Me.bttnLicense.TabIndex = 15
         Me.bttnLicense.Text = "License"
+        Me.bttnLicense.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.bttnLicense.UseVisualStyleBackColor = True
         '
         'bttnAbout
         '
+        Me.bttnAbout.FlatAppearance.BorderSize = 0
+        Me.bttnAbout.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bttnAbout.Image = CType(resources.GetObject("bttnAbout.Image"), System.Drawing.Image)
         Me.bttnAbout.Location = New System.Drawing.Point(428, 16)
         Me.bttnAbout.Name = "bttnAbout"
-        Me.bttnAbout.Size = New System.Drawing.Size(80, 32)
+        Me.bttnAbout.Size = New System.Drawing.Size(76, 70)
         Me.bttnAbout.TabIndex = 14
         Me.bttnAbout.Text = "About"
+        Me.bttnAbout.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.bttnAbout.UseVisualStyleBackColor = True
         '
         'GBLine2
         '
-        Me.GBLine2.Location = New System.Drawing.Point(610, 7)
+        Me.GBLine2.Location = New System.Drawing.Point(610, 10)
         Me.GBLine2.Name = "GBLine2"
-        Me.GBLine2.Size = New System.Drawing.Size(2, 45)
+        Me.GBLine2.Size = New System.Drawing.Size(2, 80)
         Me.GBLine2.TabIndex = 13
         Me.GBLine2.TabStop = False
         '
         'GBLine1
         '
-        Me.GBLine1.Location = New System.Drawing.Point(420, 7)
+        Me.GBLine1.Location = New System.Drawing.Point(420, 10)
         Me.GBLine1.Name = "GBLine1"
-        Me.GBLine1.Size = New System.Drawing.Size(2, 45)
+        Me.GBLine1.Size = New System.Drawing.Size(2, 80)
         Me.GBLine1.TabIndex = 12
         Me.GBLine1.TabStop = False
         '
+        'lvwDoc
+        '
+        Me.lvwDoc.AllowDrop = True
+        Me.lvwDoc.FullRowSelect = True
+        Me.lvwDoc.Location = New System.Drawing.Point(16, 100)
+        Me.lvwDoc.Name = "lvwDoc"
+        Me.lvwDoc.Size = New System.Drawing.Size(584, 198)
+        Me.lvwDoc.TabIndex = 11
+        Me.lvwDoc.UseCompatibleStateImageBehavior = False
+        Me.lvwDoc.View = System.Windows.Forms.View.Details
+        Me.lvwDoc.WatermarkAlpha = 140
+        Me.lvwDoc.WatermarkImage = CType(resources.GetObject("lvwDoc.WatermarkImage"), System.Drawing.Bitmap)
+        '
         'conv
         '
-        Me.conv.Location = New System.Drawing.Point(512, 320)
+        Me.conv.FlatAppearance.BorderSize = 0
+        Me.conv.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.conv.ImageIndex = 0
+        Me.conv.ImageList = Me.convImages
+        Me.conv.Location = New System.Drawing.Point(498, 311)
         Me.conv.Name = "conv"
-        Me.conv.Size = New System.Drawing.Size(120, 40)
+        Me.conv.Size = New System.Drawing.Size(156, 55)
         Me.conv.TabIndex = 10
-        Me.conv.Text = "Convert"
         Me.conv.UseVisualStyleBackColor = True
+        '
+        'convImages
+        '
+        Me.convImages.ImageStream = CType(resources.GetObject("convImages.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.convImages.TransparentColor = System.Drawing.Color.Transparent
+        Me.convImages.Images.SetKeyName(0, "convert.png")
+        Me.convImages.Images.SetKeyName(1, "converthover.png")
+        Me.convImages.Images.SetKeyName(2, "convertactive.png")
         '
         'bttnOpenFolder
         '
@@ -223,38 +264,57 @@ Partial Class Form1
         '
         'clearAll
         '
-        Me.clearAll.Location = New System.Drawing.Point(326, 16)
+        Me.clearAll.FlatAppearance.BorderSize = 0
+        Me.clearAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.clearAll.Image = CType(resources.GetObject("clearAll.Image"), System.Drawing.Image)
+        Me.clearAll.Location = New System.Drawing.Point(330, 16)
         Me.clearAll.Name = "clearAll"
-        Me.clearAll.Size = New System.Drawing.Size(80, 32)
+        Me.clearAll.Size = New System.Drawing.Size(76, 70)
         Me.clearAll.TabIndex = 5
         Me.clearAll.Text = "Clear All"
+        Me.clearAll.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.clearAll.UseVisualStyleBackColor = True
         '
         'removeFile
         '
-        Me.removeFile.Location = New System.Drawing.Point(225, 16)
+        Me.removeFile.FlatAppearance.BorderSize = 0
+        Me.removeFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.removeFile.Image = CType(resources.GetObject("removeFile.Image"), System.Drawing.Image)
+        Me.removeFile.Location = New System.Drawing.Point(234, 16)
         Me.removeFile.Name = "removeFile"
-        Me.removeFile.Size = New System.Drawing.Size(80, 32)
+        Me.removeFile.Size = New System.Drawing.Size(76, 70)
         Me.removeFile.TabIndex = 4
         Me.removeFile.Text = "Remove"
+        Me.removeFile.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.removeFile.UseVisualStyleBackColor = True
         '
         'addURL
         '
-        Me.addURL.Location = New System.Drawing.Point(124, 16)
+        Me.addURL.FlatAppearance.BorderSize = 0
+        Me.addURL.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.addURL.Image = CType(resources.GetObject("addURL.Image"), System.Drawing.Image)
+        Me.addURL.Location = New System.Drawing.Point(138, 16)
         Me.addURL.Name = "addURL"
-        Me.addURL.Size = New System.Drawing.Size(80, 32)
+        Me.addURL.Size = New System.Drawing.Size(76, 70)
         Me.addURL.TabIndex = 3
         Me.addURL.Text = "Add URL"
+        Me.addURL.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.addURL.UseVisualStyleBackColor = True
         '
         'addFile
         '
-        Me.addFile.Location = New System.Drawing.Point(24, 16)
+        Me.addFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.addFile.FlatAppearance.BorderColor = System.Drawing.SystemColors.Control
+        Me.addFile.FlatAppearance.BorderSize = 0
+        Me.addFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.addFile.Image = CType(resources.GetObject("addFile.Image"), System.Drawing.Image)
+        Me.addFile.Location = New System.Drawing.Point(42, 16)
         Me.addFile.Name = "addFile"
-        Me.addFile.Size = New System.Drawing.Size(80, 32)
+        Me.addFile.Size = New System.Drawing.Size(76, 70)
         Me.addFile.TabIndex = 2
-        Me.addFile.Text = "Add File(s)"
+        Me.addFile.Text = "Add file(s)"
+        Me.addFile.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.addFile.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.addFile.UseVisualStyleBackColor = True
         '
         'lvwLog
@@ -271,9 +331,11 @@ Partial Class Form1
         '
         Me.optionTabs.Controls.Add(Me.CssJavaTab)
         Me.optionTabs.Controls.Add(Me.PdfTab)
+        Me.optionTabs.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.optionTabs.Location = New System.Drawing.Point(720, 16)
         Me.optionTabs.Multiline = True
         Me.optionTabs.Name = "optionTabs"
+        Me.optionTabs.Padding = New System.Drawing.Point(6, 8)
         Me.optionTabs.SelectedIndex = 0
         Me.optionTabs.Size = New System.Drawing.Size(480, 592)
         Me.optionTabs.TabIndex = 1
@@ -283,151 +345,209 @@ Partial Class Form1
         Me.CssJavaTab.BackColor = System.Drawing.SystemColors.Control
         Me.CssJavaTab.Controls.Add(Me.GBJavaScript)
         Me.CssJavaTab.Controls.Add(Me.GBCss)
-        Me.CssJavaTab.Location = New System.Drawing.Point(4, 22)
+        Me.CssJavaTab.Location = New System.Drawing.Point(4, 34)
         Me.CssJavaTab.Name = "CssJavaTab"
         Me.CssJavaTab.Padding = New System.Windows.Forms.Padding(3)
-        Me.CssJavaTab.Size = New System.Drawing.Size(472, 566)
+        Me.CssJavaTab.Size = New System.Drawing.Size(472, 554)
         Me.CssJavaTab.TabIndex = 0
-        Me.CssJavaTab.Text = "                         CSS & JavaScript                          "
+        Me.CssJavaTab.Text = "                       CSS & JavaScript                        "
         '
         'GBJavaScript
         '
+        Me.GBJavaScript.Controls.Add(Me.lblGbJsTitle)
         Me.GBJavaScript.Controls.Add(Me.bttnJsDown)
         Me.GBJavaScript.Controls.Add(Me.bttnJsUp)
         Me.GBJavaScript.Controls.Add(Me.editJS)
         Me.GBJavaScript.Controls.Add(Me.removeJS)
         Me.GBJavaScript.Controls.Add(Me.addJS)
         Me.GBJavaScript.Controls.Add(Me.lvwJS)
-        Me.GBJavaScript.Location = New System.Drawing.Point(24, 304)
+        Me.GBJavaScript.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GBJavaScript.Location = New System.Drawing.Point(24, 284)
         Me.GBJavaScript.Name = "GBJavaScript"
-        Me.GBJavaScript.Size = New System.Drawing.Size(424, 248)
+        Me.GBJavaScript.Size = New System.Drawing.Size(424, 268)
         Me.GBJavaScript.TabIndex = 1
         Me.GBJavaScript.TabStop = False
-        Me.GBJavaScript.Text = "JavaScript (JS)"
+        '
+        'lblGbJsTitle
+        '
+        Me.lblGbJsTitle.AutoSize = True
+        Me.lblGbJsTitle.Location = New System.Drawing.Point(155, 1)
+        Me.lblGbJsTitle.Name = "lblGbJsTitle"
+        Me.lblGbJsTitle.Size = New System.Drawing.Size(90, 13)
+        Me.lblGbJsTitle.TabIndex = 6
+        Me.lblGbJsTitle.Text = "  JavaScript (JS)  "
         '
         'bttnJsDown
         '
-        Me.bttnJsDown.Location = New System.Drawing.Point(380, 161)
+        Me.bttnJsDown.FlatAppearance.BorderSize = 0
+        Me.bttnJsDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bttnJsDown.Image = CType(resources.GetObject("bttnJsDown.Image"), System.Drawing.Image)
+        Me.bttnJsDown.Location = New System.Drawing.Point(374, 176)
         Me.bttnJsDown.Name = "bttnJsDown"
-        Me.bttnJsDown.Size = New System.Drawing.Size(30, 49)
+        Me.bttnJsDown.Size = New System.Drawing.Size(40, 40)
         Me.bttnJsDown.TabIndex = 5
-        Me.bttnJsDown.Text = "Down"
         Me.bttnJsDown.UseVisualStyleBackColor = True
         '
         'bttnJsUp
         '
-        Me.bttnJsUp.Location = New System.Drawing.Point(380, 87)
+        Me.bttnJsUp.FlatAppearance.BorderSize = 0
+        Me.bttnJsUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bttnJsUp.Image = CType(resources.GetObject("bttnJsUp.Image"), System.Drawing.Image)
+        Me.bttnJsUp.Location = New System.Drawing.Point(374, 128)
         Me.bttnJsUp.Name = "bttnJsUp"
-        Me.bttnJsUp.Size = New System.Drawing.Size(30, 49)
+        Me.bttnJsUp.Size = New System.Drawing.Size(40, 42)
         Me.bttnJsUp.TabIndex = 4
-        Me.bttnJsUp.Text = "Up"
         Me.bttnJsUp.UseVisualStyleBackColor = True
         '
         'editJS
         '
-        Me.editJS.Location = New System.Drawing.Point(260, 24)
+        Me.editJS.FlatAppearance.BorderSize = 0
+        Me.editJS.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.editJS.Image = CType(resources.GetObject("editJS.Image"), System.Drawing.Image)
+        Me.editJS.Location = New System.Drawing.Point(265, 19)
         Me.editJS.Name = "editJS"
-        Me.editJS.Size = New System.Drawing.Size(75, 23)
+        Me.editJS.Size = New System.Drawing.Size(60, 60)
         Me.editJS.TabIndex = 3
         Me.editJS.Text = "Edit JS"
+        Me.editJS.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.editJS.UseVisualStyleBackColor = True
         '
         'removeJS
         '
-        Me.removeJS.Location = New System.Drawing.Point(144, 24)
+        Me.removeJS.FlatAppearance.BorderSize = 0
+        Me.removeJS.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.removeJS.Image = CType(resources.GetObject("removeJS.Image"), System.Drawing.Image)
+        Me.removeJS.Location = New System.Drawing.Point(168, 19)
         Me.removeJS.Name = "removeJS"
-        Me.removeJS.Size = New System.Drawing.Size(75, 23)
+        Me.removeJS.Size = New System.Drawing.Size(60, 60)
         Me.removeJS.TabIndex = 2
         Me.removeJS.Text = "Remove"
+        Me.removeJS.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.removeJS.UseVisualStyleBackColor = True
         '
         'addJS
         '
-        Me.addJS.Location = New System.Drawing.Point(24, 24)
+        Me.addJS.FlatAppearance.BorderSize = 0
+        Me.addJS.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.addJS.Image = CType(resources.GetObject("addJS.Image"), System.Drawing.Image)
+        Me.addJS.Location = New System.Drawing.Point(71, 19)
         Me.addJS.Name = "addJS"
-        Me.addJS.Size = New System.Drawing.Size(75, 23)
+        Me.addJS.Size = New System.Drawing.Size(60, 60)
         Me.addJS.TabIndex = 1
         Me.addJS.Text = "Add JS"
+        Me.addJS.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.addJS.UseVisualStyleBackColor = True
         '
         'lvwJS
         '
         Me.lvwJS.AllowDrop = True
         Me.lvwJS.FullRowSelect = True
-        Me.lvwJS.Location = New System.Drawing.Point(8, 56)
+        Me.lvwJS.Location = New System.Drawing.Point(8, 89)
         Me.lvwJS.Name = "lvwJS"
-        Me.lvwJS.Size = New System.Drawing.Size(360, 184)
+        Me.lvwJS.Size = New System.Drawing.Size(360, 171)
         Me.lvwJS.TabIndex = 0
         Me.lvwJS.UseCompatibleStateImageBehavior = False
         Me.lvwJS.View = System.Windows.Forms.View.Details
         '
         'GBCss
         '
+        Me.GBCss.Controls.Add(Me.lblGbCssTitle)
         Me.GBCss.Controls.Add(Me.bttnCssDown)
         Me.GBCss.Controls.Add(Me.bttnCssUp)
         Me.GBCss.Controls.Add(Me.editCss)
         Me.GBCss.Controls.Add(Me.removeCss)
         Me.GBCss.Controls.Add(Me.addCss)
         Me.GBCss.Controls.Add(Me.lvwCSS)
-        Me.GBCss.Location = New System.Drawing.Point(24, 8)
+        Me.GBCss.Location = New System.Drawing.Point(24, 14)
         Me.GBCss.Name = "GBCss"
         Me.GBCss.Size = New System.Drawing.Size(424, 264)
         Me.GBCss.TabIndex = 0
         Me.GBCss.TabStop = False
-        Me.GBCss.Text = "Cascading Style Sheet (CSS)"
+        '
+        'lblGbCssTitle
+        '
+        Me.lblGbCssTitle.AutoSize = True
+        Me.lblGbCssTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblGbCssTitle.Location = New System.Drawing.Point(125, 1)
+        Me.lblGbCssTitle.Name = "lblGbCssTitle"
+        Me.lblGbCssTitle.Size = New System.Drawing.Size(156, 13)
+        Me.lblGbCssTitle.TabIndex = 6
+        Me.lblGbCssTitle.Text = "  Cascading Style Sheet (CSS)  "
         '
         'bttnCssDown
         '
-        Me.bttnCssDown.Location = New System.Drawing.Point(380, 160)
+        Me.bttnCssDown.FlatAppearance.BorderSize = 0
+        Me.bttnCssDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bttnCssDown.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bttnCssDown.Image = CType(resources.GetObject("bttnCssDown.Image"), System.Drawing.Image)
+        Me.bttnCssDown.Location = New System.Drawing.Point(374, 171)
         Me.bttnCssDown.Name = "bttnCssDown"
-        Me.bttnCssDown.Size = New System.Drawing.Size(30, 49)
+        Me.bttnCssDown.Size = New System.Drawing.Size(40, 40)
         Me.bttnCssDown.TabIndex = 5
-        Me.bttnCssDown.Text = "Down"
         Me.bttnCssDown.UseVisualStyleBackColor = True
         '
         'bttnCssUp
         '
-        Me.bttnCssUp.Location = New System.Drawing.Point(380, 85)
+        Me.bttnCssUp.FlatAppearance.BorderSize = 0
+        Me.bttnCssUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bttnCssUp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bttnCssUp.Image = CType(resources.GetObject("bttnCssUp.Image"), System.Drawing.Image)
+        Me.bttnCssUp.Location = New System.Drawing.Point(374, 123)
         Me.bttnCssUp.Name = "bttnCssUp"
-        Me.bttnCssUp.Size = New System.Drawing.Size(30, 49)
+        Me.bttnCssUp.Size = New System.Drawing.Size(40, 42)
         Me.bttnCssUp.TabIndex = 4
-        Me.bttnCssUp.Text = "Up"
         Me.bttnCssUp.UseVisualStyleBackColor = True
         '
         'editCss
         '
-        Me.editCss.Location = New System.Drawing.Point(260, 24)
+        Me.editCss.FlatAppearance.BorderSize = 0
+        Me.editCss.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.editCss.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.editCss.Image = CType(resources.GetObject("editCss.Image"), System.Drawing.Image)
+        Me.editCss.Location = New System.Drawing.Point(265, 19)
         Me.editCss.Name = "editCss"
-        Me.editCss.Size = New System.Drawing.Size(75, 23)
+        Me.editCss.Size = New System.Drawing.Size(60, 60)
         Me.editCss.TabIndex = 3
         Me.editCss.Text = "Edit CSS"
+        Me.editCss.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.editCss.UseVisualStyleBackColor = True
         '
         'removeCss
         '
-        Me.removeCss.Location = New System.Drawing.Point(144, 24)
+        Me.removeCss.FlatAppearance.BorderSize = 0
+        Me.removeCss.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.removeCss.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.removeCss.Image = CType(resources.GetObject("removeCss.Image"), System.Drawing.Image)
+        Me.removeCss.Location = New System.Drawing.Point(168, 19)
         Me.removeCss.Name = "removeCss"
-        Me.removeCss.Size = New System.Drawing.Size(75, 23)
+        Me.removeCss.Size = New System.Drawing.Size(60, 60)
         Me.removeCss.TabIndex = 2
         Me.removeCss.Text = "Remove"
+        Me.removeCss.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.removeCss.UseVisualStyleBackColor = True
         '
         'addCss
         '
-        Me.addCss.Location = New System.Drawing.Point(24, 24)
+        Me.addCss.FlatAppearance.BorderSize = 0
+        Me.addCss.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.addCss.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.addCss.Image = CType(resources.GetObject("addCss.Image"), System.Drawing.Image)
+        Me.addCss.Location = New System.Drawing.Point(71, 19)
         Me.addCss.Name = "addCss"
-        Me.addCss.Size = New System.Drawing.Size(75, 23)
+        Me.addCss.Size = New System.Drawing.Size(60, 60)
         Me.addCss.TabIndex = 1
         Me.addCss.Text = "Add CSS"
+        Me.addCss.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.addCss.UseVisualStyleBackColor = True
         '
         'lvwCSS
         '
         Me.lvwCSS.AllowDrop = True
+        Me.lvwCSS.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lvwCSS.FullRowSelect = True
-        Me.lvwCSS.Location = New System.Drawing.Point(8, 56)
+        Me.lvwCSS.Location = New System.Drawing.Point(8, 85)
         Me.lvwCSS.Name = "lvwCSS"
-        Me.lvwCSS.Size = New System.Drawing.Size(360, 200)
+        Me.lvwCSS.Size = New System.Drawing.Size(360, 171)
         Me.lvwCSS.TabIndex = 0
         Me.lvwCSS.UseCompatibleStateImageBehavior = False
         Me.lvwCSS.View = System.Windows.Forms.View.Details
@@ -438,48 +558,57 @@ Partial Class Form1
         Me.PdfTab.Controls.Add(Me.GBAttachment)
         Me.PdfTab.Controls.Add(Me.GBEmbedFonts)
         Me.PdfTab.Controls.Add(Me.GBEncrypt)
-        Me.PdfTab.Location = New System.Drawing.Point(4, 22)
+        Me.PdfTab.Location = New System.Drawing.Point(4, 34)
         Me.PdfTab.Name = "PdfTab"
         Me.PdfTab.Padding = New System.Windows.Forms.Padding(3)
-        Me.PdfTab.Size = New System.Drawing.Size(472, 566)
+        Me.PdfTab.Size = New System.Drawing.Size(472, 554)
         Me.PdfTab.TabIndex = 1
-        Me.PdfTab.Text = "                         PDF Settings                          "
+        Me.PdfTab.Text = "                       PDF Settings                        "
         '
         'GBAttachment
         '
         Me.GBAttachment.Controls.Add(Me.BttnRemoveAttach)
         Me.GBAttachment.Controls.Add(Me.BttnAddAttach)
         Me.GBAttachment.Controls.Add(Me.lvwAttachment)
+        Me.GBAttachment.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GBAttachment.Location = New System.Drawing.Point(12, 388)
         Me.GBAttachment.Name = "GBAttachment"
         Me.GBAttachment.Size = New System.Drawing.Size(445, 165)
         Me.GBAttachment.TabIndex = 2
         Me.GBAttachment.TabStop = False
-        Me.GBAttachment.Text = "Attachment"
+        Me.GBAttachment.Text = " Attachment"
         '
         'BttnRemoveAttach
         '
-        Me.BttnRemoveAttach.Location = New System.Drawing.Point(376, 99)
+        Me.BttnRemoveAttach.FlatAppearance.BorderSize = 0
+        Me.BttnRemoveAttach.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.BttnRemoveAttach.Image = CType(resources.GetObject("BttnRemoveAttach.Image"), System.Drawing.Image)
+        Me.BttnRemoveAttach.Location = New System.Drawing.Point(372, 90)
         Me.BttnRemoveAttach.Name = "BttnRemoveAttach"
-        Me.BttnRemoveAttach.Size = New System.Drawing.Size(63, 28)
+        Me.BttnRemoveAttach.Size = New System.Drawing.Size(60, 60)
         Me.BttnRemoveAttach.TabIndex = 2
         Me.BttnRemoveAttach.Text = "Remove"
+        Me.BttnRemoveAttach.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.BttnRemoveAttach.UseVisualStyleBackColor = True
         '
         'BttnAddAttach
         '
-        Me.BttnAddAttach.Location = New System.Drawing.Point(376, 46)
+        Me.BttnAddAttach.FlatAppearance.BorderSize = 0
+        Me.BttnAddAttach.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.BttnAddAttach.Image = CType(resources.GetObject("BttnAddAttach.Image"), System.Drawing.Image)
+        Me.BttnAddAttach.Location = New System.Drawing.Point(372, 25)
         Me.BttnAddAttach.Name = "BttnAddAttach"
-        Me.BttnAddAttach.Size = New System.Drawing.Size(63, 30)
+        Me.BttnAddAttach.Size = New System.Drawing.Size(60, 60)
         Me.BttnAddAttach.TabIndex = 1
         Me.BttnAddAttach.Text = "Add"
+        Me.BttnAddAttach.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.BttnAddAttach.UseVisualStyleBackColor = True
         '
         'lvwAttachment
         '
         Me.lvwAttachment.AllowDrop = True
         Me.lvwAttachment.FullRowSelect = True
-        Me.lvwAttachment.Location = New System.Drawing.Point(18, 19)
+        Me.lvwAttachment.Location = New System.Drawing.Point(8, 19)
         Me.lvwAttachment.Name = "lvwAttachment"
         Me.lvwAttachment.Size = New System.Drawing.Size(352, 137)
         Me.lvwAttachment.TabIndex = 0
@@ -490,12 +619,13 @@ Partial Class Form1
         '
         Me.GBEmbedFonts.Controls.Add(Me.ChEmbedSubsetFontFile)
         Me.GBEmbedFonts.Controls.Add(Me.ChEmbedFontFile)
+        Me.GBEmbedFonts.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GBEmbedFonts.Location = New System.Drawing.Point(12, 308)
         Me.GBEmbedFonts.Name = "GBEmbedFonts"
         Me.GBEmbedFonts.Size = New System.Drawing.Size(445, 74)
         Me.GBEmbedFonts.TabIndex = 1
         Me.GBEmbedFonts.TabStop = False
-        Me.GBEmbedFonts.Text = "Embed Fonts"
+        Me.GBEmbedFonts.Text = " Embed Fonts "
         '
         'ChEmbedSubsetFontFile
         '
@@ -535,6 +665,7 @@ Partial Class Form1
         Me.GBEncrypt.Controls.Add(Me.ChDisallowModify)
         Me.GBEncrypt.Controls.Add(Me.ChDisallowPrint)
         Me.GBEncrypt.Controls.Add(Me.ChEncrypt)
+        Me.GBEncrypt.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GBEncrypt.Location = New System.Drawing.Point(12, 13)
         Me.GBEncrypt.Name = "GBEncrypt"
         Me.GBEncrypt.Size = New System.Drawing.Size(445, 289)
@@ -667,6 +798,7 @@ Partial Class Form1
         Me.ConvPrgrsBar.Name = "ConvPrgrsBar"
         Me.ConvPrgrsBar.Size = New System.Drawing.Size(680, 20)
         Me.ConvPrgrsBar.TabIndex = 11
+        Me.ConvPrgrsBar.Visible = False
         '
         'comboDoctype
         '
@@ -687,19 +819,6 @@ Partial Class Form1
         Me.lblStatus.TabIndex = 13
         Me.lblStatus.Visible = False
         '
-        'lvwDoc
-        '
-        Me.lvwDoc.AllowDrop = True
-        Me.lvwDoc.FullRowSelect = True
-        Me.lvwDoc.Location = New System.Drawing.Point(16, 58)
-        Me.lvwDoc.Name = "lvwDoc"
-        Me.lvwDoc.Size = New System.Drawing.Size(584, 240)
-        Me.lvwDoc.TabIndex = 11
-        Me.lvwDoc.UseCompatibleStateImageBehavior = False
-        Me.lvwDoc.View = System.Windows.Forms.View.Details
-        Me.lvwDoc.WatermarkAlpha = 140
-        Me.lvwDoc.WatermarkImage = CType(resources.GetObject("lvwDoc.WatermarkImage"), System.Drawing.Bitmap)
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -718,7 +837,9 @@ Partial Class Form1
         Me.optionTabs.ResumeLayout(False)
         Me.CssJavaTab.ResumeLayout(False)
         Me.GBJavaScript.ResumeLayout(False)
+        Me.GBJavaScript.PerformLayout()
         Me.GBCss.ResumeLayout(False)
+        Me.GBCss.PerformLayout()
         Me.PdfTab.ResumeLayout(False)
         Me.GBAttachment.ResumeLayout(False)
         Me.GBEmbedFonts.ResumeLayout(False)
@@ -790,5 +911,8 @@ Partial Class Form1
     Friend WithEvents bttnCssDown As System.Windows.Forms.Button
     Friend WithEvents bttnCssUp As System.Windows.Forms.Button
     Friend WithEvents lblStatus As System.Windows.Forms.Label
+    Friend WithEvents convImages As System.Windows.Forms.ImageList
+    Friend WithEvents lblGbCssTitle As System.Windows.Forms.Label
+    Friend WithEvents lblGbJsTitle As System.Windows.Forms.Label
 
 End Class

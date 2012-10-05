@@ -123,7 +123,7 @@ Public Class UListView
         Dim bmp As Bitmap = New Bitmap(FromImage.Width, FromImage.Height)
         Dim g As Graphics = Graphics.FromImage(bmp)
         g.Clear(Me.BackColor)
-        g.DrawImage(FromImage, 240, 80, CInt(bmp.Width / 2), CInt(bmp.Height / 2))
+        g.DrawImage(FromImage, 310, 130, CInt(bmp.Width * 1 / 3), CInt(bmp.Height * 1 / 3))
         g.FillRectangle(New SolidBrush(Color.FromArgb(WatermarkAlpha, Me.BackColor.R, Me.BackColor.G, Me.BackColor.B)), New RectangleF(0, 0, bmp.Width, bmp.Height))
         g.Dispose()
         Return bmp.GetHbitmap

@@ -13,6 +13,13 @@ Public Class Form1
     Private openFdInitJsDir As String
     Private openfdInitAttachDir As String
     Private folderBdInitDir As String
+    Private lastConvBttnState As buttonStates
+
+    Private Enum buttonStates
+        normal = 0
+        hover = 1
+        pressed = 2
+    End Enum
 
     Private Sub addFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addFile.Click
         Dim pathAndFile As String
@@ -86,6 +93,9 @@ Public Class Form1
         openFdInitJsDir = Application.StartupPath
         openfdInitAttachDir = Application.StartupPath
         folderBdInitDir = Environment.SpecialFolder.MyComputer
+
+        lastConvBttnState = buttonStates.normal
+
     End Sub
 
     Private Sub conv_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles conv.Click
@@ -95,8 +105,8 @@ Public Class Form1
         Dim outputPath As String
         Dim princePath As String
 
-        princePath = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + _
-                      "\engine\bin\prince.exe"
+        princePath = Chr(34) + System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + _
+                      "\engine\bin\prince.exe" + Chr(34)
 
         pr = New Prince(princePath)
 
@@ -656,33 +666,35 @@ Public Class Form1
 
         If Me.Height > 680 Then
             yStretch = Me.Height - 680
-
-            GBMain.Height = 571 + yStretch
-            lvwDoc.Height = 240 + yStretch / 2
-            lvwLog.Height = 176 + yStretch / 2
-            lvwLog.Location = New Point(16, (376 + yStretch / 2))
-            ChBoxMerge.Location = New Point(24, (304 + yStretch / 2))
-            lblSaveOutput.Location = New Point(21, (334 + yStretch / 2))
-            textBoxSave.Location = New Point(110, (332 + yStretch / 2))
-            bttnOpenFolder.Location = New Point(396, (330 + yStretch / 2))
-            conv.Location = New Point(512, (320 + yStretch / 2))
-            ConvPrgrsBar.Location = New Point(24, (608 + yStretch))
-            lblStatus.Location = New Point(24, (590 + yStretch))
         End If
-
         If Me.Width > 1256 Then
             xStretch = Me.Width - 1256
-
-            GBMain.Width = 680 + xStretch
-            ConvPrgrsBar.Width = 680 + xStretch
-            optionTabs.Location = New Point((720 + xStretch), 16)
-
-            lvwDoc.Width = 584 + xStretch
-            lvwLog.Width = 640 + xStretch
         End If
 
-        bttnDocUp.Location = New Point((626 + xStretch), (100 + yStretch / 4))
-        bttnDocDown.Location = New Point((626 + xStretch), (186 + yStretch / 4))
+        GBMain.Width = 680 + xStretch
+        GBMain.Height = 571 + yStretch
+
+        lvwDoc.Width = 584 + xStretch
+        lvwDoc.Height = 198 + yStretch / 2
+
+        lvwLog.Location = New Point(16, (376 + yStretch / 2))
+        lvwLog.Width = 640 + xStretch
+        lvwLog.Height = 176 + yStretch / 2
+
+        ChBoxMerge.Location = New Point(24, (304 + yStretch / 2))
+        lblSaveOutput.Location = New Point(21, (334 + yStretch / 2))
+        textBoxSave.Location = New Point(110, (332 + yStretch / 2))
+        bttnOpenFolder.Location = New Point(396, (330 + yStretch / 2))
+
+        bttnDocUp.Location = New Point((615 + xStretch), (149 + yStretch / 4))
+        bttnDocDown.Location = New Point((615 + xStretch), (198 + yStretch / 4))
+
+        conv.Location = New Point(498, (311 + yStretch / 2))
+        ConvPrgrsBar.Location = New Point(24, (608 + yStretch))
+        ConvPrgrsBar.Width = 680 + xStretch
+
+        lblStatus.Location = New Point(24, (590 + yStretch))
+        optionTabs.Location = New Point((720 + xStretch), 16)
 
     End Sub
 
@@ -835,13 +847,24 @@ Public Class Form1
         If lvwDoc.Items.Count > 0 Then
             If lvwDoc.SelectedItems.Count > 0 Then
                 If lvwDoc.SelectedIndices(0) > 0 Then
-                    Dim itm As ListViewItem = lvwDoc.SelectedItems(0)
-                    Dim newIndex As Integer = lvwDoc.SelectedIndices(0) - 1
+                    'Dim itm As ListViewItem = lvwDoc.SelectedItems(0)
+                    'Dim newIndex As Integer = lvwDoc.SelectedIndices(0) - 1
 
-                    lvwDoc.Items.Remove(itm)
-                    lvwDoc.Items.Insert(newIndex, itm)
-                    lvwDoc.Focus()
+                    'lvwDoc.Items.Remove(itm)
+                    'lvwDoc.Items.Insert(newIndex, itm)
+                    'lvwDoc.Focus()
+                    For i As Integer = 0 To (lvwDoc.SelectedItems.Count - 1) Step 1
+                        Dim itm As ListViewItem
+                        Dim newIndex As Integer
+
+                        itm = lvwDoc.SelectedItems(i)
+                        newIndex = lvwDoc.SelectedIndices(i) - 1
+
+                        lvwDoc.Items.Remove(itm)
+                        lvwDoc.Items.Insert(newIndex, itm)
+                    Next
                 End If
+                lvwDoc.Focus()
             End If
         End If
     End Sub
@@ -939,7 +962,217 @@ Public Class Form1
         End If
     End Sub
 
+    Private Sub conv_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles conv.MouseEnter
+        If lastConvBttnState = buttonStates.normal Then
+            lastConvBttnState = buttonStates.hover
+            conv.ImageIndex = buttonStates.hover
+            'Else
+            '    lastConvBttnState = buttonStates.pressed
+            '    conv.ImageIndex = buttonStates.pressed
+        End If
+    End Sub
+
+    Private Sub conv_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles conv.MouseLeave
+        If lastConvBttnState = buttonStates.hover Then
+            lastConvBttnState = buttonStates.normal
+            conv.ImageIndex = buttonStates.normal
+            'ElseIf lastConvBttnState = buttonStates.pressed Then
+            '    lastConvBttnState = buttonStates.hover
+            '    conv.ImageIndex = buttonStates.hover
+            'Else
+            '    conv.ImageIndex = buttonStates.normal
+        End If
+    End Sub
+
+    Private Sub conv_MouseDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles conv.MouseDown
+        If lastConvBttnState = buttonStates.hover Then
+            lastConvBttnState = buttonStates.pressed
+            conv.ImageIndex = buttonStates.pressed
+        End If
+    End Sub
+    Private Sub conv_MouseUp(ByVal sender As System.Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles conv.MouseUp
+        If lastConvBttnState = buttonStates.pressed Then
+            lastConvBttnState = buttonStates.hover
+            conv.ImageIndex = buttonStates.hover
+        End If
+    End Sub
+
+    Private Sub conv_MouseMove(ByVal sender As System.Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles conv.MouseMove
+        If lastConvBttnState = buttonStates.pressed Then
+            If (e.X < 0) Or (e.X > conv.Width) Or (e.Y < 0) Or (e.Y > conv.Height) Then
+                lastConvBttnState = buttonStates.pressed
+                conv.ImageIndex = buttonStates.hover
+            End If
+        End If
+        If lastConvBttnState = buttonStates.pressed Then
+            If (e.X >= 0) And (e.X <= conv.Width) And (e.Y >= 0) And (e.Y <= conv.Height) Then
+                lastConvBttnState = buttonStates.pressed
+                conv.ImageIndex = buttonStates.pressed
+            End If
+        End If
+    End Sub
+
+    Private Sub addFile_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addFile.MouseEnter
+        addFile.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub addFile_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addFile.MouseLeave
+        addFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub addURL_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addURL.MouseEnter
+        addURL.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub addURL_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addURL.MouseLeave
+        addURL.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub removeFile_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles removeFile.MouseEnter
+        removeFile.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub removeFile_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles removeFile.MouseLeave
+        removeFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub clearAll_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles clearAll.MouseEnter
+        clearAll.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub clearAll_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles clearAll.MouseLeave
+        clearAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub bttnAbout_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnAbout.MouseEnter
+        bttnAbout.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub bttnAbout_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnAbout.MouseLeave
+        bttnAbout.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub bttnLicense_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnLicense.MouseEnter
+        bttnLicense.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub bttnLicense_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnLicense.MouseLeave
+        bttnLicense.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub addCss_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addCss.MouseEnter
+        addCss.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub addCss_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addCss.MouseLeave
+        addCss.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub removeCss_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles removeCss.MouseEnter
+        removeCss.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub removeCss_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles removeCss.MouseLeave
+        removeCss.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub editCss_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles editCss.MouseEnter
+        editCss.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub editCss_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles editCss.MouseLeave
+        editCss.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub addJS_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addJS.MouseEnter
+        addJS.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub addJS_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addJS.MouseLeave
+        addJS.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub removeJS_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles removeJS.MouseEnter
+        removeJS.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub removeJS_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles removeJS.MouseLeave
+        removeJS.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub editJS_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles editJS.MouseEnter
+        editJS.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub editJS_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles editJS.MouseLeave
+        editJS.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub bttnDocUp_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnDocUp.MouseEnter
+        bttnDocUp.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub bttnDocUp_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnDocUp.MouseLeave
+        bttnDocUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub bttnDocDown_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnDocDown.MouseEnter
+        bttnDocDown.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub bttnDocDown_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnDocDown.MouseLeave
+        bttnDocDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub bttnCssUp_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnCssUp.MouseEnter
+        bttnCssUp.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub bttnCssUp_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnCssUp.MouseLeave
+        bttnCssUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub bttnCssDown_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnCssDown.MouseEnter
+        bttnCssDown.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub bttnCssDown_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnCssDown.MouseLeave
+        bttnCssDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub bttnJsUp_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnJsUp.MouseEnter
+        bttnJsUp.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub bttnJsUp_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnJsUp.MouseLeave
+        bttnJsUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub bttnJsDown_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnJsDown.MouseEnter
+        bttnJsDown.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub bttnJsDown_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnJsDown.MouseLeave
+        bttnJsDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub BttnAddAttach_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BttnAddAttach.MouseEnter
+        BttnAddAttach.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub BttnAddAttach_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BttnAddAttach.MouseLeave
+        BttnAddAttach.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
+
+    Private Sub BttnRemoveAttach_MouseEnter(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BttnRemoveAttach.MouseEnter
+        BttnRemoveAttach.FlatStyle = System.Windows.Forms.FlatStyle.Standard
+    End Sub
+
+    Private Sub BttnRemoveAttach_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BttnRemoveAttach.MouseLeave
+        BttnRemoveAttach.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+    End Sub
 End Class
+
 Public Class LvwDocItem
     Public doc As String
     Public outputPath As String
