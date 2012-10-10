@@ -830,6 +830,7 @@ Partial Class Form1
         Me.Controls.Add(Me.ConvPrgrsBar)
         Me.Controls.Add(Me.optionTabs)
         Me.Controls.Add(Me.GBMain)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Form1"
         Me.Text = "Prince"
         Me.GBMain.ResumeLayout(False)

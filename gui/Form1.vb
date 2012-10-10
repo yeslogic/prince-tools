@@ -87,6 +87,21 @@ Public Class Form1
         lvwAttachment.Columns.Add("Documents", 174, HorizontalAlignment.Left)
         lvwAttachment.Columns.Add("Location", 174, HorizontalAlignment.Left)
 
+        'initial settings for pdf encryption
+        ChDisallowPrint.Enabled = False
+        ChDisallowModify.Enabled = False
+        ChDisallowCopyText.Enabled = False
+        ChDisallowAnnotation.Enabled = False
+        lblKeyBits.Enabled = False
+        RButton40.Enabled = False
+        RButton128.Enabled = False
+        LblUserPass.Enabled = False
+        textBoxUserPass.Text = ""
+        textBoxUserPass.Enabled = False
+        LblOwnerPass.Enabled = False
+        textBoxOwnerPass.Text = ""
+        textBoxOwnerPass.Enabled = False
+
         saveFdInitDir = My.Computer.FileSystem.SpecialDirectories.MyDocuments
         openFdInitDocDir = Application.StartupPath
         openFdInitCssDir = Application.StartupPath
@@ -105,8 +120,8 @@ Public Class Form1
         Dim outputPath As String
         Dim princePath As String
 
-        princePath = Chr(34) + System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + _
-                      "\engine\bin\prince.exe" + Chr(34)
+        princePath = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + _
+                      "\engine\bin\prince.exe"
 
         pr = New Prince(princePath)
 
@@ -229,6 +244,7 @@ Public Class Form1
         Next
     End Sub
 
+    'ensure indx is within range before calling this function
     Private Sub SetItemToConv(ByVal indx As Integer)
         If Me.InvokeRequired Then
             Dim setItemToConvDel As New SetItemToConvDelegate(AddressOf SetItemToConv)
@@ -450,7 +466,8 @@ Public Class Form1
         docItem.Selected = False
     End Sub
 
-    Private Sub ChEncrypt_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ChEncrypt.Click
+    Private Sub ChEncrypt_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ChEncrypt.CheckedChanged
+
         If ChEncrypt.Checked Then
             ChDisallowPrint.Enabled = True
             ChDisallowModify.Enabled = True
@@ -464,16 +481,24 @@ Public Class Form1
             LblOwnerPass.Enabled = True
             textBoxOwnerPass.Enabled = True
         Else
+            ChDisallowPrint.Checked = False
+            ChDisallowModify.Checked = False
+            ChDisallowCopyText.Checked = False
+            ChDisallowAnnotation.Checked = False
             ChDisallowPrint.Enabled = False
             ChDisallowModify.Enabled = False
             ChDisallowCopyText.Enabled = False
             ChDisallowAnnotation.Enabled = False
             lblKeyBits.Enabled = False
+            RButton40.Checked = False
+            RButton128.Checked = False
             RButton40.Enabled = False
             RButton128.Enabled = False
             LblUserPass.Enabled = False
+            textBoxUserPass.Text = ""
             textBoxUserPass.Enabled = False
             LblOwnerPass.Enabled = False
+            textBoxOwnerPass.Text = ""
             textBoxOwnerPass.Enabled = False
         End If
     End Sub
@@ -521,7 +546,7 @@ Public Class Form1
         End If
     End Sub
     Private Sub addURL_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles addURL.Click
-        Form2.Show()
+        Form2.ShowDialog(Me)
     End Sub
 
     Private Function GetUserPass() As String
@@ -752,7 +777,7 @@ Public Class Form1
     End Sub
 
     Private Sub bttnAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnAbout.Click
-        Form3.Show()
+        Form3.ShowDialog(Me)
     End Sub
 
     Private Sub BttnAddAttach_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BttnAddAttach.Click
@@ -798,12 +823,13 @@ Public Class Form1
         If ChEmbedFontFile.Checked Then
             ChEmbedSubsetFontFile.Enabled = True
         Else
+            ChEmbedSubsetFontFile.Checked = False
             ChEmbedSubsetFontFile.Enabled = False
         End If
     End Sub
 
     Private Sub bttnLicense_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnLicense.Click
-        Form4.Show()
+        Form4.ShowDialog(Me)
     End Sub
 
     Private Sub lvwDoc_DragEnter(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles lvwDoc.DragEnter
@@ -844,28 +870,102 @@ Public Class Form1
     End Sub
 
     Private Sub bttnDocUp_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnDocUp.Click
-        If lvwDoc.Items.Count > 0 Then
-            If lvwDoc.SelectedItems.Count > 0 Then
-                If lvwDoc.SelectedIndices(0) > 0 Then
-                    'Dim itm As ListViewItem = lvwDoc.SelectedItems(0)
-                    'Dim newIndex As Integer = lvwDoc.SelectedIndices(0) - 1
+        If lvwDoc.Items.Count > 0 AndAlso lvwDoc.SelectedItems.Count > 0 Then
+            If lvwDoc.SelectedIndices(0) > 0 Then
+                Dim itm As ListViewItem
+                Dim newIndex As Integer
+                For i As Integer = 0 To (lvwDoc.SelectedItems.Count - 1) Step 1
+                    itm = lvwDoc.SelectedItems(i)
+                    newIndex = lvwDoc.SelectedIndices(i) - 1
 
-                    'lvwDoc.Items.Remove(itm)
-                    'lvwDoc.Items.Insert(newIndex, itm)
-                    'lvwDoc.Focus()
-                    For i As Integer = 0 To (lvwDoc.SelectedItems.Count - 1) Step 1
-                        Dim itm As ListViewItem
-                        Dim newIndex As Integer
-
-                        itm = lvwDoc.SelectedItems(i)
-                        newIndex = lvwDoc.SelectedIndices(i) - 1
-
-                        lvwDoc.Items.Remove(itm)
-                        lvwDoc.Items.Insert(newIndex, itm)
-                    Next
-                End If
-                lvwDoc.Focus()
+                    lvwDoc.Items.Remove(itm)
+                    lvwDoc.Items.Insert(newIndex, itm)
+                Next
             End If
+            lvwDoc.Focus()
+        End If
+    End Sub
+    Private Sub bttnDocDown_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnDocDown.Click
+        If lvwDoc.Items.Count > 0 AndAlso lvwDoc.SelectedItems.Count > 0 Then
+            If lvwDoc.SelectedIndices(lvwDoc.SelectedItems.Count - 1) < (lvwDoc.Items.Count - 1) Then
+                Dim itm As ListViewItem
+                Dim newIndex As Integer
+                For i As Integer = (lvwDoc.SelectedItems.Count - 1) To 0 Step -1
+                    itm = lvwDoc.SelectedItems(i)
+                    newIndex = lvwDoc.SelectedIndices(i) + 1
+
+                    lvwDoc.Items.Remove(itm)
+                    lvwDoc.Items.Insert(newIndex, itm)
+                Next
+            End If
+            lvwDoc.Focus()
+        End If
+    End Sub
+    Private Sub bttnCssUp_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnCssUp.Click
+        If lvwCSS.Items.Count > 0 AndAlso lvwCSS.SelectedItems.Count > 0 Then
+            If lvwCSS.SelectedIndices(0) > 0 Then
+                Dim itm As ListViewItem
+                Dim newIndex As Integer
+                For i As Integer = 0 To (lvwCSS.SelectedItems.Count - 1) Step 1
+                    itm = lvwCSS.SelectedItems(i)
+                    newIndex = lvwCSS.SelectedIndices(i) - 1
+
+                    lvwCSS.Items.Remove(itm)
+                    lvwCSS.Items.Insert(newIndex, itm)
+                Next
+            End If
+            lvwCSS.Focus()
+        End If
+    End Sub
+
+    Private Sub bttnJsUp_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnJsUp.Click
+        If lvwJS.Items.Count > 0 AndAlso lvwJS.SelectedItems.Count > 0 Then
+            If lvwJS.SelectedIndices(0) > 0 Then
+                Dim itm As ListViewItem
+                Dim newIndex As Integer
+                For i As Integer = 0 To (lvwJS.SelectedItems.Count - 1) Step 1
+                    itm = lvwJS.SelectedItems(i)
+                    newIndex = lvwJS.SelectedIndices(i) - 1
+
+                    lvwJS.Items.Remove(itm)
+                    lvwJS.Items.Insert(newIndex, itm)
+                Next
+            End If
+            lvwJS.Focus()
+        End If
+    End Sub
+
+    Private Sub bttnCssDown_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnCssDown.Click
+        If lvwCSS.Items.Count > 0 AndAlso lvwCSS.SelectedItems.Count > 0 Then
+            If lvwCSS.SelectedIndices(lvwCSS.SelectedItems.Count - 1) < (lvwCSS.Items.Count - 1) Then
+                Dim itm As ListViewItem
+                Dim newIndex As Integer
+                For i As Integer = (lvwCSS.SelectedItems.Count - 1) To 0 Step -1
+                    itm = lvwCSS.SelectedItems(i)
+                    newIndex = lvwCSS.SelectedIndices(i) + 1
+
+                    lvwCSS.Items.Remove(itm)
+                    lvwCSS.Items.Insert(newIndex, itm)
+                Next
+            End If
+            lvwCSS.Focus()
+        End If
+    End Sub
+
+    Private Sub bttnJsDown_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnJsDown.Click
+        If lvwJS.Items.Count > 0 AndAlso lvwJS.SelectedItems.Count > 0 Then
+            If lvwJS.SelectedIndices(lvwJS.SelectedItems.Count - 1) < (lvwJS.Items.Count - 1) Then
+                Dim itm As ListViewItem
+                Dim newIndex As Integer
+                For i As Integer = (lvwJS.SelectedItems.Count - 1) To 0 Step -1
+                    itm = lvwJS.SelectedItems(i)
+                    newIndex = lvwJS.SelectedIndices(i) + 1
+
+                    lvwJS.Items.Remove(itm)
+                    lvwJS.Items.Insert(newIndex, itm)
+                Next
+            End If
+            lvwJS.Focus()
         End If
     End Sub
 
@@ -1171,6 +1271,7 @@ Public Class Form1
     Private Sub BttnRemoveAttach_MouseLeave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BttnRemoveAttach.MouseLeave
         BttnRemoveAttach.FlatStyle = System.Windows.Forms.FlatStyle.Flat
     End Sub
+
 End Class
 
 Public Class LvwDocItem

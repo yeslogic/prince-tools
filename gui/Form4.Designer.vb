@@ -29,12 +29,12 @@ Partial Class Form4
         Me.textBoxCurrLic = New System.Windows.Forms.TextBox()
         Me.lblCurrLic = New System.Windows.Forms.Label()
         Me.GBNewLic = New System.Windows.Forms.GroupBox()
+        Me.lblNewLicType = New System.Windows.Forms.Label()
         Me.bttnAcceptLic = New System.Windows.Forms.Button()
         Me.bttnOpenLic = New System.Windows.Forms.Button()
         Me.textBoxNewLic = New System.Windows.Forms.TextBox()
         Me.lblNewLic = New System.Windows.Forms.Label()
         Me.bttnOk = New System.Windows.Forms.Button()
-        Me.lblNewLicType = New System.Windows.Forms.Label()
         CType(Me.pictureBoxLicense, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GBCurLic.SuspendLayout()
         Me.GBNewLic.SuspendLayout()
@@ -103,6 +103,15 @@ Partial Class Form4
         Me.GBNewLic.TabIndex = 2
         Me.GBNewLic.TabStop = False
         '
+        'lblNewLicType
+        '
+        Me.lblNewLicType.AutoSize = True
+        Me.lblNewLicType.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNewLicType.Location = New System.Drawing.Point(50, 38)
+        Me.lblNewLicType.Name = "lblNewLicType"
+        Me.lblNewLicType.Size = New System.Drawing.Size(0, 16)
+        Me.lblNewLicType.TabIndex = 4
+        '
         'bttnAcceptLic
         '
         Me.bttnAcceptLic.Enabled = False
@@ -151,25 +160,23 @@ Partial Class Form4
         Me.bttnOk.Text = "OK"
         Me.bttnOk.UseVisualStyleBackColor = True
         '
-        'lblNewLicType
-        '
-        Me.lblNewLicType.AutoSize = True
-        Me.lblNewLicType.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNewLicType.Location = New System.Drawing.Point(50, 38)
-        Me.lblNewLicType.Name = "lblNewLicType"
-        Me.lblNewLicType.Size = New System.Drawing.Size(0, 16)
-        Me.lblNewLicType.TabIndex = 4
-        '
         'Form4
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(435, 528)
         Me.Controls.Add(Me.bttnOk)
         Me.Controls.Add(Me.GBNewLic)
         Me.Controls.Add(Me.GBCurLic)
         Me.Controls.Add(Me.pictureBoxLicense)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form4"
+        Me.ShowInTaskbar = False
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Prince License"
         CType(Me.pictureBoxLicense, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GBCurLic.ResumeLayout(False)

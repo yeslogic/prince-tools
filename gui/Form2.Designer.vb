@@ -22,6 +22,7 @@ Partial Class Form2
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form2))
         Me.lblUrl = New System.Windows.Forms.Label()
         Me.textboxUrl = New System.Windows.Forms.TextBox()
         Me.bttnOk = New System.Windows.Forms.Button()
@@ -68,13 +69,20 @@ Partial Class Form2
         Me.AcceptButton = Me.bttnOk
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.CancelButton = Me.bttnCancel
         Me.ClientSize = New System.Drawing.Size(409, 197)
         Me.Controls.Add(Me.bttnCancel)
         Me.Controls.Add(Me.bttnOk)
         Me.Controls.Add(Me.textboxUrl)
         Me.Controls.Add(Me.lblUrl)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "Form2"
+        Me.ShowInTaskbar = False
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Enter URL"
         Me.ResumeLayout(False)
         Me.PerformLayout()
