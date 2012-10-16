@@ -21,29 +21,21 @@ Public Class Form3
                                 "data-driven documents and printing" + _
                                 Chr(13) + Chr(10) + _
                                 "reports, articles and manuals."
-        'Chr(13) + Chr(10) + Chr(13) + Chr(10) + _
-        '"For more information, visit:" + _
-        'Chr(13) + Chr(10) + Chr(13) + Chr(10) + _
-        '"            www.princexml.com"
-
-        'Me.linkLbl1.Links.Add(0, 24, "http://www.princexml.com")
+        
     End Sub
 
     Private Function GetPrinceVersion() As String
-        Dim princePath As String
         Dim args As String
         Dim prs As Process
         Dim stdOutputFromPrince As StreamReader
         Dim line1 As String = ""
         Dim line2 As String = ""
 
-        princePath = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + _
-                      "\engine\bin\prince.exe"
 
         args = "--version"
 
         Try
-            prs = StartPrince(princePath, args)
+            prs = StartPrince(Form1.princePath, args)
 
             If prs IsNot Nothing Then
 
@@ -64,7 +56,7 @@ Public Class Form3
             End If
 
         Catch ex As ApplicationException
-            MsgBox(ex.Message + ": " + System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + "\engine\bin\prince.exe")
+            MsgBox(ex.Message + ": " + System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location) + "\engine\bin\prince.exe")
             Return "Unknown Prince version" + Chr(13) + Chr(10) + "Copyright © 2002-2012 Yes Logic Pty Ltd"
         End Try
 

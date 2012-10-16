@@ -18,9 +18,12 @@ Public Class Form4
 
         ShowLicense(showCurrLic, newLicPath)
 
+        lblNewLicType.Text = ""
+        textBoxNewLic.Text = ""
+        bttnAcceptLic.Enabled = False
+
     End Sub
     Private Sub ShowLicense(ByVal showCurrLic As Boolean, ByVal newLicensePath As String)
-        Dim princePath As String
         Dim licensePath As String
         Dim args As String
         Dim prs As Process
@@ -34,12 +37,8 @@ Public Class Form4
         err = ""
         newLicFile = ""
 
-        princePath = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + _
-                      "\engine\bin\prince.exe"
-
         If showCurrLic Then
-            licensePath = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + _
-                          "\engine\license\license.dat"
+            licensePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location) + "\engine\license\license.dat"
         Else
             licensePath = newLicensePath
         End If
@@ -48,7 +47,7 @@ Public Class Form4
         args = "--check-license " + Chr(34) + licensePath + Chr(34) + " --server"
 
         Try
-            prs = StartPrince(princePath, args)
+            prs = StartPrince(Form1.princePath, args)
 
             If Not (prs Is Nothing) Then
                 If ReadMessages(prs) = "success" Then
@@ -78,7 +77,7 @@ Public Class Form4
             End If
 
         Catch ex As ApplicationException
-            MsgBox(ex.Message + ": " + System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + "\engine\bin\prince.exe")
+            MsgBox(ex.Message + ": " + System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location) + "\engine\bin\prince.exe")
         End Try
        
     End Sub
@@ -283,8 +282,7 @@ Public Class Form4
     Private Sub bttnAcceptLic_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnAcceptLic.Click
         Dim toFile As String
 
-        toFile = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + _
-                          "\engine\license\license.dat"
+        toFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location) + "\engine\license\license.dat"
 
         If newLicFile <> "" Then
             Try

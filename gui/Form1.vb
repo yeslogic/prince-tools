@@ -14,6 +14,7 @@ Public Class Form1
     Private openfdInitAttachDir As String
     Private folderBdInitDir As String
     Private lastConvBttnState As buttonStates
+    Public princePath As String
 
     Private Enum buttonStates
         normal = 0
@@ -111,6 +112,8 @@ Public Class Form1
 
         lastConvBttnState = buttonStates.normal
 
+        princePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location) + "\engine\bin\prince.exe"
+
     End Sub
 
     Private Sub conv_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles conv.Click
@@ -118,10 +121,6 @@ Public Class Form1
         Dim cssItem As ListViewItem
         Dim jsItem As ListViewItem
         Dim outputPath As String
-        Dim princePath As String
-
-        princePath = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)) + _
-                      "\engine\bin\prince.exe"
 
         pr = New Prince(princePath)
 
