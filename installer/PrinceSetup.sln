@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "PrinceSetup", "PrinceSetup\PrinceSetup.isproj", "{C752049E-59D5-47F6-8ED2-11816B745459}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CD_ROM|Default = CD_ROM|Default
+		DVD-5|Default = DVD-5|Default
+		SingleImage|Default = SingleImage|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C752049E-59D5-47F6-8ED2-11816B745459}.CD_ROM|Default.ActiveCfg = CD_ROM
+		{C752049E-59D5-47F6-8ED2-11816B745459}.CD_ROM|Default.Build.0 = CD_ROM
+		{C752049E-59D5-47F6-8ED2-11816B745459}.DVD-5|Default.ActiveCfg = DVD-5
+		{C752049E-59D5-47F6-8ED2-11816B745459}.DVD-5|Default.Build.0 = DVD-5
+		{C752049E-59D5-47F6-8ED2-11816B745459}.SingleImage|Default.ActiveCfg = SingleImage
+		{C752049E-59D5-47F6-8ED2-11816B745459}.SingleImage|Default.Build.0 = SingleImage
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
