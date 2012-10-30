@@ -24,7 +24,7 @@ class Prince
 
     public function __construct($exePath)
     {
-	$this->exePath = $exePath;
+	$this->exePath = $this->addDoubleQuotes(ltrim($exePath));
 	$this->styleSheets = '';
 	$this->scripts = '';
 	$this->javascript = false;
@@ -41,6 +41,7 @@ class Prince
 	$this->encryptInfo = '';
     }
 
+	
     // Add a CSS style sheet that will be applied to each document.
     // cssPath: The filename of the CSS style sheet.
     public function addStyleSheet($cssPath)
@@ -202,6 +203,7 @@ class Prince
 	}
     }
 
+
     // Convert an XML or HTML file to a PDF file.
     // The name of the output PDF file will be the same as the name of the
     // input file but with an extension of ".pdf".
@@ -212,7 +214,7 @@ class Prince
     {
 	$pathAndArgs = $this->getCommandLine();
 	$pathAndArgs .= '"' . $xmlPath . '"';
-	    
+	   
 	return $this->convert_internal_file_to_file($pathAndArgs, $msgs);
     }
     
@@ -499,5 +501,43 @@ class Prince
 	
 	return '';
     }
+    
+    
+    	//puts double-quotes around space(s) in file path.
+	//this is needed if the file path is used in a command line.
+	private function addDoubleQuotes($str)
+	{
+		$len = strlen($str);
+		
+		$outputStr = '';
+		$numSpaces = 0;
+		$subStrStart = 0;
+		for ($i = 0; $i < $len; $i++)
+		{
+			if($str[$i] == ' ')
+			{
+				if($numSpaces == 0)
+				{
+					$outputStr .= substr($str, $subStrStart, ($i - $subStrStart));
+					$spaceStart = $i;
+				}
+				$numSpaces += 1;
+			}
+			else
+			{
+				if($numSpaces > 0)
+				{
+					$outputStr .=  chr(34) . substr($str, $spaceStart, $numSpaces) . chr(34);
+				
+					$subStrStart = $i;
+					$numSpaces = 0;
+				}
+			}
+		}
+		$outputStr .= substr($str, $subStrStart, ($i - $subStrStart));
+		
+		return $outputStr;
+	}
+	
 }
 ?>
