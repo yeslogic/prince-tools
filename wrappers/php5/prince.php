@@ -9,13 +9,19 @@ class Prince
     private $exePath;
     private $styleSheets;
     private $scripts;
+    private $fileAttachments;
+    private $licenseFile;
+    private $licenseKey;
+    private $inputType;
     private $javascript;
-    private $isHTML;
     private $baseURL;
     private $doXInclude;
     private $httpUser;
     private $httpPassword;
+    private $httpProxy;
+    private $insecure;
     private $logFile;
+    private $fileRoot;
     private $embedFonts;
     private $subsetFonts;
     private $compress;
@@ -27,13 +33,19 @@ class Prince
 	$this->exePath = $this->addDoubleQuotes(ltrim($exePath));
 	$this->styleSheets = '';
 	$this->scripts = '';
+	$this->fileAttachments = '';
+	$this->licenseFile = '';
+	$this->licenseKey = '';
+	$this->inputType = 'auto';
 	$this->javascript = false;
-	$this->isHTML = false;
 	$this->baseURL = '';
 	$this->doXInclude = true;
 	$this->httpUser = '';
 	$this->httpPassword = '';
+	$this->httpProxy = '';
+	$this->insecure = false;
 	$this->logFile = '';
+	$this->fileRoot = '';
 	$this->embedFonts = true;
 	$this->subsetFonts = true;
 	$this->compress = true;
@@ -67,6 +79,40 @@ class Prince
     {
 	$this->scripts = '';
     }
+    
+    //Add a file attachment that will be attached the the PDF file
+    //filePath: The filename of the file attachment.
+    public function addFileAttachment($filePath)
+    {
+    	$this->fileAttachments .= '--attach=' . '"' . $filePath .  '" ';
+    }
+    
+    //Clear all of the file attachments.
+    public function clearFileAttachments()
+    {
+    	$this->fileAttachments = '';
+    }
+    
+    //Specify the lisence file.
+    //file: The filename of the license file.
+    public function setLicenseFile($file)
+    {
+    	$this->licenseFile = $file;
+    }
+    
+    //Specify the license key.
+    //key: The license key
+    public function setLecenseKey($key)
+    {
+    	$this->licenseKey = $key;
+    }
+    
+    //Specify the input type of the document.
+    //inputType: Can take a value of : "xml", "html" or "auto".
+    public function setInputType($inputType)
+    {
+    	$this->inputType = $inputType;
+    }
 
     // Specify whether JavaScript found in documents should be run. 
     // js: True if document scripts should be run.
@@ -79,7 +125,14 @@ class Prince
     // html: True if all documents should be treated as HTML.
     public function setHTML($html)
     {
-	$this->isHTML = $html;
+	if($html)
+	{
+		$this->inputType = "html";
+	}
+	else
+	{
+		$this->inputType = "xml";
+	}
     }
 
     // Specify a file that Prince should use to log error/warning messages.
@@ -119,7 +172,30 @@ class Prince
     {
 	$this->httpPassword = $password;
     }
-
+    //Specify the URL for the HTTP proxy server, if needed.
+    //proxy: The URL for the HTTP proxy server.
+    public function setHttpProxy($proxy)
+    {
+    	$this->httpProxy = $proxy;
+    }
+    
+    //Specify whether to disable SSL verification.
+    //insecure: If set to true, SSL verification is disabled. (not recommeded)
+    public function setInsecure($insecure)
+    {
+    	$this->insecure = $insecure;
+    }
+    
+    //Specify the root directory for absolute filenames. This can be used
+    //when converting a local file that uses absolute paths to refer to web
+    //resources. For example, /images/logo.jpg can be 
+    //rewritten to /usr/share/images/logo.jpg by specifying "/usr/share" as the root.
+    //fileRoot: The path to prepend to absolute filenames.
+    public function setFileRoot($fileRoot)
+    {
+    	$this->fileRoot = $fileRoot;
+    }
+	
     // Specify whether fonts should be embedded in the output PDF file. Fonts
     // will be embedded by default unless explicitly disabled.
     // embedFonts: False to disable PDF font embedding.
@@ -226,9 +302,44 @@ class Prince
     public function convert_file_to_file($xmlPath, $pdfPath, &$msgs = array())
     {
 	$pathAndArgs = $this->getCommandLine();
-	$pathAndArgs .= '"' . $xmlPath . '" "' . $pdfPath . '"';
+	$pathAndArgs .= '"' . $xmlPath . '" -o "' . $pdfPath . '"';
 	    
         return $this->convert_internal_file_to_file($pathAndArgs, $msgs);
+    }
+    
+    //Convert multiple XML or HTML files to a PDF file.
+    //xmlPaths: An array of the input XML or HTML documents.
+    // msgs: An optional array in which to return error and warning messages.
+    // Returns true if a PDF file was generated successfully.
+    public function convert_multiple_files($xmlPaths, $pdfPath, &$msgs = array())
+    {
+    	$pathAndArgs = $this->getCommandLine();
+    	
+    	foreach($xmlPaths as $xmlPath)
+    	{
+  		$pathAndArgs .= '"' . $xmlPath . '" ';
+    	}
+    	$pathAndArgs .= '-o "' . $pdfPath . '"';
+  
+  	 return $this->convert_internal_file_to_file($pathAndArgs, $msgs);
+    }
+    
+    // Convert multiple XML or HTML files to a PDF file, which will be passed
+    // through to the output of the current PHP page.
+    // xmlPaths: An array of the input XML or HTML documents.
+    // Returns true if a PDF file was generated successfully.
+    public function convert_multiple_files_to_passthru($xmlPaths)
+    {
+    	$pathAndArgs = $this->getCommandLine();
+    	$pathAndArgs .= '--silent "';
+    	
+    	foreach($xmlPaths as $xmlPath)
+    	{
+  		$pathAndArgs .= '"' . $xmlPath . '" ';
+    	}
+    	$pathAndArgs .= '-o -';
+    	
+    	 return $this->convert_internal_file_to_passthru($pathAndArgs);
     }
     
     // Convert an XML or HTML file to a PDF file, which will be passed
@@ -288,11 +399,14 @@ class Prince
 
     private function getCommandLine()
     {
-	$cmdline = $this->exePath . ' --server ' . $this->styleSheets . $this->scripts;
+	$cmdline = $this->exePath . ' --server ' . $this->styleSheets . $this->scripts . $this->fileAttachments;
 
-	if ($this->isHTML)
+	if ($this->inputType == "auto")
 	{
-	    $cmdline .= '--input=html ';
+	}
+	else
+	{
+		$cmdline .=  '-i "' . $this->InputType . '" ';
 	}
 
 	if ($this->javascript)
@@ -319,12 +433,37 @@ class Prince
 	{
 	    $cmdline .= '--http-password="' . $this->httpPassword . '" ';
 	}
+	
+	if($this->httpProxy != '')
+	{
+		$cmdline .= '--http-proxy="' . $this->httpProxy . '" ';
+	}
+	
+	if($this->insecure)
+	{
+		$cmdline .= '--ssl-blindly-trust-server ';
+	}
 
 	if ($this->logFile != '')
 	{
 	    $cmdline .= '--log="' . $this->logFile . '" ';
 	}
 
+	if($this->fileRoot != '')
+	{
+		 $cmdline .= '--fileroot="' + $this->fileRoot . '" ';
+	}
+	
+	if($this->licenseFile != '')
+	{
+		$cmdline .= '--license-file="' . $this->licenseFile . '" ';
+	}
+	
+	if($this->licenseKey != '')
+	{
+		$cmdline .= '--license-key="' . $this->licenseKey . '" ';
+	}
+	
 	if ($this->embedFonts == false)
 	{
 	    $cmdline .= '--no-embed-fonts ';
@@ -503,8 +642,8 @@ class Prince
     }
     
     
-    	//puts double-quotes around space(s) in file path.
-	//this is needed if the file path is used in a command line.
+    	//Puts double-quotes around space(s) in file path.
+	//This is needed if the file path is used in a command line.
 	private function addDoubleQuotes($str)
 	{
 		$len = strlen($str);
