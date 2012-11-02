@@ -355,7 +355,7 @@ Public Class Prince
         End If
 
         If mInsecure Then
-            args = args + "--ssl-blindly-trust-server "
+            args = args + "--insecure "
         End If
 
         If mLog <> "" Then
