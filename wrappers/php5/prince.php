@@ -80,7 +80,7 @@ class Prince
 	$this->scripts = '';
     }
     
-    //Add a file attachment that will be attached the the PDF file
+    //Add a file attachment that will be attached to the PDF file
     //filePath: The filename of the file attachment.
     public function addFileAttachment($filePath)
     {
@@ -93,7 +93,7 @@ class Prince
     	$this->fileAttachments = '';
     }
     
-    //Specify the lisence file.
+    //Specify the license file.
     //file: The filename of the license file.
     public function setLicenseFile($file)
     {
@@ -180,7 +180,7 @@ class Prince
     }
     
     //Specify whether to disable SSL verification.
-    //insecure: If set to true, SSL verification is disabled. (not recommeded)
+    //insecure: If set to true, SSL verification is disabled. (not recommended)
     public function setInsecure($insecure)
     {
     	$this->insecure = $insecure;
@@ -441,7 +441,7 @@ class Prince
 	
 	if($this->insecure)
 	{
-		$cmdline .= '--ssl-blindly-trust-server ';
+		$cmdline .= '--insecure ';
 	}
 
 	if ($this->logFile != '')
