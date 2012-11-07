@@ -163,15 +163,16 @@ class Prince
     // user: The username to use for basic HTTP authentication.
     public function setHttpUser($user)
     {
-	$this->httpUser = $user;
+	$this->httpUser = $this->cmdlineArgEscape2($this->cmdlineArgEscape1($user));
     }
     
     // Specify a password to use when fetching remote resources over HTTP.
     // password: The password to use for basic HTTP authentication.
     public function setHttpPassword($password)
     {
-	$this->httpPassword = $password;
+	$this->httpPassword = $this->cmdlineArgEscape2($this->cmdlineArgEscape1($password));
     }
+    
     //Specify the URL for the HTTP proxy server, if needed.
     //proxy: The URL for the HTTP proxy server.
     public function setHttpProxy($proxy)
@@ -255,8 +256,8 @@ class Prince
 
         $this->encryptInfo =
 		' --key-bits ' . $keyBits .
-                ' --user-password="' . $userPassword .
-                '" --owner-password="' . $ownerPassword . '" ';
+		' --user-password="' . $this->cmdlineArgEscape2($this->cmdlineArgEscape1($userPassword)) .
+		'" --owner-password="' . $this->cmdlineArgEscape2($this->cmdlineArgEscape1($ownerPassword)) . '" ';
 
         if ($disallowPrint)
 	{
@@ -280,6 +281,7 @@ class Prince
     }
 
 
+
     // Convert an XML or HTML file to a PDF file.
     // The name of the output PDF file will be the same as the name of the
     // input file but with an extension of ".pdf".
@@ -290,8 +292,9 @@ class Prince
     {
 	$pathAndArgs = $this->getCommandLine();
 	$pathAndArgs .= '"' . $xmlPath . '"';
-	   
+   
 	return $this->convert_internal_file_to_file($pathAndArgs, $msgs);
+
     }
     
     // Convert an XML or HTML file to a PDF file.
@@ -676,6 +679,81 @@ class Prince
 		$outputStr .= substr($str, $subStrStart, ($i - $subStrStart));
 		
 		return $outputStr;
+	}
+	
+	
+	//In the input string $argStr, a double quote with zero or more preceding backslash(es)
+	//will be replaced with: n*backslash + doublequote => (2*n+1)*backslash + doublequote
+	private function cmdlineArgEscape1($argStr)
+	{
+		//chr(34) is character double quote ( " ), chr(92) is character backslash ( \ ).
+		$len = strlen($argStr);
+		
+		$outputStr = '';
+		$numSlashes = 0;
+		$subStrStart = 0;
+		
+		for($i = 0; $i < $len; $i++)
+		{
+			if($argStr[$i] == chr(34))
+			{
+				$numSlashes = 0;
+				$j = $i - 1;
+				while($j >= 0)
+				{
+					if($argStr[$j] == chr(92))
+					{
+						$numSlashes += 1;
+						$j -= 1;
+					}
+					else
+					{
+						break;
+					}
+				}
+				
+				$outputStr .= substr($argStr, $subStrStart, ($i - $numSlashes - $subStrStart));
+				
+				for($k = 0; $k < $numSlashes; $k++)
+				{
+					$outputStr .= chr(92) . chr(92);
+				}
+				$outputStr  .= chr(92) . chr(34);
+				
+				$subStrStart = $i + 1;
+			}
+		}
+		$outputStr .= substr($argStr, $subStrStart, ($i - $subStrStart));
+		
+		return $outputStr;
+	}
+	
+	//Double the number of trailing backslash(es):	n*trailing backslash => (2*n)*trailing backslash.
+	private function cmdlineArgEscape2($argStr)
+	{
+		//chr(92) is character backslash ( \ ).
+		$len = strlen($argStr);
+		
+		$numTrailingSlashes = 0;
+		for($i = ($len - 1); $i  >= 0; $i--)
+		{
+			if($argStr[$i] == chr(92))
+			{
+				$numTrailingSlashes += 1;
+			}
+			else
+			{
+				break;
+			}
+		}
+		
+		while($numTrailingSlashes > 0)
+		{
+			$argStr .= chr(92);
+			$numTrailingSlashes -= 1;
+		}
+		
+		return $argStr;
 	}
 	
 }
