@@ -102,7 +102,7 @@ class Prince
     
     //Specify the license key.
     //key: The license key
-    public function setLecenseKey($key)
+    public function setLicenseKey($key)
     {
     	$this->licenseKey = $key;
     }
