@@ -55,8 +55,10 @@ installation.
 <ul>
 <li><a href="#convert_file"><code>convert_file</code></a></li>
 <li><a href="#convert_file_to_file"><code>convert_file_to_file</code></a></li>
+<li><a href="#convert_multiple_files"><code>convert_multiple_files</code></a></li>
 <li><a href="#convert_string_to_file"><code>convert_string_to_file</code></a></li>
 <li><a href="#convert_file_to_passthru"><code>convert_file_to_passthru</code></a></li>
+<li><a href="#convert_multiple_files_to_passthru"><code>convert_multiple_files_to_passthru</code></a></li>
 <li><a href="#convert_string_to_passthru"><code>convert_string_to_passthru</code></a></li>
 </ul>
 
@@ -66,6 +68,11 @@ installation.
 <li><a href="#clearstylesheets"><code>clearStyleSheets</code></a></li>
 <li><a href="#addscript"><code>addScript</code></a></li>
 <li><a href="#clearscripts"><code>clearScripts</code></a></li>
+<li><a href="#addfileattachment"><code>addFileAttachment</code></a></li>
+<li><a href="#clearfileattachments"><code>clearFileAttachments</code></a></li>
+<li><a href="#setlicensefile"><code>setLicenseFile</code></a></li>
+<li><a href="#setlicensekey"><code>setLicenseKey</code></a></li>
+<li><a href="#setinputtype"><code>setInputType</code></a></li>
 <li><a href="#sethtml"><code>setHTML</code></a></li>
 <li><a href="#setjavascript"><code>setJavaScript</code></a></li>
 <li><a href="#setlog"><code>setLog</code></a></li>
@@ -73,6 +80,9 @@ installation.
 <li><a href="#setxinclude"><code>setXInclude</code></a></li>
 <li><a href="#sethttpuser"><code>setHttpUser</code></a></li>
 <li><a href="#sethttppassword"><code>setHttpPassword</code></a></li>
+<li><a href="#sethttpproxy"><code>setHttpProxy</code></a></li>
+<li><a href="#setinsecure"><code>setInsecure</code></a></li>
+<li><a href="#setfileroot"><code>setFileRoot</code></a></li>
 <li><a href="#setembedfonts"><code>setEmbedFonts</code></a></li>
 <li><a href="#setsubsetfonts"><code>setSubsetFonts</code></a></li>
 <li><a href="#setcompress"><code>setCompress</code></a></li>
@@ -136,6 +146,33 @@ location (eg. a filename) and the message text.</dd>
 
 <hr>
 
+<a name="convert_multiple_files">
+
+<pre>
+public function convert_multiple_files($xmlPaths, $pdfPath, &amp;$msgs = array())
+</pre>
+
+<p>
+Convert multiple XML or HTML files to a PDF file.
+Returns true if a PDF file was generated successfully.
+</p>
+
+<dl>
+<dt><code>xmlPaths</code></dt>
+<dd>An array of the input XML or HTML documents.</dd>
+<dt><code>pdfPath</code></dt>
+<dd>The filename of the output PDF file.</dd>
+<dt><code>msgs</code></dt>
+<dd>An optional array in which to return error and warning messages. Each
+message is returned as an array of three strings: the message code
+(<code>'err'</code>, <code>'wrn'</code> or <code>'inf'</code>), the message
+location (eg. a filename) and the message text.</dd>
+<dt><code>returns</code></dt>
+<dd>True if a PDF file was generated successfully, false otherwise.</dd>
+</dl>
+
+<hr>
+
 <a name="convert_string_to_file">
 
 <pre>
@@ -183,6 +220,46 @@ direct messages to an external file.
 <dl>
 <dt><code>xmlPath</code></dt>
 <dd>The filename of the input XML or HTML document.</dd>
+<dt><code>returns</code></dt>
+<dd>True if a PDF file was generated successfully, false otherwise.</dd>
+</dl>
+
+<p>
+Note that to have the browser correctly display the PDF output, the following
+two lines will be needed before the convert method is called:
+</p>
+<pre>
+header('Content-Type: application/pdf');
+header('Content-Disposition: inline; filename="foo.pdf"');
+</pre>
+<p>
+You may also specify <code>attachment</code> for the Content-Disposition
+header instead of <code>inline</code>, so that the browser will prompt the
+user to save the PDF file instead of displaying it.
+</p>
+
+<hr>
+
+<a name="convert_multiple_files_to_passthru">
+
+<pre>
+public function convert_multiple_files_to_passthru($xmlPaths)
+</pre>
+
+<p>
+Convert multiple XML or HTML files to a PDF file, which will be passed
+through to the output buffer of the current PHP page.
+Returns true if a PDF file was generated successfully.
+</p>
+<p>
+Currently there is no mechanism to retrieve error/warning messages when using
+this convert method. However, the <code>setLog</code> function can be used to
+direct messages to an external file.
+</p>
+
+<dl>
+<dt><code>xmlPaths</code></dt>
+<dd>An array of the input XML or HTML documents.</dd>
 <dt><code>returns</code></dt>
 <dd>True if a PDF file was generated successfully, false otherwise.</dd>
 </dl>
@@ -285,7 +362,7 @@ public function addScript($jsPath)
 <p>
 Add a JavaScript script that will be run before conversion.
 The <code>addScript</code> function can be called more than once to add
-multiple scripts. This function can called before calling a convert
+multiple scripts. This function can be called before calling a convert
 function.
 </p>
 
@@ -306,6 +383,89 @@ public function clearScripts()
 Clear all of the scripts accumulated by calling
 <code>addScript</code>.
 </p>
+
+<hr>
+
+<a name="addfileattachment">
+
+<pre>
+public function addFileAttachment($filePath)
+</pre>
+
+<p>
+Add a file attachment that will be attached to the PDF file.
+The<code>addFileAttachment</code> can be called more
+than once to add multiple file attachments.
+</p>
+
+<dl>
+<dt><code>filePath</code></dt>
+<dd>The filename of the file attachment.</dd>
+</dl>
+
+<hr>
+
+<a name="clearfileattachments">
+
+<pre>
+public function clearFileAttachments()
+</pre>
+
+<p>
+Clear all of the file attachments accumulated by calling
+<code>addFileAttachment</code>.
+</p>
+
+<hr>
+
+<a name="setlicensefile">
+
+<pre>
+public function setLicenseFile($file)
+</pre>
+
+<p>
+Specify the license file.
+</p>
+
+<dl>
+<dt><code>file</code></dt>
+<dd>The filename of the license file.</dd>
+</dl>
+
+<hr>
+
+<a name="setlicensekey">
+
+<pre>
+public function  setLicenseKey($key)
+</pre>
+
+<p>
+Specify the license key.
+</p>
+
+<dl>
+<dt><code>key</code></dt>
+<dd>The license key.</dd>
+</dl>
+
+<hr>
+
+<a name="setinputtype">
+
+<pre>
+public function setInputType($inputType)
+</pre>
+
+<p>
+Specify the input type of the document.
+</P>
+
+<dl>
+<dt><code>inputType</code></dt>
+<dd>Can take a value of : "xml", "html" or "auto".</dd>
+</dl>
 
 <hr>
 
@@ -428,6 +588,60 @@ Specify a password to use when fetching remote resources over HTTP.
 <dt><code>password</code></dt>
 <dd>The password to use for basic HTTP authentication.</dd>
 </dl>
+
+<hr>
+
+<a name="sethttpproxy">
+
+<pre>
+public function setHttpProxy($proxy)
+</pre>
+
+<p>
+Specify the URL for the HTTP proxy server, if needed.
+</p>
+
+<dl>
+<dt><code>proxy</code></dt>
+<dd>The URL for the HTTP proxy server.</dd>
+</dl>
+
+<hr>
+
+<a name="setinsecure">
+
+<pre>
+public function setInsecure($insecure)
+</pre>
+
+<p>
+Specify whether to disable SSL verification.
+</p>
+
+<dl>
+<dt><code>insecure</code></dt>
+<dd>If set to true, SSL verification is disabled. (not recommended)</dd>
+</d>
+
+<hr>
+
+<a name="setfileroot">
+
+<pre>
+public function setFileRoot($fileRoot)
+</pre>
+
+<p>
+Specify the root directory for absolute filenames. This can be used
+when converting a local file that uses absolute paths to refer to web
+resources. For example, /images/logo.jpg can be rewritten 
+to /usr/share/images/logo.jpg by specifying "/usr/share" as the root.
+</p>
+
+<dl>
+<dt><code>fileRoot</code></dt>
+<dd>The path to prepend to absolute filenames.</dd>
+</d>
 
 <hr>
 

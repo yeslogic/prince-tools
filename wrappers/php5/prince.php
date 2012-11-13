@@ -328,7 +328,7 @@ class Prince
     }
     
     // Convert multiple XML or HTML files to a PDF file, which will be passed
-    // through to the output of the current PHP page.
+    // through to the output buffer of the current PHP page.
     // xmlPaths: An array of the input XML or HTML documents.
     // Returns true if a PDF file was generated successfully.
     public function convert_multiple_files_to_passthru($xmlPaths)
@@ -346,7 +346,7 @@ class Prince
     }
     
     // Convert an XML or HTML file to a PDF file, which will be passed
-    // through to the output of the current PHP page.
+    // through to the output buffer of the current PHP page.
     // xmlPath: The filename of the input XML or HTML document.
     // Returns true if a PDF file was generated successfully.
     public function convert_file_to_passthru($xmlPath)
@@ -358,7 +358,7 @@ class Prince
     }
     
     // Convert an XML or HTML string to a PDF file, which will be passed
-    // through to the output of the current PHP page.
+    // through to the output buffer of the current PHP page.
     // xmlString: A string containing an XML or HTML document.
     // Returns true if a PDF file was generated successfully.
     public function convert_string_to_passthru($xmlString)
