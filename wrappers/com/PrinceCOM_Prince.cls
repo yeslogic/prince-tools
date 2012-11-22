@@ -15,26 +15,48 @@ Option Explicit
 
 Private princePath As String
 Private styleSheets As String
-Private optionHTML As Boolean
-Private optionLog As String
-Private optionBaseURL As String
-Private optionXInclude As Boolean
-Private optionEmbedFonts As Boolean
-Private optionCompress As Boolean
-Private optionEncrypt As Boolean
+Private scripts As String
+Private fileAttachments As String
+Private licenseFile As String
+Private licenseKey As String
+Private inputType As String
+Private javascript As Boolean
+Private baseURL As String
+Private doXInclude As Boolean
+Private httpUser As String
+Private httpPassword As String
+Private httpProxy As String
+Private insecure As Boolean
+Private logFile As String
+Private fileRoot As String
+Private embedFonts As Boolean
+Private subsetFonts As Boolean
+Private compress As Boolean
+Private encrypt As Boolean
 Private encryptInfo As String
 
 Public Event Message(msgType As String, msgLocation As String, msg As String)
 Private Sub Class_Initialize()
     princePath = ""
     styleSheets = ""
-    optionHTML = False
-    optionLog = ""
-    optionBaseURL = ""
-    optionXInclude = True
-    optionEmbedFonts = True
-    optionCompress = True
-    optionEncrypt = False
+    scripts = ""
+    fileAttachments = ""
+    licenseFile = ""
+    licenseKey = ""
+    inputType = "auto"
+    javascript = False
+    baseURL = ""
+    doXInclude = True
+    httpUser = ""
+    httpPassword = ""
+    httpProxy = ""
+    insecure = False
+    logFile = ""
+    fileRoot = ""
+    embedFonts = True
+    subsetFonts = True
+    compress = True
+    encrypt = False
     encryptInfo = ""
 End Sub
 Private Sub Class_Terminate()
@@ -47,35 +69,8 @@ Public Function Convert(ByVal xmlPath As String, _
     Dim pathAndArguments As String
     Dim outputMessage As String
     
-    pathAndArguments = princePath + " --server " + styleSheets
     
-    If optionEncrypt Then
-        pathAndArguments = pathAndArguments + encryptInfo
-    End If
-    
-    If optionHTML Then
-        pathAndArguments = pathAndArguments + "-i html "
-    End If
-    
-    If optionLog <> "" Then
-        pathAndArguments = pathAndArguments + "--log=""" + optionLog + """ "
-    End If
-    
-    If optionBaseURL <> "" Then
-        pathAndArguments = pathAndArguments + "--baseurl=""" + optionBaseURL + """ "
-    End If
-    
-    If Not optionXInclude Then
-        pathAndArguments = pathAndArguments + "--no-xinclude "
-    End If
-    
-    If Not optionEmbedFonts Then
-        pathAndArguments = pathAndArguments + "--no-embed-fonts "
-    End If
-    
-    If Not optionCompress Then
-        pathAndArguments = pathAndArguments + "--no-compress "
-    End If
+    pathAndArguments = GetCommandLine()
     
     inputFile = """" + xmlPath + """"
     
@@ -83,7 +78,7 @@ Public Function Convert(ByVal xmlPath As String, _
         pathAndArguments = pathAndArguments + inputFile
     Else
         outputFile = """" + pdfPath + """"
-        pathAndArguments = pathAndArguments + inputFile + " " + outputFile
+        pathAndArguments = pathAndArguments + inputFile + " -o " + outputFile
     End If
     
     outputMessage = ReadOutputMessage(pathAndArguments)
@@ -97,6 +92,167 @@ Public Function Convert(ByVal xmlPath As String, _
     End If
 
 End Function
+
+Public Function ConvertMultiple(ByRef xmlPaths() As String, ByVal pdfPath As String)
+    Dim idx As Integer
+    Dim pathAndArguments As String
+    Dim outputMessage As String
+    
+    pathAndArguments = GetCommandLine()
+    
+    For idx = LBound(xmlPaths) To UBound(xmlPaths)
+        pathAndArguments = pathAndArguments + """" + xmlPaths(idx) + """ "
+    Next
+    
+    pathAndArguments = pathAndArguments + "-o """ + pdfPath + """"
+    
+    outputMessage = ReadOutputMessage(pathAndArguments)
+
+    If outputMessage = "success" Then
+        ConvertMultiple = 1
+    ElseIf outputMessage = "failure" Then
+        ConvertMultiple = 0
+    Else
+        ConvertMultiple = 0
+    End If
+
+End Function
+
+Private Function GetCommandLine() As String
+    Dim cmdLine As String
+    cmdLine = ""
+    
+    cmdLine = princePath + " --server " + styleSheets + scripts + fileAttachments
+    
+    If inputType = "auto" Then
+    
+    Else
+        cmdLine = cmdLine + "-i " + inputType + " "
+    End If
+    
+    If javascript Then
+        cmdLine = cmdLine + "--javascript "
+    End If
+    
+    If logFile <> "" Then
+        cmdLine = cmdLine + "--log=""" + logFile + """ "
+    End If
+    
+    If baseURL <> "" Then
+        cmdLine = cmdLine + "--baseurl=""" + baseURL + """ "
+    End If
+    
+    If Not doXInclude Then
+        cmdLine = cmdLine + "--no-xinclude "
+    End If
+    
+    If httpUser <> "" Then
+        cmdLine = cmdLine + "--http-user=""" + httpUser + """ "
+    End If
+    
+    If httpPassword <> "" Then
+        cmdLine = cmdLine + "--http-password=""" + httpPassword + """ "
+    End If
+    
+    If httpProxy <> "" Then
+        cmdLine = cmdLine + "--http-proxy=""" + httpProxy + """ "
+    End If
+    
+    If insecure Then
+        cmdLine = cmdLine + "--insecure "
+    End If
+    
+    If fileRoot <> "" Then
+        cmdLine = cmdLine + "--fileroot=""" + fileRoot + """ "
+    End If
+    
+    If licenseFile <> "" Then
+        cmdLine = cmdLine + "--license-file=""" + licenseFile + """ "
+    End If
+    
+    If licenseKey <> "" Then
+        cmdLine = cmdLine + "--license-key=""" + licenseKey + """ "
+    End If
+    
+    If Not embedFonts Then
+        cmdLine = cmdLine + "--no-embed-fonts "
+    End If
+    
+    If Not subsetFonts Then
+        cmdLine = cmdLine + "--no-subset-fonts "
+    End If
+    
+    If Not compress Then
+        cmdLine = cmdLine + "--no-compress "
+    End If
+    
+    If encrypt Then
+        cmdLine = cmdLine + "--encrypt " + encryptInfo
+    End If
+    
+    GetCommandLine = cmdLine
+    
+End Function
+Private Function cmdlineArgEscape1(ByVal argStr As String)
+    'Chr(34) is character double quote ( " ), Chr(92) is character backslash ( \ ).
+    Dim outputStr As String
+    Dim numSlashes As Integer
+    Dim subStrStart As Integer
+    Dim i, j, k As Integer
+    
+    outputStr = ""
+    numSlashes = 0
+    subStrStart = 1
+    
+    For i = 1 To Len(argStr) Step 1
+        If Mid(argStr, i, 1) = Chr(34) Then
+            numSlashes = 0
+            j = i - 1
+            Do While (j >= 1)
+                If (Mid(argStr, j, 1) = Chr(92)) Then
+                    numSlashes = numSlashes + 1
+                    j = j - 1
+                Else
+                    Exit Do
+                End If
+            Loop
+            
+            outputStr = outputStr + Mid(argStr, subStrStart, (i - numSlashes - subStrStart))
+            
+            For k = 1 To numSlashes Step 1
+                outputStr = outputStr + Chr(92) + Chr(92)
+            Next
+            outputStr = outputStr + Chr(92) + Chr(34)
+            
+            subStrStart = i + 1
+        End If
+    Next
+    outputStr = outputStr + Mid(argStr, subStrStart, (i - subStrStart))
+    
+    cmdlineArgEscape1 = outputStr
+End Function
+Private Function cmdlineArgEscape2(ByVal argStr As String)
+    'chr(92) is character backslash ( \ ).
+    Dim numTrailingSlashes As Integer
+    Dim i As Integer
+    
+    numTrailingSlashes = 0
+    For i = Len(argStr) To 1 Step -1
+        If Mid(argStr, i, 1) = Chr(92) Then
+            numTrailingSlashes = numTrailingSlashes + 1
+        Else
+            Exit For
+        End If
+    Next
+    
+    Do While (numTrailingSlashes > 0)
+        argStr = argStr + Chr(92)
+        numTrailingSlashes = numTrailingSlashes - 1
+    Loop
+
+    cmdlineArgEscape2 = argStr
+End Function
+
 Private Function ReadOutputMessage(ByVal fName As String) As String
     Dim retVal As Long
     Dim ourReadPipe As Long
@@ -313,26 +469,72 @@ End Sub
 Public Sub ClearStyleSheets()
     styleSheets = ""
 End Sub
+Public Sub AddScript(ByVal jsPath As String)
+    scripts = scripts + "--script " + """" + jsPath + """ "
+End Sub
+Public Sub ClearScripts()
+    scripts = ""
+End Sub
+Public Sub AddFileAttachment(ByVal filePath As String)
+    fileAttachments = fileAttachments + "--attach=" + """" + filePath + """ "
+End Sub
+Public Sub ClearFileAttachments()
+    fileAttachments = ""
+End Sub
+Public Sub SetLicenseFile(ByVal file As String)
+    licenseFile = file
+End Sub
+Public Sub SetLicenseKey(ByVal key As String)
+    licenseKey = key
+End Sub
+Public Sub SetInputType(ByVal inputType As String)
+    inputType = inputType
+End Sub
+Public Sub SetJavaScript(ByVal js As Boolean)
+    javascript = js
+End Sub
 Public Sub SetHTML(ByVal html As Boolean)
-    optionHTML = html
+    If html Then
+        inputType = "html"
+    Else
+        inputType = "xml"
+    End If
 End Sub
 Public Sub SetLog(ByVal logFile As String)
-    optionLog = logFile
+    logFile = logFile
 End Sub
-Public Sub SetBaseURL(ByVal baseurl As String)
-    optionBaseURL = baseurl
+Public Sub SetBaseURL(ByVal baseURL As String)
+    baseURL = baseURL
 End Sub
 Public Sub SetXInclude(ByVal xinclude As Boolean)
-    optionXInclude = xinclude
+    doXInclude = xinclude
+End Sub
+Public Sub SetHttpUser(ByVal user As String)
+    httpUser = cmdlineArgEscape2(cmdlineArgEscape1(user))
+End Sub
+Public Sub SetHttpPassword(ByVal password As String)
+    httpPassword = cmdlineArgEscape2(cmdlineArgEscape1(password))
+End Sub
+Public Sub SetHttpProxy(ByVal proxy As String)
+    httpProxy = proxy
+End Sub
+Public Sub SetInsecure(ByVal insecure As Boolean)
+        insecure = insecure
+End Sub
+Public Sub SetFileRoot(ByVal fileRoot As String)
+    fileRoot = fileRoot
 End Sub
 Public Sub SetEmbedFonts(ByVal embed As Boolean)
-    optionEmbedFonts = embed
+    embedFonts = embed
+End Sub
+Public Sub SetSubsetFonts(ByVal subset As Boolean)
+    subsetFonts = subset
 End Sub
 Public Sub SetCompress(ByVal compress As Boolean)
-    optionCompress = compress
+    compress = compress
 End Sub
 Public Sub SetEncrypt(ByVal encrypt As Boolean)
-    optionEncrypt = encrypt
+    encrypt = encrypt
 End Sub
 Public Sub SetEncryptInfo(ByVal keyBits As Integer, _
                           ByVal userPassword As String, _
@@ -341,11 +543,10 @@ Public Sub SetEncryptInfo(ByVal keyBits As Integer, _
                           ByVal disallowModify As Boolean, _
                           ByVal disallowCopy As Boolean, _
                           ByVal disallowAnnotate As Boolean)
-    optionEncrypt = True
-    encryptInfo = "--encrypt " + _
-                    " --key-bits " + Str(keyBits) + _
-                    " --user-password=" + """" + userPassword + """" + _
-                    " --owner-password=" + """" + ownerPassword + """" + " " _
+    encrypt = True
+    encryptInfo = " --key-bits " + Str(keyBits) + _
+                  " --user-password=" + """" + cmdlineArgEscape2(cmdlineArgEscape1(userPassword)) + """" + _
+                  " --owner-password=" + """" + cmdlineArgEscape2(cmdlineArgEscape1(ownerPassword)) + """" + " " _
 
     If disallowPrint Then
         encryptInfo = encryptInfo + "--disallow-print "
