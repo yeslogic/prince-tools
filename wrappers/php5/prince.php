@@ -409,7 +409,7 @@ class Prince
 	}
 	else
 	{
-		$cmdline .=  '-i "' . $this->InputType . '" ';
+		$cmdline .=  '-i "' . $this->inputType . '" ';
 	}
 
 	if ($this->javascript)
@@ -454,7 +454,7 @@ class Prince
 
 	if($this->fileRoot != '')
 	{
-		 $cmdline .= '--fileroot="' + $this->fileRoot . '" ';
+		 $cmdline .= '--fileroot="' . $this->fileRoot . '" ';
 	}
 	
 	if($this->licenseFile != '')
