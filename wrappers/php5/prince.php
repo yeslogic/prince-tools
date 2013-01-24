@@ -1,7 +1,7 @@
 <?php
 
 // Prince - PHP interface
-// Copyright 2005-2012 YesLogic Pty. Ltd.
+// Copyright 2005-2013 YesLogic Pty. Ltd.
 // http://www.princexml.com
 
 class Prince
@@ -311,7 +311,7 @@ class Prince
     }
     
     //Convert multiple XML or HTML files to a PDF file.
-    //xmlPaths: An array of the input XML or HTML documents.
+    // xmlPaths: An array of the input XML or HTML documents.
     // msgs: An optional array in which to return error and warning messages.
     // Returns true if a PDF file was generated successfully.
     public function convert_multiple_files($xmlPaths, $pdfPath, &$msgs = array())
@@ -334,7 +334,7 @@ class Prince
     public function convert_multiple_files_to_passthru($xmlPaths)
     {
     	$pathAndArgs = $this->getCommandLine();
-    	$pathAndArgs .= '--silent "';
+    	$pathAndArgs .= '--silent ';
     	
     	foreach($xmlPaths as $xmlPath)
     	{
