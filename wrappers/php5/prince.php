@@ -645,34 +645,41 @@ class Prince
     }
     
     
-    	//Puts double-quotes around space(s) in file path.
+    	//Puts double-quotes around space(s) in file path,
+    	//and also around semicolon(;), comma(,), ampersand(&), up-arrow(^) and parentheses.
 	//This is needed if the file path is used in a command line.
 	private function addDoubleQuotes($str)
 	{
 		$len = strlen($str);
 		
 		$outputStr = '';
-		$numSpaces = 0;
+		$numWeirdChars = 0;
 		$subStrStart = 0;
 		for ($i = 0; $i < $len; $i++)
 		{
-			if($str[$i] == ' ')
+			if(($str[$i] == ' ') ||
+			   ($str[$i] == ';') ||
+			   ($str[$i] == ',') ||
+			   ($str[$i] == '&') ||
+			   ($str[$i] == '^') ||
+			   ($str[$i] == '(') ||
+			   ($str[$i] == ')'))
 			{
-				if($numSpaces == 0)
+				if($numWeirdChars == 0)
 				{
 					$outputStr .= substr($str, $subStrStart, ($i - $subStrStart));
-					$spaceStart = $i;
+					$weirdCharsStart = $i;
 				}
-				$numSpaces += 1;
+				$numWeirdChars += 1;
 			}
 			else
 			{
-				if($numSpaces > 0)
+				if($numWeirdChars > 0)
 				{
-					$outputStr .=  chr(34) . substr($str, $spaceStart, $numSpaces) . chr(34);
+					$outputStr .=  chr(34) . substr($str, $weirdCharsStart, $numWeirdChars) . chr(34);
 				
 					$subStrStart = $i;
-					$numSpaces = 0;
+					$numWeirdChars = 0;
 				}
 			}
 		}
