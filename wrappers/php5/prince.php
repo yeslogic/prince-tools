@@ -25,6 +25,11 @@ class Prince
     private $embedFonts;
     private $subsetFonts;
     private $compress;
+    private $pdfTitle;
+    private $pdfSubject;
+    private $pdfAuthor;
+    private $pdfKeywords;
+    private $pdfCreator;
     private $encrypt;
     private $encryptInfo;
 
@@ -49,6 +54,11 @@ class Prince
 	$this->embedFonts = true;
 	$this->subsetFonts = true;
 	$this->compress = true;
+	$this->pdfTitle = '';
+	$this->pdfSubject = '';
+	$this->pdfAuthor = '';
+	$this->pdfKeywords = '';
+	$this->pdfCreator = '';
 	$this->encrypt = false;
 	$this->encryptInfo = '';
     }
@@ -163,14 +173,14 @@ class Prince
     // user: The username to use for basic HTTP authentication.
     public function setHttpUser($user)
     {
-	$this->httpUser = $this->cmdlineArgEscape2($this->cmdlineArgEscape1($user));
+	$this->httpUser = $this->cmdlineArgEscape($user);
     }
     
     // Specify a password to use when fetching remote resources over HTTP.
     // password: The password to use for basic HTTP authentication.
     public function setHttpPassword($password)
     {
-	$this->httpPassword = $this->cmdlineArgEscape2($this->cmdlineArgEscape1($password));
+	$this->httpPassword = $this->cmdlineArgEscape($password);
     }
     
     //Specify the URL for the HTTP proxy server, if needed.
@@ -221,6 +231,36 @@ class Prince
 	$this->compress = $compress;
     }
 
+    // Specify the document title for PDF metadata.
+    public function setPDFTitle($pdfTitle)
+    {
+	$this->pdfTitle = $pdfTitle;
+    }
+
+    // Specify the document subject for PDF metadata.
+    public function setPDFSubject($pdfSubject)
+    {
+	$this->pdfSubject = $pdfSubject;
+    }
+
+    // Specify the document author for PDF metadata.
+    public function setPDFAuthor($pdfAuthor)
+    {
+	$this->pdfAuthor = $pdfAuthor;
+    }
+
+    // Specify the document keywords for PDF metadata.
+    public function setPDFKeywords($pdfKeywords)
+    {
+	$this->pdfKeywords = $pdfKeywords;
+    }
+
+    // Specify the document creator for PDF metadata.
+    public function setPDFCreator($pdfCreator)
+    {
+	$this->pdfCreator = $pdfCreator;
+    }
+
     // Specify whether encryption should be applied to the output PDF file.
     // Encryption will not be applied by default unless explicitly enabled.
     // encrypt: True to enable PDF encryption.
@@ -256,8 +296,8 @@ class Prince
 
         $this->encryptInfo =
 		' --key-bits ' . $keyBits .
-		' --user-password="' . $this->cmdlineArgEscape2($this->cmdlineArgEscape1($userPassword)) .
-		'" --owner-password="' . $this->cmdlineArgEscape2($this->cmdlineArgEscape1($ownerPassword)) . '" ';
+		' --user-password="' . $this->cmdlineArgEscape($userPassword) .
+		'" --owner-password="' . $this->cmdlineArgEscape($ownerPassword) . '" ';
 
         if ($disallowPrint)
 	{
@@ -482,6 +522,31 @@ class Prince
 	    $cmdline .= '--no-compress ';
 	}
 
+	if ($this->pdfTitle != '')
+	{
+	    $cmdline .= '--pdf-title="' . $this->cmdlineArgEscape($this->pdfTitle) . '" ';
+	}
+
+	if ($this->pdfSubject != '')
+	{
+	    $cmdline .= '--pdf-subject="' . $this->cmdlineArgEscape($this->pdfSubject) . '" ';
+	}
+
+	if ($this->pdfAuthor != '')
+	{
+	    $cmdline .= '--pdf-author="' . $this->cmdlineArgEscape($this->pdfAuthor) . '" ';
+	}
+
+	if ($this->pdfKeywords != '')
+	{
+	    $cmdline .= '--pdf-keywords="' . $this->cmdlineArgEscape($this->pdfKeywords) . '" ';
+	}
+
+	if ($this->pdfCreator != '')
+	{
+	    $cmdline .= '--pdf-creator="' . $this->cmdlineArgEscape($this->pdfCreator) . '" ';
+	}
+
 	if ($this->encrypt)
 	{
 	    $cmdline .= '--encrypt ' . $this->encryptInfo;
@@ -688,6 +753,10 @@ class Prince
 		return $outputStr;
 	}
 	
+	private function cmdlineArgEscape($argStr)
+	{
+		return $this->cmdlineArgEscape2($this->cmdlineArgEscape1($argStr));
+	}
 	
 	//In the input string $argStr, a double quote with zero or more preceding backslash(es)
 	//will be replaced with: n*backslash + doublequote => (2*n+1)*backslash + doublequote
