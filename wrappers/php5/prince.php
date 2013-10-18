@@ -24,6 +24,7 @@ class Prince
     private $fileRoot;
     private $embedFonts;
     private $subsetFonts;
+    private $artificialFonts;
     private $compress;
     private $pdfTitle;
     private $pdfSubject;
@@ -53,6 +54,7 @@ class Prince
 	$this->fileRoot = '';
 	$this->embedFonts = true;
 	$this->subsetFonts = true;
+	$this->artificialFonts = true;
 	$this->compress = true;
 	$this->pdfTitle = '';
 	$this->pdfSubject = '';
@@ -221,6 +223,14 @@ class Prince
     public function setSubsetFonts($subsetFonts)
     {
 	$this->subsetFonts = $subsetFonts;
+    }
+
+    // Specify whether artificial bold/italic fonts should be generated if
+    // necessary. Artificial fonts are enabled by default.
+    // artificialFonts: False to disable artificial bold/italic fonts.
+    public function setArtificialFonts($artificialFonts)
+    {
+	$this->artificialFonts = $artificialFonts;
     }
 
     // Specify whether compression should be applied to the output PDF file.
@@ -515,6 +525,11 @@ class Prince
 	if ($this->subsetFonts == false)
 	{
 	    $cmdline .= '--no-subset-fonts ';
+	}
+
+	if ($this->artificialFonts == false)
+	{
+	    $cmdline .= '--no-artificial-fonts ';
 	}
 
 	if ($this->compress == false)
