@@ -12,7 +12,6 @@ Public Class Form1
     Private openFdInitCssDir As String
     Private openFdInitJsDir As String
     Private openfdInitAttachDir As String
-    Private folderBdInitDir As String
     Private lastConvBttnState As buttonStates
     Public princePath As String
 
@@ -108,7 +107,6 @@ Public Class Form1
         openFdInitCssDir = Application.StartupPath
         openFdInitJsDir = Application.StartupPath
         openfdInitAttachDir = Application.StartupPath
-        folderBdInitDir = Environment.SpecialFolder.MyComputer
 
         lastConvBttnState = buttonStates.normal
 
@@ -505,18 +503,17 @@ Public Class Form1
     Private Sub bttnOpenFolder_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bttnOpenFolder.Click
 
         'Folder browser dialog settings:
-        folderBD.RootFolder = folderBdInitDir
+        folderBD.RootFolder = Environment.SpecialFolder.Desktop
         folderBD.Description = "Select Output Folder"
 
         If folderBD.ShowDialog = Windows.Forms.DialogResult.OK Then
-            If textBoxSave.Text = (folderBD.SelectedPath + "\output.pdf") Then
+
+            If String.Equals(textBoxSave.Text, (folderBD.SelectedPath + "\output.pdf")) Then
 
             Else
                 textBoxSave.Text = folderBD.SelectedPath + "\output.pdf"
             End If
 
-            'remember output folder for folder browser
-            folderBdInitDir = folderBD.SelectedPath
         End If
     End Sub
 

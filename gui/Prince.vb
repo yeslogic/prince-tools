@@ -701,10 +701,11 @@ Public Class Prince
             mMainForm.clearAll.Enabled = True
             mMainForm.bttnAbout.Enabled = True
             mMainForm.bttnLicense.Enabled = True
-            mMainForm.ChBoxMerge.Enabled = True
-            mMainForm.lblSaveOutput.Enabled = True
-            mMainForm.textBoxSave.Enabled = True
-            mMainForm.bttnOpenFolder.Enabled = True
+
+            If mMainForm.lvwDoc.Items.Count > 1 Then
+                mMainForm.ChBoxMerge.Enabled = True
+            End If
+
             mMainForm.bttnDocUp.Enabled = True
             mMainForm.bttnDocDown.Enabled = True
             mMainForm.conv.Enabled = True
