@@ -704,6 +704,13 @@ Public Class Prince
 
             If mMainForm.lvwDoc.Items.Count > 1 Then
                 mMainForm.ChBoxMerge.Enabled = True
+
+                If mMainForm.ChBoxMerge.Checked = True Then
+                    mMainForm.lblSaveOutput.Enabled = True
+                    mMainForm.bttnOpenFolder.Enabled = True
+                    mMainForm.textBoxSave.Enabled = True
+                End If
+
             End If
 
             mMainForm.bttnDocUp.Enabled = True
@@ -718,7 +725,7 @@ Public Class Prince
             'disable status label
             mMainForm.lblStatus.Visible = False
 
-        End If
+            End If
     End Sub
     Private Sub ConversionSuccess()
         Dim docItem As ListViewItem
