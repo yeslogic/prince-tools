@@ -34,6 +34,7 @@ Public Interface IPrince
     Sub SetSubsetFonts(ByVal embedSubset As Boolean)
     Sub SetCompress(ByVal compress As Boolean)
     Sub SetEncrypt(ByVal encrypt As Boolean)
+    Sub SetOptions(ByVal options As String)
     Function Convert(ByVal xmlPath As String) As Boolean
     Function Convert(ByVal xmlPath As String, ByVal pdfPath As String) As Boolean
     Function Convert(ByVal xmlPath As String, ByVal pdfOutput As Stream) As Boolean
@@ -144,6 +145,7 @@ Public Class Prince
     Private mCompress As Boolean
     Private mEncrypt As Boolean
     Private mEncryptInfo As String
+    Private mOptions As String
     Public Sub New()
         Me.mPrincePath = ""
         Me.mStyleSheets = ""
@@ -166,6 +168,7 @@ Public Class Prince
         Me.mCompress = True
         Me.mEncrypt = False
         Me.mEncryptInfo = ""
+        Me.mOptions = ""
     End Sub
     Public Sub New(ByVal princePath As String)
         Me.mPrincePath = princePath
@@ -189,6 +192,7 @@ Public Class Prince
         Me.mCompress = True
         Me.mEncrypt = False
         Me.mEncryptInfo = ""
+        Me.mOptions = ""
     End Sub
     Public Sub SetLicenseFile(ByVal file As String) _
         Implements IPrince.SetLicenseFile
@@ -299,6 +303,10 @@ Public Class Prince
             End If
         End If
     End Sub
+    Public Sub SetOptions(ByVal options As String) _
+        Implements IPrince.SetOptions
+        mOptions = options
+    End Sub
     Public Sub AddStyleSheet(ByVal cssPath As String) _
         Implements IPrince.AddStyleSheet
         mStyleSheets = mStyleSheets + "-s " + """" + cssPath + """" + " "
@@ -392,6 +400,10 @@ Public Class Prince
 
         If Not mCompress Then
             args = args + "--no-compress "
+        End If
+
+        If mOptions <> "" Then
+            args = args + mOptions + " "
         End If
 
         Return args
