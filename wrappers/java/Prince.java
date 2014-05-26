@@ -1,4 +1,4 @@
-// Copyright (C) 2005-2006, 2010, 2012 YesLogic Pty. Ltd.
+// Copyright (C) 2005-2006, 2010, 2012, 2014 YesLogic Pty. Ltd.
 // All rights reserved.
 
 package com.princexml;
@@ -54,6 +54,9 @@ public class Prince
     private boolean mDisallowModify;
     private boolean mDisallowCopy;
     private boolean mDisallowAnnotate;
+
+    // Other command-line options
+    private String mOptions;
 
     /** Constructor for Prince.
      * @param exePath The path of the Prince executable. (For example, this
@@ -116,6 +119,9 @@ public class Prince
 	mDisallowModify = false;
 	mDisallowCopy = false;
 	mDisallowAnnotate = false;
+
+	// Other command-line options
+	mOptions = null;
     }
 
     /**
@@ -391,6 +397,15 @@ public class Prince
 	mDisallowAnnotate = disallowAnnotate;
     }
     
+    /**
+     * Specify additional Prince command-line options.
+     * @param options Additional command-line options, or null.
+     */
+    public void setOptions(String options)
+    {
+	mOptions = options;
+    }
+
     /**
      * Convert an XML or HTML file to a PDF file. The name of the output PDF
      * file will be the same as the name of the input file but with an
@@ -677,6 +692,11 @@ public class Prince
 	    {
 		cmdline.add("--disallow-annotate");
 	    }
+	}
+
+	if (mOptions != null)
+	{
+	    cmdline.add(mOptions);
 	}
 
 	return cmdline;
