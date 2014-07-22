@@ -1,7 +1,7 @@
 <?php
 
 // Prince - PHP interface
-// Copyright 2005-2013 YesLogic Pty. Ltd.
+// Copyright 2005-2014 YesLogic Pty. Ltd.
 // http://www.princexml.com
 
 class Prince
@@ -578,7 +578,7 @@ class Prince
 				2 => array("pipe", "w")
 				);
 	
-	$process = proc_open($pathAndArgs, $descriptorspec, $pipes);
+	$process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
 	
 	if (is_resource($process))
 	{
@@ -606,7 +606,7 @@ class Prince
 			    2 => array("pipe", "w")
 			    );
 	
-	$process = proc_open($pathAndArgs, $descriptorspec, $pipes);
+	$process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
 	
 	if (is_resource($process))
 	{
@@ -636,7 +636,7 @@ class Prince
 			    2 => array("pipe", "w")
 			    );
 	
-	$process = proc_open($pathAndArgs, $descriptorspec, $pipes);
+	$process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
 	
 	if (is_resource($process))
 	{
@@ -666,7 +666,7 @@ class Prince
 			    2 => array("pipe", "w")
 			    );
 	
-	$process = proc_open($pathAndArgs, $descriptorspec, $pipes);
+	$process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
 	
 	if (is_resource($process))
 	{
