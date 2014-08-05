@@ -209,7 +209,7 @@ location (eg. a filename) and the message text.</dd>
 <a name="convert_file_to_passthru">
 
 <pre>
-public function convert_file_to_passthru($xmlPath)
+public function convert_file_to_passthru($xmlPath, &amp;$msgs = array())
 </pre>
 
 <p>
@@ -217,15 +217,15 @@ Convert an XML or HTML file to a PDF file, which will be passed
 through to the output buffer of the current PHP page.
 Returns true if a PDF file was generated successfully.
 </p>
-<p>
-Currently there is no mechanism to retrieve error/warning messages when using
-this convert method. However, the <code>setLog</code> function can be used to
-direct messages to an external file.
-</p>
 
 <dl>
 <dt><code>xmlPath</code></dt>
 <dd>The filename of the input XML or HTML document.</dd>
+<dt><code>msgs</code></dt>
+<dd>An optional array in which to return error and warning messages. Each
+message is returned as an array of three strings: the message code
+(<code>'err'</code>, <code>'wrn'</code> or <code>'inf'</code>), the message
+location (eg. a filename) and the message text.</dd>
 <dt><code>returns</code></dt>
 <dd>True if a PDF file was generated successfully, false otherwise.</dd>
 </dl>
@@ -249,7 +249,7 @@ user to save the PDF file instead of displaying it.
 <a name="convert_multiple_files_to_passthru">
 
 <pre>
-public function convert_multiple_files_to_passthru($xmlPaths)
+public function convert_multiple_files_to_passthru($xmlPaths, &amp;$msgs = array())
 </pre>
 
 <p>
@@ -257,15 +257,15 @@ Convert multiple XML or HTML files to a PDF file, which will be passed
 through to the output buffer of the current PHP page.
 Returns true if a PDF file was generated successfully.
 </p>
-<p>
-Currently there is no mechanism to retrieve error/warning messages when using
-this convert method. However, the <code>setLog</code> function can be used to
-direct messages to an external file.
-</p>
 
 <dl>
 <dt><code>xmlPaths</code></dt>
 <dd>An array of the input XML or HTML documents.</dd>
+<dt><code>msgs</code></dt>
+<dd>An optional array in which to return error and warning messages. Each
+message is returned as an array of three strings: the message code
+(<code>'err'</code>, <code>'wrn'</code> or <code>'inf'</code>), the message
+location (eg. a filename) and the message text.</dd>
 <dt><code>returns</code></dt>
 <dd>True if a PDF file was generated successfully, false otherwise.</dd>
 </dl>
@@ -289,7 +289,7 @@ user to save the PDF file instead of displaying it.
 <a name="convert_string_to_passthru">
 
 <pre>
-public function convert_string_to_passthru($xmlString)
+public function convert_string_to_passthru($xmlString, &amp;$msgs = array())
 </pre>
 
 <p>
@@ -297,15 +297,15 @@ Convert an XML or HTML string to a PDF file, which will be passed
 through to the output buffer of the current PHP page.
 Returns true if a PDF file was generated successfully.
 </p>
-<p>
-Currently there is no mechanism to retrieve error/warning messages when using
-this convert method. However, the <code>setLog</code> function can be used to
-direct messages to an external file.
-</p>
 
 <dl>
 <dt><code>xmlString</code></dt>
 <dd>A string containing an XML or HTML document.</dd>
+<dt><code>msgs</code></dt>
+<dd>An optional array in which to return error and warning messages. Each
+message is returned as an array of three strings: the message code
+(<code>'err'</code>, <code>'wrn'</code> or <code>'inf'</code>), the message
+location (eg. a filename) and the message text.</dd>
 <dt><code>returns</code></dt>
 <dd>True if a PDF file was generated successfully, false otherwise.</dd>
 </dl>
