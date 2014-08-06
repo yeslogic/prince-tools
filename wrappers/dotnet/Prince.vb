@@ -331,10 +331,10 @@ Public Class Prince
          Implements IPrince.ClearFileAttachments
         mFileAttachments = ""
     End Sub
-    Private Function getArgs() As String
+    Private Function getArgs(ByVal LogType As String) As String
         Dim args As String
 
-        args = "--server " + mStyleSheets + mJavaScripts + mFileAttachments
+        args = "--structured-log=" + LogType + " " + mStyleSheets + mJavaScripts + mFileAttachments
 
         If mEncrypt Then
             args = args + mEncryptInfo
@@ -412,7 +412,7 @@ Public Class Prince
         Implements IPrince.Convert
         Dim args As String
 
-        args = getArgs() + Chr(34) + xmlPath + Chr(34)
+        args = getArgs("normal") + Chr(34) + xmlPath + Chr(34)
 
         Return Convert1(args)
     End Function
@@ -420,7 +420,7 @@ Public Class Prince
         Implements IPrince.convert
         Dim args As String
 
-        args = getArgs() + Chr(34) + xmlPath + Chr(34) + " -o " + Chr(34) + pdfPath + Chr(34)
+        args = getArgs("normal") + Chr(34) + xmlPath + Chr(34) + " -o " + Chr(34) + pdfPath + Chr(34)
 
         Return Convert1(args)
     End Function
@@ -435,7 +435,7 @@ Public Class Prince
             docPaths = docPaths + Chr(34) + doc + Chr(34) + " "
         Next
 
-        args = getArgs() + docPaths + " -o " + Chr(34) + pdfPath + Chr(34)
+        args = getArgs("normal") + docPaths + " -o " + Chr(34) + pdfPath + Chr(34)
 
         Return Convert1(args)
     End Function
@@ -450,7 +450,7 @@ Public Class Prince
         If Not pdfOutput.CanWrite Then
             Throw New ApplicationException("The pdfOutput stream is not writable")
         Else
-            args = getArgs() + "--silent " + """" + xmlPath + """ -o -"
+            args = getArgs("buffered") + """" + xmlPath + """ -o -"
             prs = StartPrince(args)
 
             prs.StandardInput.Close()
@@ -480,7 +480,7 @@ Public Class Prince
         If Not xmlInput.CanRead Then
             Throw New ApplicationException("The xmlInput stream is not readable")
         Else
-            args = getArgs() + "--silent - -o """ + pdfPath + """"
+            args = getArgs("buffered") + "- -o """ + pdfPath + """"
             prs = StartPrince(args)
 
             bytesRead = xmlInput.Read(buf, 0, 4096)
@@ -512,7 +512,7 @@ Public Class Prince
         ElseIf Not pdfOutput.CanWrite Then
             Throw New ApplicationException("The pdfOutput stream is not writable")
         Else
-            args = getArgs() + "--silent -"
+            args = getArgs("buffered") + "-"
             prs = StartPrince(args)
 
             bytesRead = xmlInput.Read(buf, 0, 4096)
@@ -547,7 +547,7 @@ Public Class Prince
         If Not pdfOutput.CanWrite Then
             Throw New ApplicationException("The pdfOutput stream is not writable")
         Else
-            args = getArgs() + "--silent -"
+            args = getArgs("buffered") + "-"
             prs = StartPrince(args)
 
             xmlInput.WriteTo(prs.StandardInput.BaseStream)
@@ -578,7 +578,7 @@ Public Class Prince
         If Not pdfOutput.CanWrite Then
             Throw New ApplicationException("The pdfOutput stream is not writable")
         Else
-            args = getArgs() + "--silent -"
+            args = getArgs("buffered") + "-"
             prs = StartPrince(args)
 
             Dim enc As New UTF8Encoding
