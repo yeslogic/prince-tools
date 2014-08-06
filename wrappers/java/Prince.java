@@ -418,7 +418,7 @@ public class Prince
     {
 	List cmdline = getCommandLine();
 
-	cmdline.add("--server");
+	cmdline.add("--structured-log=normal");
 	cmdline.add(xmlPath);
         
 	Process process = Util.invokeProcess(cmdline);
@@ -437,7 +437,7 @@ public class Prince
     {
 	List cmdline = getCommandLine();
 
-	cmdline.add("--server");
+	cmdline.add("--structured-log=normal");
 	cmdline.add(xmlPath);
 	cmdline.add(pdfPath);
         
@@ -457,7 +457,7 @@ public class Prince
     {
 	List cmdline = getCommandLine();
 
-	cmdline.add("--server");
+	cmdline.add("--structured-log=normal");
 	cmdline.add("--output="+pdfPath);
 
 	for (int i = 0; i < xmlPaths.size(); ++i)
@@ -475,13 +475,6 @@ public class Prince
      * Convert an XML or HTML file to a PDF file. This method is useful for
      * servlets as it allows Prince to write the PDF output directly to the
      * OutputStream of the servlet response.
-     * <p>
-     * Note that no error/warning messages will be returned via the
-     * PrinceEvents interface when calling this method. This is due to a
-     * limitation of Prince that will be fixed in a future release. In the
-     * meantime, we recommend the use of the <code>setLog()</code> method to
-     * specify a log file that can be used to view error/warning messages from
-     * Prince.
      * @param xmlPath The filename of the input XML or HTML document.
      * @param pdfOutput The OutputStream to which Prince will write the PDF
      * output.
@@ -492,8 +485,7 @@ public class Prince
     {
 	List cmdline = getCommandLine();
 
-	cmdline.add("--server");
-	cmdline.add("--silent");
+	cmdline.add("--structured-log=buffered");
 	cmdline.add(xmlPath);
 	cmdline.add("-");
 
@@ -518,13 +510,6 @@ public class Prince
      * Note that it may be helpful to specify a base URL or path for the input
      * document using the setBaseURL() method. This allows relative URLs and
      * paths in the document (eg. for images) to be resolved correctly.
-     * <p>
-     * Note that no error/warning messages will be returned via the
-     * PrinceEvents interface when calling this method. This is due to a
-     * limitation of Prince that will be fixed in a future release. In the
-     * meantime, we recommend the use of the <code>setLog()</code> method to
-     * specify a log file that can be used to view error/warning messages from
-     * Prince.
      * @param xmlInput The InputStream from which Prince will read the XML or
      * HTML document.
      * @param pdfOutput The OutputStream to which Prince will write the PDF
@@ -536,8 +521,7 @@ public class Prince
     {
 	List cmdline = getCommandLine();
 
-	cmdline.add("--server");
-	cmdline.add("--silent");
+	cmdline.add("--structured-log=buffered");
 	cmdline.add("-");
 
 	Process process = Util.invokeProcess(cmdline);
