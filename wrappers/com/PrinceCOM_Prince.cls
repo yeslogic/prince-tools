@@ -28,12 +28,13 @@ Private httpPassword As String
 Private httpProxy As String
 Private insecure As Boolean
 Private logFile As String
-Private fileRoot As String
+Private mfileRoot As String
 Private embedFonts As Boolean
 Private subsetFonts As Boolean
-Private compress As Boolean
-Private encrypt As Boolean
+Private mcompress As Boolean
+Private mencrypt As Boolean
 Private encryptInfo As String
+Private extraOptions As String
 
 Public Event Message(msgType As String, msgLocation As String, msg As String)
 Private Sub Class_Initialize()
@@ -52,12 +53,13 @@ Private Sub Class_Initialize()
     httpProxy = ""
     insecure = False
     logFile = ""
-    fileRoot = ""
+    mfileRoot = ""
     embedFonts = True
     subsetFonts = True
-    compress = True
-    encrypt = False
+    mcompress = True
+    mencrypt = False
     encryptInfo = ""
+    extraOptions = ""
 End Sub
 Private Sub Class_Terminate()
    On Error Resume Next
@@ -68,7 +70,6 @@ Public Function Convert(ByVal xmlPath As String, _
     Dim outputFile As String
     Dim pathAndArguments As String
     Dim outputMessage As String
-    
     
     pathAndArguments = GetCommandLine()
     
@@ -162,8 +163,8 @@ Private Function GetCommandLine() As String
         cmdLine = cmdLine + "--insecure "
     End If
     
-    If fileRoot <> "" Then
-        cmdLine = cmdLine + "--fileroot=""" + fileRoot + """ "
+    If mfileRoot <> "" Then
+        cmdLine = cmdLine + "--fileroot=""" + mfileRoot + """ "
     End If
     
     If licenseFile <> "" Then
@@ -182,12 +183,16 @@ Private Function GetCommandLine() As String
         cmdLine = cmdLine + "--no-subset-fonts "
     End If
     
-    If Not compress Then
+    If Not mcompress Then
         cmdLine = cmdLine + "--no-compress "
     End If
     
-    If encrypt Then
+    If mencrypt Then
         cmdLine = cmdLine + "--encrypt " + encryptInfo
+    End If
+    
+    If extraOptions <> "" Then
+        cmdLine = cmdLine + extraOptions + " "
     End If
     
     GetCommandLine = cmdLine
@@ -522,7 +527,7 @@ Public Sub SetInsecure(ByVal insecure As Boolean)
         insecure = insecure
 End Sub
 Public Sub SetFileRoot(ByVal fileRoot As String)
-    fileRoot = fileRoot
+    mfileRoot = fileRoot
 End Sub
 Public Sub SetEmbedFonts(ByVal embed As Boolean)
     embedFonts = embed
@@ -531,10 +536,10 @@ Public Sub SetSubsetFonts(ByVal subset As Boolean)
     subsetFonts = subset
 End Sub
 Public Sub SetCompress(ByVal compress As Boolean)
-    compress = compress
+    mcompress = compress
 End Sub
 Public Sub SetEncrypt(ByVal encrypt As Boolean)
-    encrypt = encrypt
+    mencrypt = encrypt
 End Sub
 Public Sub SetEncryptInfo(ByVal keyBits As Integer, _
                           ByVal userPassword As String, _
@@ -543,7 +548,7 @@ Public Sub SetEncryptInfo(ByVal keyBits As Integer, _
                           ByVal disallowModify As Boolean, _
                           ByVal disallowCopy As Boolean, _
                           ByVal disallowAnnotate As Boolean)
-    encrypt = True
+    mencrypt = True
     encryptInfo = " --key-bits " + Str(keyBits) + _
                   " --user-password=" + """" + cmdlineArgEscape2(cmdlineArgEscape1(userPassword)) + """" + _
                   " --owner-password=" + """" + cmdlineArgEscape2(cmdlineArgEscape1(ownerPassword)) + """" + " " _
@@ -564,3 +569,7 @@ Public Sub SetEncryptInfo(ByVal keyBits As Integer, _
         encryptInfo = encryptInfo + "--disallow-annotate "
     End If
 End Sub
+Public Sub SetExtraOptions(ByVal extra As String)
+    extraOptions = extra
+End Sub
+

@@ -53,6 +53,8 @@ Class Methods:
 
 	Public Sub SetCompress(ByVal compress As Boolean)
 
+	Public Sub SetExtraOptions(ByVal extra As String)
+
 	Public Sub SetEncrypt(ByVal encrypt As Boolean)
 
 	Public Sub SetEncryptInfo(ByVal keyBits As Integer, _
