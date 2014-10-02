@@ -487,6 +487,7 @@ public class Prince
 
 	cmdline.add("--structured-log=buffered");
 	cmdline.add(xmlPath);
+	cmdline.add("-o");
 	cmdline.add("-");
 
 	Process process = Util.invokeProcess(cmdline);
