@@ -56,7 +56,7 @@ public class Prince
     private boolean mDisallowAnnotate;
 
     // Other command-line options
-    private String mOptions;
+    private String[] mOptions;
 
     /** Constructor for Prince.
      * @param exePath The path of the Prince executable. (For example, this
@@ -399,11 +399,35 @@ public class Prince
     
     /**
      * Specify additional Prince command-line options.
+     * @param option Additional command-line option, or null.
+     */
+    public void setOptions(String option)
+    {
+	if (option != null)
+	{
+	    String[] options = { option };
+	    mOptions = options;
+	}
+	else
+	{
+	    mOptions = null;
+	}
+    }
+
+    /**
+     * Specify additional Prince command-line options.
      * @param options Additional command-line options, or null.
      */
-    public void setOptions(String options)
+    public void setOptions(String[] options)
     {
-	mOptions = options;
+	if (options != null)
+	{
+	    mOptions = options;
+	}
+	else
+	{
+	    mOptions = null;
+	}
     }
 
     /**
@@ -681,7 +705,10 @@ public class Prince
 
 	if (mOptions != null)
 	{
-	    cmdline.add(mOptions);
+	    for (String option : mOptions)
+	    {
+		cmdline.add(option);
+	    }
 	}
 
 	return cmdline;
