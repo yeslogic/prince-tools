@@ -463,7 +463,7 @@ public class Prince
 
 	cmdline.add("--structured-log=normal");
 	cmdline.add(xmlPath);
-	cmdline.add(pdfPath);
+	cmdline.add("--output="+pdfPath);
         
 	Process process = Util.invokeProcess(cmdline);
 	
