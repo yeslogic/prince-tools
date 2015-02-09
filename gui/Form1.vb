@@ -137,8 +137,12 @@ Public Class Form1
             pr.AddFileAttachment(attachItem.Subitems(1).text + "\" + attachItem.text)
         Next
 
-        'set javaScript to TRUE
-        pr.SetJavaScript(True)
+        'enable or disable JavaScript in document
+        If ChDocScript.Checked Then
+            pr.SetJavaScript(True)
+        Else
+            pr.SetJavaScript(False)
+        End If
 
         'set PDF encrypt info
         setPDFEncryptInfo()
@@ -1268,6 +1272,9 @@ Public Class Form1
         BttnRemoveAttach.FlatStyle = System.Windows.Forms.FlatStyle.Flat
     End Sub
 
+    Private Sub ChDisallowAnnotation_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ChDisallowAnnotation.CheckedChanged
+
+    End Sub
 End Class
 
 Public Class LvwDocItem

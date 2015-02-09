@@ -46,6 +46,7 @@ Partial Class Form1
         Me.optionTabs = New System.Windows.Forms.TabControl()
         Me.CssJavaTab = New System.Windows.Forms.TabPage()
         Me.GBJavaScript = New System.Windows.Forms.GroupBox()
+        Me.ChDocScript = New System.Windows.Forms.CheckBox()
         Me.lblGbJsTitle = New System.Windows.Forms.Label()
         Me.bttnJsDown = New System.Windows.Forms.Button()
         Me.bttnJsUp = New System.Windows.Forms.Button()
@@ -337,7 +338,7 @@ Partial Class Form1
         Me.optionTabs.Name = "optionTabs"
         Me.optionTabs.Padding = New System.Drawing.Point(6, 8)
         Me.optionTabs.SelectedIndex = 0
-        Me.optionTabs.Size = New System.Drawing.Size(480, 592)
+        Me.optionTabs.Size = New System.Drawing.Size(480, 615)
         Me.optionTabs.TabIndex = 1
         '
         'CssJavaTab
@@ -348,12 +349,13 @@ Partial Class Form1
         Me.CssJavaTab.Location = New System.Drawing.Point(4, 34)
         Me.CssJavaTab.Name = "CssJavaTab"
         Me.CssJavaTab.Padding = New System.Windows.Forms.Padding(3)
-        Me.CssJavaTab.Size = New System.Drawing.Size(472, 554)
+        Me.CssJavaTab.Size = New System.Drawing.Size(472, 577)
         Me.CssJavaTab.TabIndex = 0
         Me.CssJavaTab.Text = "                       CSS & JavaScript                        "
         '
         'GBJavaScript
         '
+        Me.GBJavaScript.Controls.Add(Me.ChDocScript)
         Me.GBJavaScript.Controls.Add(Me.lblGbJsTitle)
         Me.GBJavaScript.Controls.Add(Me.bttnJsDown)
         Me.GBJavaScript.Controls.Add(Me.bttnJsUp)
@@ -364,9 +366,21 @@ Partial Class Form1
         Me.GBJavaScript.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GBJavaScript.Location = New System.Drawing.Point(24, 284)
         Me.GBJavaScript.Name = "GBJavaScript"
-        Me.GBJavaScript.Size = New System.Drawing.Size(424, 268)
+        Me.GBJavaScript.Size = New System.Drawing.Size(424, 288)
         Me.GBJavaScript.TabIndex = 1
         Me.GBJavaScript.TabStop = False
+        '
+        'ChDocScript
+        '
+        Me.ChDocScript.AutoSize = True
+        Me.ChDocScript.Checked = True
+        Me.ChDocScript.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.ChDocScript.Location = New System.Drawing.Point(23, 266)
+        Me.ChDocScript.Name = "ChDocScript"
+        Me.ChDocScript.Size = New System.Drawing.Size(146, 17)
+        Me.ChDocScript.TabIndex = 7
+        Me.ChDocScript.Text = "Enable Document Scripts"
+        Me.ChDocScript.UseVisualStyleBackColor = True
         '
         'lblGbJsTitle
         '
@@ -561,7 +575,7 @@ Partial Class Form1
         Me.PdfTab.Location = New System.Drawing.Point(4, 34)
         Me.PdfTab.Name = "PdfTab"
         Me.PdfTab.Padding = New System.Windows.Forms.Padding(3)
-        Me.PdfTab.Size = New System.Drawing.Size(472, 554)
+        Me.PdfTab.Size = New System.Drawing.Size(472, 577)
         Me.PdfTab.TabIndex = 1
         Me.PdfTab.Text = "                       PDF Settings                        "
         '
@@ -915,5 +929,6 @@ Partial Class Form1
     Friend WithEvents convImages As System.Windows.Forms.ImageList
     Friend WithEvents lblGbCssTitle As System.Windows.Forms.Label
     Friend WithEvents lblGbJsTitle As System.Windows.Forms.Label
+    Friend WithEvents ChDocScript As System.Windows.Forms.CheckBox
 
 End Class
