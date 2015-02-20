@@ -16,4 +16,16 @@ On Windows, be sure to specify the path to the `prince.exe` file located within 
 
 ## Documentation
 
-Full documentation can be found in the `./docs` folder that came with this file.
+Documentation for the `Prince` class is provided inline in [PHPDocumentor](http://www.phpdoc.org/) format. You can publish a copy of the documentation using `phpdoc` from within this directory.
+
+## Basic Usage
+
+```
+// In this example, we are parsing an HTML file
+$prince->setInputType('html');
+$prince->setHTML(true);
+
+// Get the contents of the file (or pass it in directly) and set an output location
+$prince->convert_string_to_file(file_get_contents('/tmp/document.html'), '/tmp/document.pdf');
+
+```
