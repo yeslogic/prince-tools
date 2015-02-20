@@ -1,0 +1,1457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project title="Prince Wrapper for PHP5" version="2.7.0">
+  <partials/>
+  <file path="prince.php" generated-path="prince.html" hash="2cc77053857baf37eb100ff36b28a36a" package="Default">
+    <docblock line="0">
+      <description>Prince - PHP interface</description>
+      <long-description></long-description>
+      <tag name="package" line="0" description="Default"/>
+      <tag name="copyright" line="0" description="2005-2014 YesLogic Pty. Ltd."/>
+      <tag name="link" line="0" description="http://www.princexml.com" link="http://www.princexml.com"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="" line="14" package="Prince">
+      <extends/>
+      <name>Prince</name>
+      <full_name>\Prince</full_name>
+      <docblock line="14">
+        <description>Prince Wrapper Class</description>
+        <long-description></long-description>
+        <tag name="package" line="14" description="Prince"/>
+      </docblock>
+      <property static="false" visibility="private" namespace="" line="19" package="Prince">
+        <name>$exePath</name>
+        <full_name>\Prince::exePath</full_name>
+        <default></default>
+        <docblock line="19">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="19" description="&lt;p&gt;Path to Prince executable&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="24" package="Prince">
+        <name>$styleSheets</name>
+        <full_name>\Prince::styleSheets</full_name>
+        <default></default>
+        <docblock line="24">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="24" description="&lt;p&gt;CSS stylesheets&lt;/p&gt;" type="array" variable="">
+            <type>array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="29" package="Prince">
+        <name>$scripts</name>
+        <full_name>\Prince::scripts</full_name>
+        <default></default>
+        <docblock line="29">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="29" description="&lt;p&gt;JavaScript files&lt;/p&gt;" type="array" variable="">
+            <type>array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="34" package="Prince">
+        <name>$fileAttachments</name>
+        <full_name>\Prince::fileAttachments</full_name>
+        <default></default>
+        <docblock line="34">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="34" description="&lt;p&gt;File attachments&lt;/p&gt;" type="array" variable="">
+            <type>array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="39" package="Prince">
+        <name>$licenseFile</name>
+        <full_name>\Prince::licenseFile</full_name>
+        <default></default>
+        <docblock line="39">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="39" description="&lt;p&gt;Path to PDF license file&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="44" package="Prince">
+        <name>$licenseKey</name>
+        <full_name>\Prince::licenseKey</full_name>
+        <default></default>
+        <docblock line="44">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="44" description="&lt;p&gt;Path to PDF license key&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="49" package="Prince">
+        <name>$inputType</name>
+        <full_name>\Prince::inputType</full_name>
+        <default></default>
+        <docblock line="49">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="49" description="&lt;p&gt;Input type&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="54" package="Prince">
+        <name>$javascript</name>
+        <full_name>\Prince::javascript</full_name>
+        <default></default>
+        <docblock line="54">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="54" description="&lt;p&gt;Load javascript?&lt;/p&gt;" type="boolean" variable="">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="59" package="Prince">
+        <name>$baseURL</name>
+        <full_name>\Prince::baseURL</full_name>
+        <default></default>
+        <docblock line="59">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="59" description="&lt;p&gt;Base URL for links&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="64" package="Prince">
+        <name>$doXInclude</name>
+        <full_name>\Prince::doXInclude</full_name>
+        <default></default>
+        <docblock line="64">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="64" description="&lt;p&gt;Parse XML Includes?&lt;/p&gt;" type="boolean" variable="">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="69" package="Prince">
+        <name>$httpUser</name>
+        <full_name>\Prince::httpUser</full_name>
+        <default></default>
+        <docblock line="69">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="69" description="&lt;p&gt;HTTP BasicAuth username&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="74" package="Prince">
+        <name>$httpPassword</name>
+        <full_name>\Prince::httpPassword</full_name>
+        <default></default>
+        <docblock line="74">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="74" description="&lt;p&gt;HTTP BasicAuth password&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="79" package="Prince">
+        <name>$httpProxy</name>
+        <full_name>\Prince::httpProxy</full_name>
+        <default></default>
+        <docblock line="79">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="79" description="&lt;p&gt;HTTP proxy server URL&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="84" package="Prince">
+        <name>$insecure</name>
+        <full_name>\Prince::insecure</full_name>
+        <default></default>
+        <docblock line="84">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="84" description="&lt;p&gt;Verify SSL connection?&lt;/p&gt;" type="boolean" variable="">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="89" package="Prince">
+        <name>$verbose</name>
+        <full_name>\Prince::verbose</full_name>
+        <default></default>
+        <docblock line="89">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="89" description="&lt;p&gt;Enable verbose logging?&lt;/p&gt;" type="boolean" variable="">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="94" package="Prince">
+        <name>$logFile</name>
+        <full_name>\Prince::logFile</full_name>
+        <default></default>
+        <docblock line="94">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="94" description="&lt;p&gt;Path to log file&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="99" package="Prince">
+        <name>$fileRoot</name>
+        <full_name>\Prince::fileRoot</full_name>
+        <default></default>
+        <docblock line="99">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="99" description="&lt;p&gt;File root&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="104" package="Prince">
+        <name>$embedFonts</name>
+        <full_name>\Prince::embedFonts</full_name>
+        <default></default>
+        <docblock line="104">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="104" description="&lt;p&gt;Embed fonts?&lt;/p&gt;" type="boolean" variable="">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="109" package="Prince">
+        <name>$subsetFonts</name>
+        <full_name>\Prince::subsetFonts</full_name>
+        <default></default>
+        <docblock line="109">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="109" description="&lt;p&gt;Embed subset fonts?&lt;/p&gt;" type="boolean" variable="">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="114" package="Prince">
+        <name>$artificialFonts</name>
+        <full_name>\Prince::artificialFonts</full_name>
+        <default></default>
+        <docblock line="114">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="114" description="&lt;p&gt;Embed artificial fonts?&lt;/p&gt;" type="boolean" variable="">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="119" package="Prince">
+        <name>$compress</name>
+        <full_name>\Prince::compress</full_name>
+        <default></default>
+        <docblock line="119">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="119" description="&lt;p&gt;Compress file?&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="124" package="Prince">
+        <name>$pdfTitle</name>
+        <full_name>\Prince::pdfTitle</full_name>
+        <default></default>
+        <docblock line="124">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="124" description="&lt;p&gt;Title attribute for PDF&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="129" package="Prince">
+        <name>$pdfSubject</name>
+        <full_name>\Prince::pdfSubject</full_name>
+        <default></default>
+        <docblock line="129">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="129" description="&lt;p&gt;Subject attribute for PDF&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="134" package="Prince">
+        <name>$pdfAuthor</name>
+        <full_name>\Prince::pdfAuthor</full_name>
+        <default></default>
+        <docblock line="134">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="134" description="&lt;p&gt;Author attribute for PDF&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="139" package="Prince">
+        <name>$pdfKeywords</name>
+        <full_name>\Prince::pdfKeywords</full_name>
+        <default></default>
+        <docblock line="139">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="139" description="&lt;p&gt;Author attribute for PDF&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="144" package="Prince">
+        <name>$pdfCreator</name>
+        <full_name>\Prince::pdfCreator</full_name>
+        <default></default>
+        <docblock line="144">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="144" description="&lt;p&gt;Creator (program) attribute for PDF&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="149" package="Prince">
+        <name>$encrypt</name>
+        <full_name>\Prince::encrypt</full_name>
+        <default></default>
+        <docblock line="149">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="149" description="&lt;p&gt;Encrypt file?&lt;/p&gt;" type="boolean" variable="">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="154" package="Prince">
+        <name>$encryptInfo</name>
+        <full_name>\Prince::encryptInfo</full_name>
+        <default></default>
+        <docblock line="154">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="154" description="&lt;p&gt;Encryption settings.&lt;/p&gt;" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="161" package="Prince">
+        <name>__construct</name>
+        <full_name>\Prince::__construct()</full_name>
+        <docblock line="161">
+          <description>Constructor</description>
+          <long-description></long-description>
+          <tag name="param" line="161" description="&lt;p&gt;Path to Prince executable&lt;/p&gt;" type="string" variable="$exePath">
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$exePath</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="201" package="Prince">
+        <name>addStyleSheet</name>
+        <full_name>\Prince::addStyleSheet()</full_name>
+        <docblock line="201">
+          <description>Add Stylesheet</description>
+          <long-description>Add a CSS style sheet that will be applied to each document.</long-description>
+          <tag name="param" line="201" description="&lt;p&gt;The filename of the CSS style sheet.&lt;/p&gt;" type="string" variable="$cssPath">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="201" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$cssPath</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="213" package="Prince">
+        <name>clearStyleSheets</name>
+        <full_name>\Prince::clearStyleSheets()</full_name>
+        <docblock line="213">
+          <description>Clear Stylesheets</description>
+          <long-description>Clear all of the CSS style sheets.</long-description>
+          <tag name="return" line="213" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="226" package="Prince">
+        <name>addScript</name>
+        <full_name>\Prince::addScript()</full_name>
+        <docblock line="226">
+          <description>Add Script</description>
+          <long-description>Add a JavaScript script that will be run before conversion.</long-description>
+          <tag name="param" line="226" description="&lt;p&gt;The filename of the script.&lt;/p&gt;" type="string" variable="$jsPath">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="226" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$jsPath</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="238" package="Prince">
+        <name>clearScripts</name>
+        <full_name>\Prince::clearScripts()</full_name>
+        <docblock line="238">
+          <description>Clear Scripts</description>
+          <long-description>Clear all of the scripts</long-description>
+          <tag name="return" line="238" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="251" package="Prince">
+        <name>addFileAttachment</name>
+        <full_name>\Prince::addFileAttachment()</full_name>
+        <docblock line="251">
+          <description>Add File Attachment</description>
+          <long-description>Add a file attachment that will be attached to the PDF file</long-description>
+          <tag name="param" line="251" description="&lt;p&gt;The filename of the file attachment.&lt;/p&gt;" type="string" variable="$filePath">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="251" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$filePath</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="263" package="Prince">
+        <name>clearFileAttachments</name>
+        <full_name>\Prince::clearFileAttachments()</full_name>
+        <docblock line="263">
+          <description>Clear File Attachments</description>
+          <long-description>Clear all of the file attachments.</long-description>
+          <tag name="return" line="263" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="276" package="Prince">
+        <name>setLicenseFile</name>
+        <full_name>\Prince::setLicenseFile()</full_name>
+        <docblock line="276">
+          <description>Set License File</description>
+          <long-description>Specify the license file.</long-description>
+          <tag name="param" line="276" description="&lt;p&gt;The filename of the license file.&lt;/p&gt;" type="string" variable="$file">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="276" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$file</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="289" package="Prince">
+        <name>setLicenseKey</name>
+        <full_name>\Prince::setLicenseKey()</full_name>
+        <docblock line="289">
+          <description>Set License Key</description>
+          <long-description>Specify the license key.</long-description>
+          <tag name="param" line="289" description="&lt;p&gt;The license key&lt;/p&gt;" type="string" variable="$key">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="289" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$key</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="302" package="Prince">
+        <name>setInputType</name>
+        <full_name>\Prince::setInputType()</full_name>
+        <docblock line="302">
+          <description>Set Input Type</description>
+          <long-description>Specify the input type of the document.</long-description>
+          <tag name="param" line="302" description="&lt;p&gt;Can take a value of : &quot;xml&quot;, &quot;html&quot; or &quot;auto&quot;.&lt;/p&gt;" type="string" variable="$inputType">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="302" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$inputType</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="315" package="Prince">
+        <name>setJavaScript</name>
+        <full_name>\Prince::setJavaScript()</full_name>
+        <docblock line="315">
+          <description>Set JavaScript</description>
+          <long-description>Specify whether JavaScript found in documents should be run.</long-description>
+          <tag name="param" line="315" description="&lt;p&gt;True if document scripts should be run.&lt;/p&gt;" type="boolean" variable="$js">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="315" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$js</name>
+          <default></default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="328" package="Prince">
+        <name>setHTML</name>
+        <full_name>\Prince::setHTML()</full_name>
+        <docblock line="328">
+          <description>Set HTML</description>
+          <long-description>Specify whether documents should be parsed as HTML or XML/XHTML.</long-description>
+          <tag name="param" line="328" description="&lt;p&gt;True if all documents should be treated as HTML.&lt;/p&gt;" type="boolean" variable="$html">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="328" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$html</name>
+          <default></default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="347" package="Prince">
+        <name>setVerbose</name>
+        <full_name>\Prince::setVerbose()</full_name>
+        <docblock line="347">
+          <description>Set Verbose</description>
+          <long-description>Specify whether to use verbose logging</long-description>
+          <tag name="param" line="347" description="&lt;p&gt;True to use verbose logging.&lt;/p&gt;" type="boolean" variable="$verbose">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="347" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$verbose</name>
+          <default></default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="361" package="Prince">
+        <name>setLog</name>
+        <full_name>\Prince::setLog()</full_name>
+        <docblock line="361">
+          <description>Set Log</description>
+          <long-description>Specify a file that Prince should use to log error/warning messages.</long-description>
+          <tag name="param" line="361" description="&lt;p&gt;The filename that Prince should use to log error/warning&#10;messages, or '' to disable logging.&lt;/p&gt;" type="string" variable="$logFile">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="361" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$logFile</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="374" package="Prince">
+        <name>setBaseURL</name>
+        <full_name>\Prince::setBaseURL()</full_name>
+        <docblock line="374">
+          <description>Set Base URL</description>
+          <long-description>Specify the base URL of the input document.</long-description>
+          <tag name="param" line="374" description="&lt;p&gt;The base URL or path of the input document, or ''.&lt;/p&gt;" type="string" variable="$baseURL">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="374" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$baseURL</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="389" package="Prince">
+        <name>setXInclude</name>
+        <full_name>\Prince::setXInclude()</full_name>
+        <docblock line="389">
+          <description>Set XInclude</description>
+          <long-description>Specify whether XML Inclusions (XInclude) processing should be applied
+to input documents. XInclude processing will be performed by default
+unless explicitly disabled.</long-description>
+          <tag name="param" line="389" description="&lt;p&gt;False to disable XInclude processing.&lt;/p&gt;" type="boolean" variable="$xinclude">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="389" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$xinclude</name>
+          <default></default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="402" package="Prince">
+        <name>setHttpUser</name>
+        <full_name>\Prince::setHttpUser()</full_name>
+        <docblock line="402">
+          <description>Set HTTP User</description>
+          <long-description>Specify a username to use when fetching remote resources over HTTP.</long-description>
+          <tag name="param" line="402" description="&lt;p&gt;The username to use for basic HTTP authentication.&lt;/p&gt;" type="string" variable="$user">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="402" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$user</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="415" package="Prince">
+        <name>setHttpPassword</name>
+        <full_name>\Prince::setHttpPassword()</full_name>
+        <docblock line="415">
+          <description>Set HTTP Password</description>
+          <long-description>Specify a password to use when fetching remote resources over HTTP.</long-description>
+          <tag name="param" line="415" description="&lt;p&gt;The password to use for basic HTTP authentication.&lt;/p&gt;" type="string" variable="$password">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="415" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$password</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="428" package="Prince">
+        <name>setHttpProxy</name>
+        <full_name>\Prince::setHttpProxy()</full_name>
+        <docblock line="428">
+          <description>Add Script</description>
+          <long-description>Specify the URL for the HTTP proxy server, if needed.</long-description>
+          <tag name="param" line="428" description="&lt;ul&gt;&#10;&lt;li&gt;The URL for the HTTP proxy server.&lt;/li&gt;&#10;&lt;/ul&gt;" type="string" variable="$proxy">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="428" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$proxy</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="441" package="Prince">
+        <name>setInsecure</name>
+        <full_name>\Prince::setInsecure()</full_name>
+        <docblock line="441">
+          <description>Set Insecure</description>
+          <long-description>Specify whether to disable SSL verification.</long-description>
+          <tag name="param" line="441" description="&lt;ul&gt;&#10;&lt;li&gt;If set to true, SSL verification is disabled. (not recommended)&lt;/li&gt;&#10;&lt;/ul&gt;" type="boolean" variable="$insecure">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="441" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$insecure</name>
+          <default></default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="457" package="Prince">
+        <name>setFileRoot</name>
+        <full_name>\Prince::setFileRoot()</full_name>
+        <docblock line="457">
+          <description>Set File Root</description>
+          <long-description>Specify the root directory for absolute filenames. This can be used
+when converting a local file that uses absolute paths to refer to web
+resources. For example, /images/logo.jpg can be
+rewritten to /usr/share/images/logo.jpg by specifying "/usr/share" as the root.</long-description>
+          <tag name="param" line="457" description="&lt;ul&gt;&#10;&lt;li&gt;The path to prepend to absolute filenames.&lt;/li&gt;&#10;&lt;/ul&gt;" type="string" variable="$fileRoot">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="457" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$fileRoot</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="471" package="Prince">
+        <name>setEmbedFonts</name>
+        <full_name>\Prince::setEmbedFonts()</full_name>
+        <docblock line="471">
+          <description>Set Embed Fonts</description>
+          <long-description>Specify whether fonts should be embedded in the output PDF file. Fonts
+will be embedded by default unless explicitly disabled.</long-description>
+          <tag name="param" line="471" description="&lt;ul&gt;&#10;&lt;li&gt;False to disable PDF font embedding.&lt;/li&gt;&#10;&lt;/ul&gt;" type="boolean" variable="$embedFonts">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="471" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$embedFonts</name>
+          <default></default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="485" package="Prince">
+        <name>setSubsetFonts</name>
+        <full_name>\Prince::setSubsetFonts()</full_name>
+        <docblock line="485">
+          <description>Set Subset Fonts</description>
+          <long-description>Specify whether embedded fonts should be subset.
+Fonts will be subset by default unless explicitly disabled.</long-description>
+          <tag name="param" line="485" description="&lt;ul&gt;&#10;&lt;li&gt;False to disable PDF font subsetting&lt;/li&gt;&#10;&lt;/ul&gt;" type="boolean" variable="$subsetFonts">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="485" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$subsetFonts</name>
+          <default></default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="499" package="Prince">
+        <name>setArtificialFonts</name>
+        <full_name>\Prince::setArtificialFonts()</full_name>
+        <docblock line="499">
+          <description>Set Artificial Fonts</description>
+          <long-description>Specify whether artificial bold/italic fonts should be generated if
+necessary. Artificial fonts are enabled by default.</long-description>
+          <tag name="param" line="499" description="&lt;ul&gt;&#10;&lt;li&gt;False to disable artificial bold/italic fonts.&lt;/li&gt;&#10;&lt;/ul&gt;" type="boolean" variable="$artificialFonts">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="499" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$artificialFonts</name>
+          <default></default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="513" package="Prince">
+        <name>setCompress</name>
+        <full_name>\Prince::setCompress()</full_name>
+        <docblock line="513">
+          <description>Set Compress</description>
+          <long-description>Specify whether compression should be applied to the output PDF file.
+Compression will be applied by default unless explicitly disabled.</long-description>
+          <tag name="param" line="513" description="&lt;ul&gt;&#10;&lt;li&gt;False to disable PDF compression.&lt;/li&gt;&#10;&lt;/ul&gt;" type="boolean" variable="$compress">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="513" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$compress</name>
+          <default></default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="526" package="Prince">
+        <name>setPDFTitle</name>
+        <full_name>\Prince::setPDFTitle()</full_name>
+        <docblock line="526">
+          <description>Set PDF Title</description>
+          <long-description>Specify the document title for PDF metadata.</long-description>
+          <tag name="param" line="526" description="" type="string" variable="$pdfTitle">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="526" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$pdfTitle</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="539" package="Prince">
+        <name>setPDFSubject</name>
+        <full_name>\Prince::setPDFSubject()</full_name>
+        <docblock line="539">
+          <description>Set PDF Subject</description>
+          <long-description>Specify the document subject for PDF metadata.</long-description>
+          <tag name="param" line="539" description="" type="string" variable="$pdfSubject">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="539" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$pdfSubject</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="552" package="Prince">
+        <name>setPDFAuthor</name>
+        <full_name>\Prince::setPDFAuthor()</full_name>
+        <docblock line="552">
+          <description>Set PDF Author</description>
+          <long-description>Specify the document author for PDF metadata.</long-description>
+          <tag name="param" line="552" description="" type="string" variable="$pdfAuthor">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="552" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$pdfAuthor</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="565" package="Prince">
+        <name>setPDFKeywords</name>
+        <full_name>\Prince::setPDFKeywords()</full_name>
+        <docblock line="565">
+          <description>Set PDF Keywords</description>
+          <long-description>Specify the document keywords for PDF metadata.</long-description>
+          <tag name="param" line="565" description="" type="string" variable="$pdfKeywords">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="565" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$pdfKeywords</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="578" package="Prince">
+        <name>setPDFCreator</name>
+        <full_name>\Prince::setPDFCreator()</full_name>
+        <docblock line="578">
+          <description>Set PDF Creator</description>
+          <long-description>Specify the document creator for PDF metadata.</long-description>
+          <tag name="param" line="578" description="" type="string" variable="$pdfCreator">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="578" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$pdfCreator</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="592" package="Prince">
+        <name>setEncrypt</name>
+        <full_name>\Prince::setEncrypt()</full_name>
+        <docblock line="592">
+          <description>Set Encrypt</description>
+          <long-description>Specify whether encryption should be applied to the output PDF file.
+Encryption will not be applied by default unless explicitly enabled.</long-description>
+          <tag name="param" line="592" description="&lt;p&gt;True to enable PDF encryption.&lt;/p&gt;" type="boolean" variable="$encrypt">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="592" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$encrypt</name>
+          <default></default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="612" package="Prince">
+        <name>setEncryptInfo</name>
+        <full_name>\Prince::setEncryptInfo()</full_name>
+        <docblock line="612">
+          <description>Set Encryption Info</description>
+          <long-description>Set the parameters used for PDF encryption. Calling this method will
+also enable PDF encryption, equivalent to calling setEncrypt(true).</long-description>
+          <tag name="param" line="612" description="&lt;p&gt;The size of the encryption key in bits (must be 40 or 128)&lt;/p&gt;" type="integer" variable="$keyBits">
+            <type>integer</type>
+          </tag>
+          <tag name="param" line="612" description="&lt;p&gt;The user password for the PDF file.&lt;/p&gt;" type="string" variable="$userPassword">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="612" description="&lt;p&gt;The owner password for the PDF file.&lt;/p&gt;" type="string" variable="$ownerPassword">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="612" description="&lt;p&gt;True to disallow printing of the PDF file.&lt;/p&gt;" type="boolean" variable="$disallowPrint">
+            <type>boolean</type>
+          </tag>
+          <tag name="param" line="612" description="&lt;p&gt;True to disallow modification of the PDF file.&lt;/p&gt;" type="boolean" variable="$disallowModify">
+            <type>boolean</type>
+          </tag>
+          <tag name="param" line="612" description="&lt;p&gt;True to disallow copying from the PDF file.&lt;/p&gt;" type="boolean" variable="$disallowCopy">
+            <type>boolean</type>
+          </tag>
+          <tag name="param" line="612" description="&lt;p&gt;True to disallow annotation of the PDF file.&lt;/p&gt;" type="boolean" variable="$disallowAnnotate">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="612" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$keyBits</name>
+          <default></default>
+          <type>integer</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$userPassword</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$ownerPassword</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$disallowPrint</name>
+          <default>false</default>
+          <type>boolean</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$disallowModify</name>
+          <default>false</default>
+          <type>boolean</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$disallowCopy</name>
+          <default>false</default>
+          <type>boolean</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$disallowAnnotate</name>
+          <default>false</default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="658" package="Prince">
+        <name>convert_file</name>
+        <full_name>\Prince::convert_file()</full_name>
+        <docblock line="658">
+          <description>Convert File</description>
+          <long-description></long-description>
+          <tag name="param" line="658" description="&lt;p&gt;The filename of the input XML or HTML document.&lt;/p&gt;" type="array" variable="$xmlPath">
+            <type>array</type>
+          </tag>
+          <tag name="param" line="658" description="&lt;p&gt;An optional array in which to return error and warning messages.&lt;/p&gt;" type="array" variable="$msgs">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="658" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$xmlPath</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$msgs</name>
+          <default>array()</default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="675" package="Prince">
+        <name>convert_file_to_file</name>
+        <full_name>\Prince::convert_file_to_file()</full_name>
+        <docblock line="675">
+          <description>Convert File to FIle</description>
+          <long-description></long-description>
+          <tag name="param" line="675" description="&lt;p&gt;The filename of the input XML or HTML document.&lt;/p&gt;" type="array" variable="$xmlPath">
+            <type>array</type>
+          </tag>
+          <tag name="param" line="675" description="&lt;p&gt;The filename of the output PDF file.&lt;/p&gt;" type="string" variable="$pdfPath">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="675" description="&lt;p&gt;An optional array in which to return error and warning messages.&lt;/p&gt;" type="array" variable="$msgs">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="675" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$xmlPath</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$pdfPath</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$msgs</name>
+          <default>array()</default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="692" package="Prince">
+        <name>convert_multiple_files</name>
+        <full_name>\Prince::convert_multiple_files()</full_name>
+        <docblock line="692">
+          <description>Convert Multiple Files</description>
+          <long-description></long-description>
+          <tag name="param" line="692" description="&lt;p&gt;An array of the input XML or HTML documents.&lt;/p&gt;" type="array" variable="$xmlPaths">
+            <type>array</type>
+          </tag>
+          <tag name="param" line="692" description="&lt;p&gt;The filename of the output PDF file.&lt;/p&gt;" type="string" variable="$pdfPath">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="692" description="&lt;p&gt;An optional array in which to return error and warning messages.&lt;/p&gt;" type="array" variable="$msgs">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="692" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$xmlPaths</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$pdfPath</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$msgs</name>
+          <default>array()</default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="713" package="Prince">
+        <name>convert_multiple_files_to_passthru</name>
+        <full_name>\Prince::convert_multiple_files_to_passthru()</full_name>
+        <docblock line="713">
+          <description>Convert Multiple Files to Passthru</description>
+          <long-description></long-description>
+          <tag name="param" line="713" description="&lt;p&gt;An array of the input XML or HTML documents.&lt;/p&gt;" type="array" variable="$xmlPaths">
+            <type>array</type>
+          </tag>
+          <tag name="param" line="713" description="&lt;p&gt;An optional array in which to return error and warning messages.&lt;/p&gt;" type="array" variable="$msgs">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="713" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$xmlPaths</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$msgs</name>
+          <default>array()</default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="734" package="Prince">
+        <name>convert_file_to_passthru</name>
+        <full_name>\Prince::convert_file_to_passthru()</full_name>
+        <docblock line="734">
+          <description>Convert File to Passthru</description>
+          <long-description></long-description>
+          <tag name="param" line="734" description="&lt;p&gt;The filename of the input XML or HTML document.&lt;/p&gt;" type="string" variable="$xmlPath">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="734" description="&lt;p&gt;An optional array in which to return error and warning messages.&lt;/p&gt;" type="array" variable="$msgs">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="734" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$xmlPath</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$msgs</name>
+          <default>array()</default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="749" package="Prince">
+        <name>convert_string_to_passthru</name>
+        <full_name>\Prince::convert_string_to_passthru()</full_name>
+        <docblock line="749">
+          <description>Convert String to Passthru</description>
+          <long-description></long-description>
+          <tag name="param" line="749" description="&lt;p&gt;A string containing an XML or HTML document.&lt;/p&gt;" type="string" variable="$xmlString">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="749" description="&lt;p&gt;An optional array in which to return error and warning messages.&lt;/p&gt;" type="array" variable="$msgs">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="749" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$xmlString</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$msgs</name>
+          <default>array()</default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="765" package="Prince">
+        <name>convert_string_to_file</name>
+        <full_name>\Prince::convert_string_to_file()</full_name>
+        <docblock line="765">
+          <description>Convert String to File</description>
+          <long-description></long-description>
+          <tag name="param" line="765" description="&lt;p&gt;A string containing an XML or HTML document.&lt;/p&gt;" type="string" variable="$xmlString">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="765" description="&lt;p&gt;The filename of the output PDF file.&lt;/p&gt;" type="string" variable="$pdfPath">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="765" description="&lt;p&gt;An optional array in which to return error and warning messages.&lt;/p&gt;" type="array" variable="$msgs">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="765" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$xmlString</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$pdfPath</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$msgs</name>
+          <default>array()</default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="779" package="Prince">
+        <name>getCommandLine</name>
+        <full_name>\Prince::getCommandLine()</full_name>
+        <docblock line="779">
+          <description>Get Command Line</description>
+          <long-description></long-description>
+          <tag name="return" line="779" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="888" package="Prince">
+        <name>convert_internal_file_to_file</name>
+        <full_name>\Prince::convert_internal_file_to_file()</full_name>
+        <docblock line="888">
+          <description>Convert Internal File to File</description>
+          <long-description></long-description>
+          <tag name="param" line="888" description="&lt;p&gt;Path and arguments to execute.&lt;/p&gt;" type="string" variable="$pathAndArgs">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="888" description="&lt;p&gt;An optional array in which to return error and warning messages.&lt;/p&gt;" type="array" variable="$msgs">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="888" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$pathAndArgs</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$msgs</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="923" package="Prince">
+        <name>convert_internal_string_to_file</name>
+        <full_name>\Prince::convert_internal_string_to_file()</full_name>
+        <docblock line="923">
+          <description>Convert Internal String to File</description>
+          <long-description></long-description>
+          <tag name="param" line="923" description="&lt;p&gt;Path and arguments to execute.&lt;/p&gt;" type="string" variable="$pathAndArgs">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="923" description="&lt;p&gt;Contents of the XML file.&lt;/p&gt;" type="string" variable="$xmlString">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="923" description="&lt;p&gt;An optional array in which to return error and warning messages.&lt;/p&gt;" type="array" variable="$msgs">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="923" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$pathAndArgs</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$xmlString</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$msgs</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="958" package="Prince">
+        <name>convert_internal_file_to_passthru</name>
+        <full_name>\Prince::convert_internal_file_to_passthru()</full_name>
+        <docblock line="958">
+          <description>Convert Internal File to Passthru</description>
+          <long-description></long-description>
+          <tag name="param" line="958" description="&lt;p&gt;Path and arguments to execute.&lt;/p&gt;" type="string" variable="$pathAndArgs">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="958" description="&lt;p&gt;An optional array in which to return error and warning messages.&lt;/p&gt;" type="array" variable="$msgs">
+            <type>array</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$pathAndArgs</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$msgs</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="995" package="Prince">
+        <name>convert_internal_string_to_passthru</name>
+        <full_name>\Prince::convert_internal_string_to_passthru()</full_name>
+        <docblock line="995">
+          <description>Convert Internal String to Passthru</description>
+          <long-description></long-description>
+          <tag name="param" line="995" description="&lt;p&gt;Path and arguments to execute.&lt;/p&gt;" type="string" variable="$pathAndArgs">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="995" description="&lt;p&gt;Contents of the XML file.&lt;/p&gt;" type="string" variable="$xmlString">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="995" description="&lt;p&gt;An optional array in which to return error and warning messages.&lt;/p&gt;" type="array" variable="$msgs">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="995" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$pathAndArgs</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$xmlString</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$msgs</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="1032" package="Prince">
+        <name>readMessages</name>
+        <full_name>\Prince::readMessages()</full_name>
+        <docblock line="1032">
+          <description>Read Messages</description>
+          <long-description></long-description>
+          <tag name="param" line="1032" description="&lt;p&gt;File hanndle.&lt;/p&gt;" type="resource" variable="$pipe">
+            <type>resource</type>
+          </tag>
+          <tag name="param" line="1032" description="&lt;p&gt;An optional array in which to return error and warning messages.&lt;/p&gt;" type="array" variable="$msgs">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="1032" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$pipe</name>
+          <default></default>
+          <type>resource</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$msgs</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="1074" package="Prince">
+        <name>addDoubleQuotes</name>
+        <full_name>\Prince::addDoubleQuotes()</full_name>
+        <docblock line="1074">
+          <description>Add Double Quotes</description>
+          <long-description>Puts double-quotes around space(s) in file path,
+and also around semicolon(;), comma(,), ampersand(&amp;), up-arrow(^) and parentheses.
+This is needed if the file path is used in a command line.</long-description>
+          <tag name="param" line="1074" description="" type="string" variable="$str">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="1074" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$str</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="1118" package="Prince">
+        <name>cmdlineArgEscape</name>
+        <full_name>\Prince::cmdlineArgEscape()</full_name>
+        <docblock line="1118">
+          <description>Command Line Argument Escape</description>
+          <long-description></long-description>
+          <tag name="param" line="1118" description="" type="string" variable="$argStr">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="1118" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$argStr</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="1132" package="Prince">
+        <name>cmdlineArgEscape1</name>
+        <full_name>\Prince::cmdlineArgEscape1()</full_name>
+        <docblock line="1132">
+          <description>Command Line Argument Escape (1)</description>
+          <long-description>In the input string $argStr, a double quote with zero or more preceding backslash(es)
+will be replaced with: n*backslash + doublequote =&gt; (2*n+1)*backslash + doublequote</long-description>
+          <tag name="param" line="1132" description="" type="string" variable="$argStr">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="1132" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$argStr</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="" line="1182" package="Prince">
+        <name>cmdlineArgEscape2</name>
+        <full_name>\Prince::cmdlineArgEscape2()</full_name>
+        <docblock line="1182">
+          <description>Command Line Argument Escape (2)</description>
+          <long-description>Double the number of trailing backslash(es): n*trailing backslash =&gt; (2*n)*trailing backslash.</long-description>
+          <tag name="param" line="1182" description="" type="string" variable="$argStr">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="1182" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$argStr</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+    </class>
+    <markers/>
+    <source>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</source>
+  </file>
+  <package name="Default" full_name="Default"/>
+  <package name="Prince" full_name="Prince"/>
+  <package name="global" full_name="global"/>
+  <namespace name="global" full_name="global"/>
+  <deprecated count="0"/>
+</project>

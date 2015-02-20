@@ -1,0 +1,1173 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Prince Wrapper for PHP5 » \Prince</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Prince Wrapper for PHP5</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Packages</a></li>
+<li><a href="../packages/Prince.html"><i class="icon-folder-open"></i> Prince</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">0</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">0</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<div xmlns:php="http://php.net/xsl" class="btn-toolbar">
+<div class="btn-group visibility" data-toggle="buttons-checkbox">
+<button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button>
+</div>
+<div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+</div>
+<ul xmlns:php="http://php.net/xsl" class="side-nav nav nav-list">
+<li class="nav-header">
+<i title="Methods" class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method___construct" title="__construct() :: Constructor"><span class="description">Constructor</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#method_addFileAttachment" title="addFileAttachment() :: Add File Attachment"><span class="description">Add File Attachment</span><pre>addFileAttachment()</pre></a></li>
+<li class="method public "><a href="#method_addScript" title="addScript() :: Add Script"><span class="description">Add Script</span><pre>addScript()</pre></a></li>
+<li class="method public "><a href="#method_addStyleSheet" title="addStyleSheet() :: Add Stylesheet"><span class="description">Add Stylesheet</span><pre>addStyleSheet()</pre></a></li>
+<li class="method public "><a href="#method_clearFileAttachments" title="clearFileAttachments() :: Clear File Attachments"><span class="description">Clear File Attachments</span><pre>clearFileAttachments()</pre></a></li>
+<li class="method public "><a href="#method_clearScripts" title="clearScripts() :: Clear Scripts"><span class="description">Clear Scripts</span><pre>clearScripts()</pre></a></li>
+<li class="method public "><a href="#method_clearStyleSheets" title="clearStyleSheets() :: Clear Stylesheets"><span class="description">Clear Stylesheets</span><pre>clearStyleSheets()</pre></a></li>
+<li class="method public "><a href="#method_convert_file" title="convert_file() :: Convert File"><span class="description">Convert File</span><pre>convert_file()</pre></a></li>
+<li class="method public "><a href="#method_convert_file_to_file" title="convert_file_to_file() :: Convert File to FIle"><span class="description">Convert File to FIle</span><pre>convert_file_to_file()</pre></a></li>
+<li class="method public "><a href="#method_convert_file_to_passthru" title="convert_file_to_passthru() :: Convert File to Passthru"><span class="description">Convert File to Passthru</span><pre>convert_file_to_passthru()</pre></a></li>
+<li class="method public "><a href="#method_convert_multiple_files" title="convert_multiple_files() :: Convert Multiple Files"><span class="description">Convert Multiple Files</span><pre>convert_multiple_files()</pre></a></li>
+<li class="method public "><a href="#method_convert_multiple_files_to_passthru" title="convert_multiple_files_to_passthru() :: Convert Multiple Files to Passthru"><span class="description">Convert Multiple Files to Passthru</span><pre>convert_multiple_files_to_passthru()</pre></a></li>
+<li class="method public "><a href="#method_convert_string_to_file" title="convert_string_to_file() :: Convert String to File"><span class="description">Convert String to File</span><pre>convert_string_to_file()</pre></a></li>
+<li class="method public "><a href="#method_convert_string_to_passthru" title="convert_string_to_passthru() :: Convert String to Passthru"><span class="description">Convert String to Passthru</span><pre>convert_string_to_passthru()</pre></a></li>
+<li class="method public "><a href="#method_setArtificialFonts" title="setArtificialFonts() :: Set Artificial Fonts"><span class="description">Set Artificial Fonts</span><pre>setArtificialFonts()</pre></a></li>
+<li class="method public "><a href="#method_setBaseURL" title="setBaseURL() :: Set Base URL"><span class="description">Set Base URL</span><pre>setBaseURL()</pre></a></li>
+<li class="method public "><a href="#method_setCompress" title="setCompress() :: Set Compress"><span class="description">Set Compress</span><pre>setCompress()</pre></a></li>
+<li class="method public "><a href="#method_setEmbedFonts" title="setEmbedFonts() :: Set Embed Fonts"><span class="description">Set Embed Fonts</span><pre>setEmbedFonts()</pre></a></li>
+<li class="method public "><a href="#method_setEncrypt" title="setEncrypt() :: Set Encrypt"><span class="description">Set Encrypt</span><pre>setEncrypt()</pre></a></li>
+<li class="method public "><a href="#method_setEncryptInfo" title="setEncryptInfo() :: Set Encryption Info"><span class="description">Set Encryption Info</span><pre>setEncryptInfo()</pre></a></li>
+<li class="method public "><a href="#method_setFileRoot" title="setFileRoot() :: Set File Root"><span class="description">Set File Root</span><pre>setFileRoot()</pre></a></li>
+<li class="method public "><a href="#method_setHTML" title="setHTML() :: Set HTML"><span class="description">Set HTML</span><pre>setHTML()</pre></a></li>
+<li class="method public "><a href="#method_setHttpPassword" title="setHttpPassword() :: Set HTTP Password"><span class="description">Set HTTP Password</span><pre>setHttpPassword()</pre></a></li>
+<li class="method public "><a href="#method_setHttpProxy" title="setHttpProxy() :: Add Script"><span class="description">Add Script</span><pre>setHttpProxy()</pre></a></li>
+<li class="method public "><a href="#method_setHttpUser" title="setHttpUser() :: Set HTTP User"><span class="description">Set HTTP User</span><pre>setHttpUser()</pre></a></li>
+<li class="method public "><a href="#method_setInputType" title="setInputType() :: Set Input Type"><span class="description">Set Input Type</span><pre>setInputType()</pre></a></li>
+<li class="method public "><a href="#method_setInsecure" title="setInsecure() :: Set Insecure"><span class="description">Set Insecure</span><pre>setInsecure()</pre></a></li>
+<li class="method public "><a href="#method_setJavaScript" title="setJavaScript() :: Set JavaScript"><span class="description">Set JavaScript</span><pre>setJavaScript()</pre></a></li>
+<li class="method public "><a href="#method_setLicenseFile" title="setLicenseFile() :: Set License File"><span class="description">Set License File</span><pre>setLicenseFile()</pre></a></li>
+<li class="method public "><a href="#method_setLicenseKey" title="setLicenseKey() :: Set License Key"><span class="description">Set License Key</span><pre>setLicenseKey()</pre></a></li>
+<li class="method public "><a href="#method_setLog" title="setLog() :: Set Log"><span class="description">Set Log</span><pre>setLog()</pre></a></li>
+<li class="method public "><a href="#method_setPDFAuthor" title="setPDFAuthor() :: Set PDF Author"><span class="description">Set PDF Author</span><pre>setPDFAuthor()</pre></a></li>
+<li class="method public "><a href="#method_setPDFCreator" title="setPDFCreator() :: Set PDF Creator"><span class="description">Set PDF Creator</span><pre>setPDFCreator()</pre></a></li>
+<li class="method public "><a href="#method_setPDFKeywords" title="setPDFKeywords() :: Set PDF Keywords"><span class="description">Set PDF Keywords</span><pre>setPDFKeywords()</pre></a></li>
+<li class="method public "><a href="#method_setPDFSubject" title="setPDFSubject() :: Set PDF Subject"><span class="description">Set PDF Subject</span><pre>setPDFSubject()</pre></a></li>
+<li class="method public "><a href="#method_setPDFTitle" title="setPDFTitle() :: Set PDF Title"><span class="description">Set PDF Title</span><pre>setPDFTitle()</pre></a></li>
+<li class="method public "><a href="#method_setSubsetFonts" title="setSubsetFonts() :: Set Subset Fonts"><span class="description">Set Subset Fonts</span><pre>setSubsetFonts()</pre></a></li>
+<li class="method public "><a href="#method_setVerbose" title="setVerbose() :: Set Verbose"><span class="description">Set Verbose</span><pre>setVerbose()</pre></a></li>
+<li class="method public "><a href="#method_setXInclude" title="setXInclude() :: Set XInclude"><span class="description">Set XInclude</span><pre>setXInclude()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header private">» Private
+                    <ul>
+<li class="method private "><a href="#method_addDoubleQuotes" title="addDoubleQuotes() :: Add Double Quotes"><span class="description">Add Double Quotes</span><pre>addDoubleQuotes()</pre></a></li>
+<li class="method private "><a href="#method_cmdlineArgEscape" title="cmdlineArgEscape() :: Command Line Argument Escape"><span class="description">Command Line Argument Escape</span><pre>cmdlineArgEscape()</pre></a></li>
+<li class="method private "><a href="#method_cmdlineArgEscape1" title="cmdlineArgEscape1() :: Command Line Argument Escape (1)"><span class="description">Command Line Argument Escape (1)</span><pre>cmdlineArgEscape1()</pre></a></li>
+<li class="method private "><a href="#method_cmdlineArgEscape2" title="cmdlineArgEscape2() :: Command Line Argument Escape (2)"><span class="description">Command Line Argument Escape (2)</span><pre>cmdlineArgEscape2()</pre></a></li>
+<li class="method private "><a href="#method_convert_internal_file_to_file" title="convert_internal_file_to_file() :: Convert Internal File to File"><span class="description">Convert Internal File to File</span><pre>convert_internal_file_to_file()</pre></a></li>
+<li class="method private "><a href="#method_convert_internal_file_to_passthru" title="convert_internal_file_to_passthru() :: Convert Internal File to Passthru"><span class="description">Convert Internal File to Passthru</span><pre>convert_internal_file_to_passthru()</pre></a></li>
+<li class="method private "><a href="#method_convert_internal_string_to_file" title="convert_internal_string_to_file() :: Convert Internal String to File"><span class="description">Convert Internal String to File</span><pre>convert_internal_string_to_file()</pre></a></li>
+<li class="method private "><a href="#method_convert_internal_string_to_passthru" title="convert_internal_string_to_passthru() :: Convert Internal String to Passthru"><span class="description">Convert Internal String to Passthru</span><pre>convert_internal_string_to_passthru()</pre></a></li>
+<li class="method private "><a href="#method_getCommandLine" title="getCommandLine() :: Get Command Line"><span class="description">Get Command Line</span><pre>getCommandLine()</pre></a></li>
+<li class="method private "><a href="#method_readMessages" title="readMessages() :: Read Messages"><span class="description">Read Messages</span><pre>readMessages()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i title="Properties" class="icon-custom icon-property"></i> Properties
+                    <ul></ul>
+</li>
+<li class="nav-header private">» Private
+                    <ul>
+<li class="property private "><a href="#property_artificialFonts" title="$artificialFonts() :: "><span class="description">Embed artificial fonts?</span><pre>$artificialFonts</pre></a></li>
+<li class="property private "><a href="#property_baseURL" title="$baseURL() :: "><span class="description">Base URL for links</span><pre>$baseURL</pre></a></li>
+<li class="property private "><a href="#property_compress" title="$compress() :: "><span class="description">Compress file?</span><pre>$compress</pre></a></li>
+<li class="property private "><a href="#property_doXInclude" title="$doXInclude() :: "><span class="description">Parse XML Includes?</span><pre>$doXInclude</pre></a></li>
+<li class="property private "><a href="#property_embedFonts" title="$embedFonts() :: "><span class="description">Embed fonts?</span><pre>$embedFonts</pre></a></li>
+<li class="property private "><a href="#property_encrypt" title="$encrypt() :: "><span class="description">Encrypt file?</span><pre>$encrypt</pre></a></li>
+<li class="property private "><a href="#property_encryptInfo" title="$encryptInfo() :: "><span class="description">Encryption settings.</span><pre>$encryptInfo</pre></a></li>
+<li class="property private "><a href="#property_exePath" title="$exePath() :: "><span class="description">Path to Prince executable</span><pre>$exePath</pre></a></li>
+<li class="property private "><a href="#property_fileAttachments" title="$fileAttachments() :: "><span class="description">File attachments</span><pre>$fileAttachments</pre></a></li>
+<li class="property private "><a href="#property_fileRoot" title="$fileRoot() :: "><span class="description">File root</span><pre>$fileRoot</pre></a></li>
+<li class="property private "><a href="#property_httpPassword" title="$httpPassword() :: "><span class="description">HTTP BasicAuth password</span><pre>$httpPassword</pre></a></li>
+<li class="property private "><a href="#property_httpProxy" title="$httpProxy() :: "><span class="description">HTTP proxy server URL</span><pre>$httpProxy</pre></a></li>
+<li class="property private "><a href="#property_httpUser" title="$httpUser() :: "><span class="description">HTTP BasicAuth username</span><pre>$httpUser</pre></a></li>
+<li class="property private "><a href="#property_inputType" title="$inputType() :: "><span class="description">Input type</span><pre>$inputType</pre></a></li>
+<li class="property private "><a href="#property_insecure" title="$insecure() :: "><span class="description">Verify SSL connection?</span><pre>$insecure</pre></a></li>
+<li class="property private "><a href="#property_javascript" title="$javascript() :: "><span class="description">Load javascript?</span><pre>$javascript</pre></a></li>
+<li class="property private "><a href="#property_licenseFile" title="$licenseFile() :: "><span class="description">Path to PDF license file</span><pre>$licenseFile</pre></a></li>
+<li class="property private "><a href="#property_licenseKey" title="$licenseKey() :: "><span class="description">Path to PDF license key</span><pre>$licenseKey</pre></a></li>
+<li class="property private "><a href="#property_logFile" title="$logFile() :: "><span class="description">Path to log file</span><pre>$logFile</pre></a></li>
+<li class="property private "><a href="#property_pdfAuthor" title="$pdfAuthor() :: "><span class="description">Author attribute for PDF</span><pre>$pdfAuthor</pre></a></li>
+<li class="property private "><a href="#property_pdfCreator" title="$pdfCreator() :: "><span class="description">Creator (program) attribute for PDF</span><pre>$pdfCreator</pre></a></li>
+<li class="property private "><a href="#property_pdfKeywords" title="$pdfKeywords() :: "><span class="description">Author attribute for PDF</span><pre>$pdfKeywords</pre></a></li>
+<li class="property private "><a href="#property_pdfSubject" title="$pdfSubject() :: "><span class="description">Subject attribute for PDF</span><pre>$pdfSubject</pre></a></li>
+<li class="property private "><a href="#property_pdfTitle" title="$pdfTitle() :: "><span class="description">Title attribute for PDF</span><pre>$pdfTitle</pre></a></li>
+<li class="property private "><a href="#property_scripts" title="$scripts() :: "><span class="description">JavaScript files</span><pre>$scripts</pre></a></li>
+<li class="property private "><a href="#property_styleSheets" title="$styleSheets() :: "><span class="description">CSS stylesheets</span><pre>$styleSheets</pre></a></li>
+<li class="property private "><a href="#property_subsetFonts" title="$subsetFonts() :: "><span class="description">Embed subset fonts?</span><pre>$subsetFonts</pre></a></li>
+<li class="property private "><a href="#property_verbose" title="$verbose() :: "><span class="description">Enable verbose logging?</span><pre>$verbose</pre></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a xmlns:php="http://php.net/xsl" id="\Prince"></a><ul xmlns:php="http://php.net/xsl" class="breadcrumb">
+<li>
+<a href="../index.html"><i title="Classes" class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/Prince.html">Prince</a>
+</li>
+</ul>
+<div xmlns:php="http://php.net/xsl" class="element class">
+<p class="short_description">Prince Wrapper Class</p>
+<div class="details">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>package</th>
+<td><a href="../packages/Prince.html">Prince</a></td>
+</tr></table>
+<h3>
+<i title="Methods" class="icon-custom icon-method"></i> Methods</h3>
+<a id="method___construct"></a><div class="element clickable method public method___construct " data-toggle="collapse" data-target=".method___construct .collapse" title="public">
+<h2>Constructor</h2>
+<pre>__construct(string $exePath) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$exePath</h4>
+<code>string</code><p>Path to Prince executable</p></div>
+</div></div>
+</div>
+<a id="method_addFileAttachment"></a><div class="element clickable method public method_addFileAttachment " data-toggle="collapse" data-target=".method_addFileAttachment .collapse" title="public">
+<h2>Add File Attachment</h2>
+<pre>addFileAttachment(string $filePath) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Add a file attachment that will be attached to the PDF file</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$filePath</h4>
+<code>string</code><p>The filename of the file attachment.</p></div>
+</div></div>
+</div>
+<a id="method_addScript"></a><div class="element clickable method public method_addScript " data-toggle="collapse" data-target=".method_addScript .collapse" title="public">
+<h2>Add Script</h2>
+<pre>addScript(string $jsPath) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Add a JavaScript script that will be run before conversion.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$jsPath</h4>
+<code>string</code><p>The filename of the script.</p></div>
+</div></div>
+</div>
+<a id="method_addStyleSheet"></a><div class="element clickable method public method_addStyleSheet " data-toggle="collapse" data-target=".method_addStyleSheet .collapse" title="public">
+<h2>Add Stylesheet</h2>
+<pre>addStyleSheet(string $cssPath) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Add a CSS style sheet that will be applied to each document.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$cssPath</h4>
+<code>string</code><p>The filename of the CSS style sheet.</p></div>
+</div></div>
+</div>
+<a id="method_clearFileAttachments"></a><div class="element clickable method public method_clearFileAttachments " data-toggle="collapse" data-target=".method_clearFileAttachments .collapse" title="public">
+<h2>Clear File Attachments</h2>
+<pre>clearFileAttachments() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"><p>Clear all of the file attachments.</p></div></div></div>
+</div>
+<a id="method_clearScripts"></a><div class="element clickable method public method_clearScripts " data-toggle="collapse" data-target=".method_clearScripts .collapse" title="public">
+<h2>Clear Scripts</h2>
+<pre>clearScripts() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"><p>Clear all of the scripts</p></div></div></div>
+</div>
+<a id="method_clearStyleSheets"></a><div class="element clickable method public method_clearStyleSheets " data-toggle="collapse" data-target=".method_clearStyleSheets .collapse" title="public">
+<h2>Clear Stylesheets</h2>
+<pre>clearStyleSheets() : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"><p>Clear all of the CSS style sheets.</p></div></div></div>
+</div>
+<a id="method_convert_file"></a><div class="element clickable method public method_convert_file " data-toggle="collapse" data-target=".method_convert_file .collapse" title="public">
+<h2>Convert File</h2>
+<pre>convert_file(array $xmlPath, array $msgs<code> = array()</code>) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$xmlPath</h4>
+<code>array</code><p>The filename of the input XML or HTML document.</p></div>
+<div class="subelement argument">
+<h4>$msgs</h4>
+<code>array</code><p>An optional array in which to return error and warning messages.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_convert_file_to_file"></a><div class="element clickable method public method_convert_file_to_file " data-toggle="collapse" data-target=".method_convert_file_to_file .collapse" title="public">
+<h2>Convert File to FIle</h2>
+<pre>convert_file_to_file(array $xmlPath, string $pdfPath, array $msgs<code> = array()</code>) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$xmlPath</h4>
+<code>array</code><p>The filename of the input XML or HTML document.</p></div>
+<div class="subelement argument">
+<h4>$pdfPath</h4>
+<code>string</code><p>The filename of the output PDF file.</p></div>
+<div class="subelement argument">
+<h4>$msgs</h4>
+<code>array</code><p>An optional array in which to return error and warning messages.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_convert_file_to_passthru"></a><div class="element clickable method public method_convert_file_to_passthru " data-toggle="collapse" data-target=".method_convert_file_to_passthru .collapse" title="public">
+<h2>Convert File to Passthru</h2>
+<pre>convert_file_to_passthru(string $xmlPath, array $msgs<code> = array()</code>) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$xmlPath</h4>
+<code>string</code><p>The filename of the input XML or HTML document.</p></div>
+<div class="subelement argument">
+<h4>$msgs</h4>
+<code>array</code><p>An optional array in which to return error and warning messages.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_convert_multiple_files"></a><div class="element clickable method public method_convert_multiple_files " data-toggle="collapse" data-target=".method_convert_multiple_files .collapse" title="public">
+<h2>Convert Multiple Files</h2>
+<pre>convert_multiple_files(array $xmlPaths, string $pdfPath, array $msgs<code> = array()</code>) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$xmlPaths</h4>
+<code>array</code><p>An array of the input XML or HTML documents.</p></div>
+<div class="subelement argument">
+<h4>$pdfPath</h4>
+<code>string</code><p>The filename of the output PDF file.</p></div>
+<div class="subelement argument">
+<h4>$msgs</h4>
+<code>array</code><p>An optional array in which to return error and warning messages.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_convert_multiple_files_to_passthru"></a><div class="element clickable method public method_convert_multiple_files_to_passthru " data-toggle="collapse" data-target=".method_convert_multiple_files_to_passthru .collapse" title="public">
+<h2>Convert Multiple Files to Passthru</h2>
+<pre>convert_multiple_files_to_passthru(array $xmlPaths, array $msgs<code> = array()</code>) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$xmlPaths</h4>
+<code>array</code><p>An array of the input XML or HTML documents.</p></div>
+<div class="subelement argument">
+<h4>$msgs</h4>
+<code>array</code><p>An optional array in which to return error and warning messages.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_convert_string_to_file"></a><div class="element clickable method public method_convert_string_to_file " data-toggle="collapse" data-target=".method_convert_string_to_file .collapse" title="public">
+<h2>Convert String to File</h2>
+<pre>convert_string_to_file(string $xmlString, string $pdfPath, array $msgs<code> = array()</code>) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$xmlString</h4>
+<code>string</code><p>A string containing an XML or HTML document.</p></div>
+<div class="subelement argument">
+<h4>$pdfPath</h4>
+<code>string</code><p>The filename of the output PDF file.</p></div>
+<div class="subelement argument">
+<h4>$msgs</h4>
+<code>array</code><p>An optional array in which to return error and warning messages.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_convert_string_to_passthru"></a><div class="element clickable method public method_convert_string_to_passthru " data-toggle="collapse" data-target=".method_convert_string_to_passthru .collapse" title="public">
+<h2>Convert String to Passthru</h2>
+<pre>convert_string_to_passthru(string $xmlString, array $msgs<code> = array()</code>) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$xmlString</h4>
+<code>string</code><p>A string containing an XML or HTML document.</p></div>
+<div class="subelement argument">
+<h4>$msgs</h4>
+<code>array</code><p>An optional array in which to return error and warning messages.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a id="method_setArtificialFonts"></a><div class="element clickable method public method_setArtificialFonts " data-toggle="collapse" data-target=".method_setArtificialFonts .collapse" title="public">
+<h2>Set Artificial Fonts</h2>
+<pre>setArtificialFonts(boolean $artificialFonts) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify whether artificial bold/italic fonts should be generated if
+necessary. Artificial fonts are enabled by default.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$artificialFonts</h4>
+<code>boolean</code><ul>
+<li>False to disable artificial bold/italic fonts.</li>
+</ul></div>
+</div></div>
+</div>
+<a id="method_setBaseURL"></a><div class="element clickable method public method_setBaseURL " data-toggle="collapse" data-target=".method_setBaseURL .collapse" title="public">
+<h2>Set Base URL</h2>
+<pre>setBaseURL(string $baseURL) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify the base URL of the input document.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$baseURL</h4>
+<code>string</code><p>The base URL or path of the input document, or ''.</p></div>
+</div></div>
+</div>
+<a id="method_setCompress"></a><div class="element clickable method public method_setCompress " data-toggle="collapse" data-target=".method_setCompress .collapse" title="public">
+<h2>Set Compress</h2>
+<pre>setCompress(boolean $compress) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify whether compression should be applied to the output PDF file.
+Compression will be applied by default unless explicitly disabled.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$compress</h4>
+<code>boolean</code><ul>
+<li>False to disable PDF compression.</li>
+</ul></div>
+</div></div>
+</div>
+<a id="method_setEmbedFonts"></a><div class="element clickable method public method_setEmbedFonts " data-toggle="collapse" data-target=".method_setEmbedFonts .collapse" title="public">
+<h2>Set Embed Fonts</h2>
+<pre>setEmbedFonts(boolean $embedFonts) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify whether fonts should be embedded in the output PDF file. Fonts
+will be embedded by default unless explicitly disabled.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$embedFonts</h4>
+<code>boolean</code><ul>
+<li>False to disable PDF font embedding.</li>
+</ul></div>
+</div></div>
+</div>
+<a id="method_setEncrypt"></a><div class="element clickable method public method_setEncrypt " data-toggle="collapse" data-target=".method_setEncrypt .collapse" title="public">
+<h2>Set Encrypt</h2>
+<pre>setEncrypt(boolean $encrypt) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify whether encryption should be applied to the output PDF file.
+Encryption will not be applied by default unless explicitly enabled.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$encrypt</h4>
+<code>boolean</code><p>True to enable PDF encryption.</p></div>
+</div></div>
+</div>
+<a id="method_setEncryptInfo"></a><div class="element clickable method public method_setEncryptInfo " data-toggle="collapse" data-target=".method_setEncryptInfo .collapse" title="public">
+<h2>Set Encryption Info</h2>
+<pre>setEncryptInfo(integer $keyBits, string $userPassword, string $ownerPassword, boolean $disallowPrint<code> = false</code>, boolean $disallowModify<code> = false</code>, boolean $disallowCopy<code> = false</code>, boolean $disallowAnnotate<code> = false</code>) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Set the parameters used for PDF encryption. Calling this method will
+also enable PDF encryption, equivalent to calling setEncrypt(true).</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$keyBits</h4>
+<code>integer</code><p>The size of the encryption key in bits (must be 40 or 128)</p></div>
+<div class="subelement argument">
+<h4>$userPassword</h4>
+<code>string</code><p>The user password for the PDF file.</p></div>
+<div class="subelement argument">
+<h4>$ownerPassword</h4>
+<code>string</code><p>The owner password for the PDF file.</p></div>
+<div class="subelement argument">
+<h4>$disallowPrint</h4>
+<code>boolean</code><p>True to disallow printing of the PDF file.</p></div>
+<div class="subelement argument">
+<h4>$disallowModify</h4>
+<code>boolean</code><p>True to disallow modification of the PDF file.</p></div>
+<div class="subelement argument">
+<h4>$disallowCopy</h4>
+<code>boolean</code><p>True to disallow copying from the PDF file.</p></div>
+<div class="subelement argument">
+<h4>$disallowAnnotate</h4>
+<code>boolean</code><p>True to disallow annotation of the PDF file.</p></div>
+</div></div>
+</div>
+<a id="method_setFileRoot"></a><div class="element clickable method public method_setFileRoot " data-toggle="collapse" data-target=".method_setFileRoot .collapse" title="public">
+<h2>Set File Root</h2>
+<pre>setFileRoot(string $fileRoot) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify the root directory for absolute filenames. This can be used
+when converting a local file that uses absolute paths to refer to web
+resources. For example, /images/logo.jpg can be
+rewritten to /usr/share/images/logo.jpg by specifying &quot;/usr/share&quot; as the root.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$fileRoot</h4>
+<code>string</code><ul>
+<li>The path to prepend to absolute filenames.</li>
+</ul></div>
+</div></div>
+</div>
+<a id="method_setHTML"></a><div class="element clickable method public method_setHTML " data-toggle="collapse" data-target=".method_setHTML .collapse" title="public">
+<h2>Set HTML</h2>
+<pre>setHTML(boolean $html) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify whether documents should be parsed as HTML or XML/XHTML.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$html</h4>
+<code>boolean</code><p>True if all documents should be treated as HTML.</p></div>
+</div></div>
+</div>
+<a id="method_setHttpPassword"></a><div class="element clickable method public method_setHttpPassword " data-toggle="collapse" data-target=".method_setHttpPassword .collapse" title="public">
+<h2>Set HTTP Password</h2>
+<pre>setHttpPassword(string $password) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify a password to use when fetching remote resources over HTTP.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$password</h4>
+<code>string</code><p>The password to use for basic HTTP authentication.</p></div>
+</div></div>
+</div>
+<a id="method_setHttpProxy"></a><div class="element clickable method public method_setHttpProxy " data-toggle="collapse" data-target=".method_setHttpProxy .collapse" title="public">
+<h2>Add Script</h2>
+<pre>setHttpProxy(string $proxy) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify the URL for the HTTP proxy server, if needed.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$proxy</h4>
+<code>string</code><ul>
+<li>The URL for the HTTP proxy server.</li>
+</ul></div>
+</div></div>
+</div>
+<a id="method_setHttpUser"></a><div class="element clickable method public method_setHttpUser " data-toggle="collapse" data-target=".method_setHttpUser .collapse" title="public">
+<h2>Set HTTP User</h2>
+<pre>setHttpUser(string $user) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify a username to use when fetching remote resources over HTTP.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$user</h4>
+<code>string</code><p>The username to use for basic HTTP authentication.</p></div>
+</div></div>
+</div>
+<a id="method_setInputType"></a><div class="element clickable method public method_setInputType " data-toggle="collapse" data-target=".method_setInputType .collapse" title="public">
+<h2>Set Input Type</h2>
+<pre>setInputType(string $inputType) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify the input type of the document.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$inputType</h4>
+<code>string</code><p>Can take a value of : "xml", "html" or "auto".</p></div>
+</div></div>
+</div>
+<a id="method_setInsecure"></a><div class="element clickable method public method_setInsecure " data-toggle="collapse" data-target=".method_setInsecure .collapse" title="public">
+<h2>Set Insecure</h2>
+<pre>setInsecure(boolean $insecure) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify whether to disable SSL verification.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$insecure</h4>
+<code>boolean</code><ul>
+<li>If set to true, SSL verification is disabled. (not recommended)</li>
+</ul></div>
+</div></div>
+</div>
+<a id="method_setJavaScript"></a><div class="element clickable method public method_setJavaScript " data-toggle="collapse" data-target=".method_setJavaScript .collapse" title="public">
+<h2>Set JavaScript</h2>
+<pre>setJavaScript(boolean $js) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify whether JavaScript found in documents should be run.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$js</h4>
+<code>boolean</code><p>True if document scripts should be run.</p></div>
+</div></div>
+</div>
+<a id="method_setLicenseFile"></a><div class="element clickable method public method_setLicenseFile " data-toggle="collapse" data-target=".method_setLicenseFile .collapse" title="public">
+<h2>Set License File</h2>
+<pre>setLicenseFile(string $file) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify the license file.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$file</h4>
+<code>string</code><p>The filename of the license file.</p></div>
+</div></div>
+</div>
+<a id="method_setLicenseKey"></a><div class="element clickable method public method_setLicenseKey " data-toggle="collapse" data-target=".method_setLicenseKey .collapse" title="public">
+<h2>Set License Key</h2>
+<pre>setLicenseKey(string $key) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify the license key.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$key</h4>
+<code>string</code><p>The license key</p></div>
+</div></div>
+</div>
+<a id="method_setLog"></a><div class="element clickable method public method_setLog " data-toggle="collapse" data-target=".method_setLog .collapse" title="public">
+<h2>Set Log</h2>
+<pre>setLog(string $logFile) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify a file that Prince should use to log error/warning messages.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$logFile</h4>
+<code>string</code><p>The filename that Prince should use to log error/warning
+messages, or '' to disable logging.</p></div>
+</div></div>
+</div>
+<a id="method_setPDFAuthor"></a><div class="element clickable method public method_setPDFAuthor " data-toggle="collapse" data-target=".method_setPDFAuthor .collapse" title="public">
+<h2>Set PDF Author</h2>
+<pre>setPDFAuthor(string $pdfAuthor) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify the document author for PDF metadata.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pdfAuthor</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a id="method_setPDFCreator"></a><div class="element clickable method public method_setPDFCreator " data-toggle="collapse" data-target=".method_setPDFCreator .collapse" title="public">
+<h2>Set PDF Creator</h2>
+<pre>setPDFCreator(string $pdfCreator) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify the document creator for PDF metadata.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pdfCreator</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a id="method_setPDFKeywords"></a><div class="element clickable method public method_setPDFKeywords " data-toggle="collapse" data-target=".method_setPDFKeywords .collapse" title="public">
+<h2>Set PDF Keywords</h2>
+<pre>setPDFKeywords(string $pdfKeywords) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify the document keywords for PDF metadata.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pdfKeywords</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a id="method_setPDFSubject"></a><div class="element clickable method public method_setPDFSubject " data-toggle="collapse" data-target=".method_setPDFSubject .collapse" title="public">
+<h2>Set PDF Subject</h2>
+<pre>setPDFSubject(string $pdfSubject) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify the document subject for PDF metadata.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pdfSubject</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a id="method_setPDFTitle"></a><div class="element clickable method public method_setPDFTitle " data-toggle="collapse" data-target=".method_setPDFTitle .collapse" title="public">
+<h2>Set PDF Title</h2>
+<pre>setPDFTitle(string $pdfTitle) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify the document title for PDF metadata.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pdfTitle</h4>
+<code>string</code>
+</div>
+</div></div>
+</div>
+<a id="method_setSubsetFonts"></a><div class="element clickable method public method_setSubsetFonts " data-toggle="collapse" data-target=".method_setSubsetFonts .collapse" title="public">
+<h2>Set Subset Fonts</h2>
+<pre>setSubsetFonts(boolean $subsetFonts) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify whether embedded fonts should be subset.
+Fonts will be subset by default unless explicitly disabled.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$subsetFonts</h4>
+<code>boolean</code><ul>
+<li>False to disable PDF font subsetting</li>
+</ul></div>
+</div></div>
+</div>
+<a id="method_setVerbose"></a><div class="element clickable method public method_setVerbose " data-toggle="collapse" data-target=".method_setVerbose .collapse" title="public">
+<h2>Set Verbose</h2>
+<pre>setVerbose(boolean $verbose) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify whether to use verbose logging</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$verbose</h4>
+<code>boolean</code><p>True to use verbose logging.</p></div>
+</div></div>
+</div>
+<a id="method_setXInclude"></a><div class="element clickable method public method_setXInclude " data-toggle="collapse" data-target=".method_setXInclude .collapse" title="public">
+<h2>Set XInclude</h2>
+<pre>setXInclude(boolean $xinclude) : void</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Specify whether XML Inclusions (XInclude) processing should be applied
+to input documents. XInclude processing will be performed by default
+unless explicitly disabled.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$xinclude</h4>
+<code>boolean</code><p>False to disable XInclude processing.</p></div>
+</div></div>
+</div>
+<a id="method_addDoubleQuotes"></a><div class="element clickable method private method_addDoubleQuotes " data-toggle="collapse" data-target=".method_addDoubleQuotes .collapse" title="private">
+<h2>Add Double Quotes</h2>
+<pre>addDoubleQuotes(string $str) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Puts double-quotes around space(s) in file path,
+and also around semicolon(;), comma(,), ampersand(&amp;), up-arrow(^) and parentheses.
+This is needed if the file path is used in a command line.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$str</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_cmdlineArgEscape"></a><div class="element clickable method private method_cmdlineArgEscape " data-toggle="collapse" data-target=".method_cmdlineArgEscape .collapse" title="private">
+<h2>Command Line Argument Escape</h2>
+<pre>cmdlineArgEscape(string $argStr) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$argStr</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_cmdlineArgEscape1"></a><div class="element clickable method private method_cmdlineArgEscape1 " data-toggle="collapse" data-target=".method_cmdlineArgEscape1 .collapse" title="private">
+<h2>Command Line Argument Escape (1)</h2>
+<pre>cmdlineArgEscape1(string $argStr) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>In the input string $argStr, a double quote with zero or more preceding backslash(es)
+will be replaced with: n<em>backslash + doublequote =&gt; (2</em>n+1)*backslash + doublequote</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$argStr</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_cmdlineArgEscape2"></a><div class="element clickable method private method_cmdlineArgEscape2 " data-toggle="collapse" data-target=".method_cmdlineArgEscape2 .collapse" title="private">
+<h2>Command Line Argument Escape (2)</h2>
+<pre>cmdlineArgEscape2(string $argStr) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"><p>Double the number of trailing backslash(es): n<em>trailing backslash =&gt; (2</em>n)*trailing backslash.</p></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$argStr</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_convert_internal_file_to_file"></a><div class="element clickable method private method_convert_internal_file_to_file " data-toggle="collapse" data-target=".method_convert_internal_file_to_file .collapse" title="private">
+<h2>Convert Internal File to File</h2>
+<pre>convert_internal_file_to_file(string $pathAndArgs, array $msgs) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pathAndArgs</h4>
+<code>string</code><p>Path and arguments to execute.</p></div>
+<div class="subelement argument">
+<h4>$msgs</h4>
+<code>array</code><p>An optional array in which to return error and warning messages.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_convert_internal_file_to_passthru"></a><div class="element clickable method private method_convert_internal_file_to_passthru " data-toggle="collapse" data-target=".method_convert_internal_file_to_passthru .collapse" title="private">
+<h2>Convert Internal File to Passthru</h2>
+<pre>convert_internal_file_to_passthru(string $pathAndArgs, array $msgs) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pathAndArgs</h4>
+<code>string</code><p>Path and arguments to execute.</p></div>
+<div class="subelement argument">
+<h4>$msgs</h4>
+<code>array</code><p>An optional array in which to return error and warning messages.</p></div>
+</div></div>
+</div>
+<a id="method_convert_internal_string_to_file"></a><div class="element clickable method private method_convert_internal_string_to_file " data-toggle="collapse" data-target=".method_convert_internal_string_to_file .collapse" title="private">
+<h2>Convert Internal String to File</h2>
+<pre>convert_internal_string_to_file(string $pathAndArgs, string $xmlString, array $msgs) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pathAndArgs</h4>
+<code>string</code><p>Path and arguments to execute.</p></div>
+<div class="subelement argument">
+<h4>$xmlString</h4>
+<code>string</code><p>Contents of the XML file.</p></div>
+<div class="subelement argument">
+<h4>$msgs</h4>
+<code>array</code><p>An optional array in which to return error and warning messages.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_convert_internal_string_to_passthru"></a><div class="element clickable method private method_convert_internal_string_to_passthru " data-toggle="collapse" data-target=".method_convert_internal_string_to_passthru .collapse" title="private">
+<h2>Convert Internal String to Passthru</h2>
+<pre>convert_internal_string_to_passthru(string $pathAndArgs, string $xmlString, array $msgs) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pathAndArgs</h4>
+<code>string</code><p>Path and arguments to execute.</p></div>
+<div class="subelement argument">
+<h4>$xmlString</h4>
+<code>string</code><p>Contents of the XML file.</p></div>
+<div class="subelement argument">
+<h4>$msgs</h4>
+<code>array</code><p>An optional array in which to return error and warning messages.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_getCommandLine"></a><div class="element clickable method private method_getCommandLine " data-toggle="collapse" data-target=".method_getCommandLine .collapse" title="private">
+<h2>Get Command Line</h2>
+<pre>getCommandLine() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a id="method_readMessages"></a><div class="element clickable method private method_readMessages " data-toggle="collapse" data-target=".method_readMessages .collapse" title="private">
+<h2>Read Messages</h2>
+<pre>readMessages(resource $pipe, array $msgs) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$pipe</h4>
+<code>resource</code><p>File hanndle.</p></div>
+<div class="subelement argument">
+<h4>$msgs</h4>
+<code>array</code><p>An optional array in which to return error and warning messages.</p></div>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<h3>
+<i title="Properties" class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_artificialFonts"> </a><div class="element clickable property private property_artificialFonts" data-toggle="collapse" data-target=".property_artificialFonts .collapse" title="private">
+<h2>Embed artificial fonts?</h2>
+<pre>$artificialFonts : boolean</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_baseURL"> </a><div class="element clickable property private property_baseURL" data-toggle="collapse" data-target=".property_baseURL .collapse" title="private">
+<h2>Base URL for links</h2>
+<pre>$baseURL : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_compress"> </a><div class="element clickable property private property_compress" data-toggle="collapse" data-target=".property_compress .collapse" title="private">
+<h2>Compress file?</h2>
+<pre>$compress : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_doXInclude"> </a><div class="element clickable property private property_doXInclude" data-toggle="collapse" data-target=".property_doXInclude .collapse" title="private">
+<h2>Parse XML Includes?</h2>
+<pre>$doXInclude : boolean</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_embedFonts"> </a><div class="element clickable property private property_embedFonts" data-toggle="collapse" data-target=".property_embedFonts .collapse" title="private">
+<h2>Embed fonts?</h2>
+<pre>$embedFonts : boolean</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_encrypt"> </a><div class="element clickable property private property_encrypt" data-toggle="collapse" data-target=".property_encrypt .collapse" title="private">
+<h2>Encrypt file?</h2>
+<pre>$encrypt : boolean</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_encryptInfo"> </a><div class="element clickable property private property_encryptInfo" data-toggle="collapse" data-target=".property_encryptInfo .collapse" title="private">
+<h2>Encryption settings.</h2>
+<pre>$encryptInfo : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_exePath"> </a><div class="element clickable property private property_exePath" data-toggle="collapse" data-target=".property_exePath .collapse" title="private">
+<h2>Path to Prince executable</h2>
+<pre>$exePath : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_fileAttachments"> </a><div class="element clickable property private property_fileAttachments" data-toggle="collapse" data-target=".property_fileAttachments .collapse" title="private">
+<h2>File attachments</h2>
+<pre>$fileAttachments : array</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_fileRoot"> </a><div class="element clickable property private property_fileRoot" data-toggle="collapse" data-target=".property_fileRoot .collapse" title="private">
+<h2>File root</h2>
+<pre>$fileRoot : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_httpPassword"> </a><div class="element clickable property private property_httpPassword" data-toggle="collapse" data-target=".property_httpPassword .collapse" title="private">
+<h2>HTTP BasicAuth password</h2>
+<pre>$httpPassword : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_httpProxy"> </a><div class="element clickable property private property_httpProxy" data-toggle="collapse" data-target=".property_httpProxy .collapse" title="private">
+<h2>HTTP proxy server URL</h2>
+<pre>$httpProxy : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_httpUser"> </a><div class="element clickable property private property_httpUser" data-toggle="collapse" data-target=".property_httpUser .collapse" title="private">
+<h2>HTTP BasicAuth username</h2>
+<pre>$httpUser : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_inputType"> </a><div class="element clickable property private property_inputType" data-toggle="collapse" data-target=".property_inputType .collapse" title="private">
+<h2>Input type</h2>
+<pre>$inputType : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_insecure"> </a><div class="element clickable property private property_insecure" data-toggle="collapse" data-target=".property_insecure .collapse" title="private">
+<h2>Verify SSL connection?</h2>
+<pre>$insecure : boolean</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_javascript"> </a><div class="element clickable property private property_javascript" data-toggle="collapse" data-target=".property_javascript .collapse" title="private">
+<h2>Load javascript?</h2>
+<pre>$javascript : boolean</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_licenseFile"> </a><div class="element clickable property private property_licenseFile" data-toggle="collapse" data-target=".property_licenseFile .collapse" title="private">
+<h2>Path to PDF license file</h2>
+<pre>$licenseFile : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_licenseKey"> </a><div class="element clickable property private property_licenseKey" data-toggle="collapse" data-target=".property_licenseKey .collapse" title="private">
+<h2>Path to PDF license key</h2>
+<pre>$licenseKey : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_logFile"> </a><div class="element clickable property private property_logFile" data-toggle="collapse" data-target=".property_logFile .collapse" title="private">
+<h2>Path to log file</h2>
+<pre>$logFile : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_pdfAuthor"> </a><div class="element clickable property private property_pdfAuthor" data-toggle="collapse" data-target=".property_pdfAuthor .collapse" title="private">
+<h2>Author attribute for PDF</h2>
+<pre>$pdfAuthor : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_pdfCreator"> </a><div class="element clickable property private property_pdfCreator" data-toggle="collapse" data-target=".property_pdfCreator .collapse" title="private">
+<h2>Creator (program) attribute for PDF</h2>
+<pre>$pdfCreator : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_pdfKeywords"> </a><div class="element clickable property private property_pdfKeywords" data-toggle="collapse" data-target=".property_pdfKeywords .collapse" title="private">
+<h2>Author attribute for PDF</h2>
+<pre>$pdfKeywords : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_pdfSubject"> </a><div class="element clickable property private property_pdfSubject" data-toggle="collapse" data-target=".property_pdfSubject .collapse" title="private">
+<h2>Subject attribute for PDF</h2>
+<pre>$pdfSubject : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_pdfTitle"> </a><div class="element clickable property private property_pdfTitle" data-toggle="collapse" data-target=".property_pdfTitle .collapse" title="private">
+<h2>Title attribute for PDF</h2>
+<pre>$pdfTitle : string</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_scripts"> </a><div class="element clickable property private property_scripts" data-toggle="collapse" data-target=".property_scripts .collapse" title="private">
+<h2>JavaScript files</h2>
+<pre>$scripts : array</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_styleSheets"> </a><div class="element clickable property private property_styleSheets" data-toggle="collapse" data-target=".property_styleSheets .collapse" title="private">
+<h2>CSS stylesheets</h2>
+<pre>$styleSheets : array</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_subsetFonts"> </a><div class="element clickable property private property_subsetFonts" data-toggle="collapse" data-target=".property_subsetFonts .collapse" title="private">
+<h2>Embed subset fonts?</h2>
+<pre>$subsetFonts : boolean</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property_verbose"> </a><div class="element clickable property private property_verbose" data-toggle="collapse" data-target=".property_verbose .collapse" title="private">
+<h2>Enable verbose logging?</h2>
+<pre>$verbose : boolean</pre>
+<div class="row collapse"><div class="detail-description">
+<h3>Default</h3>
+<div class="subelement argument"></div>
+</div></div>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.7.0</a> and<br>
+            generated on 2015-02-20T10:52:11-06:00.<br></footer></div>
+</div>
+</body>
+</html>

@@ -1,47 +1,162 @@
 <?php
-
 /**
  * Prince - PHP interface
  *
  * @copyright 2005-2014 YesLogic Pty. Ltd.
  * @link      http://www.princexml.com
  */
+
+/**
+ * Prince Wrapper Class
+ *
+ * @package Prince
+ */
 class Prince
 {
+    /**
+     * @var string Path to Prince executable
+     */
     private $exePath;
+
+    /**
+     * @var array CSS stylesheets
+     */
     private $styleSheets;
+
+    /**
+     * @var array JavaScript files
+     */
     private $scripts;
+
+    /**
+     * @var array File attachments
+     */
     private $fileAttachments;
+
+    /**
+     * @var string Path to PDF license file
+     */
     private $licenseFile;
+
+    /**
+     * @var string Path to PDF license key
+     */
     private $licenseKey;
+
+    /**
+     * @var string Input type
+     */
     private $inputType;
+
+    /**
+     * @var boolean Load javascript?
+     */
     private $javascript;
+
+    /**
+     * @var string Base URL for links
+     */
     private $baseURL;
+
+    /**
+     * @var boolean Parse XML Includes?
+     */
     private $doXInclude;
+
+    /**
+     * @var string HTTP BasicAuth username
+     */
     private $httpUser;
+
+    /**
+     * @var string HTTP BasicAuth password
+     */
     private $httpPassword;
+
+    /**
+     * @var string HTTP proxy server URL
+     */
     private $httpProxy;
+
+    /**
+     * @var boolean Verify SSL connection?
+     */
     private $insecure;
+
+    /**
+     * @var boolean Enable verbose logging?
+     */
     private $verbose;
+
+    /**
+     * @var string Path to log file
+     */
     private $logFile;
+
+    /**
+     * @var string File root
+     */
     private $fileRoot;
+
+    /**
+     * @var boolean Embed fonts?
+     */
     private $embedFonts;
+
+    /**
+     * @var boolean Embed subset fonts?
+     */
     private $subsetFonts;
+
+    /**
+     * @var boolean Embed artificial fonts?
+     */
     private $artificialFonts;
+
+    /**
+     * @var string Compress file?
+     */
     private $compress;
+
+    /**
+     * @var string Title attribute for PDF
+     */
     private $pdfTitle;
+
+    /**
+     * @var string Subject attribute for PDF
+     */
     private $pdfSubject;
+
+    /**
+     * @var string Author attribute for PDF
+     */
     private $pdfAuthor;
+
+    /**
+     * @var string Author attribute for PDF
+     */
     private $pdfKeywords;
+
+    /**
+     * @var string Creator (program) attribute for PDF
+     */
     private $pdfCreator;
+
+    /**
+     * @var boolean Encrypt file?
+     */
     private $encrypt;
+
+    /**
+     * @var string Encryption settings.
+     */
     private $encryptInfo;
 
     /**
      * Constructor
      *
-     * @param  string $exePath
-     * @return object
+     * @param string $exePath Path to Prince executable
      */
     public function __construct($exePath)
     {
@@ -80,7 +195,7 @@ class Prince
      *
      * Add a CSS style sheet that will be applied to each document.
      *
-     * @param  string $cssPath - The filename of the CSS style sheet.
+     * @param  string $cssPath The filename of the CSS style sheet.
      * @return void
      */
     public function addStyleSheet($cssPath)
@@ -105,7 +220,7 @@ class Prince
      *
      * Add a JavaScript script that will be run before conversion.
      *
-     * @param  string $jsPath - The filename of the script.
+     * @param  string $jsPath The filename of the script.
      * @return void
      */
     public function addScript($jsPath)
@@ -120,7 +235,6 @@ class Prince
      *
      * @return void
      */
-    // Clear all of the scripts.
     public function clearScripts()
     {
         $this->scripts = '';
@@ -131,7 +245,7 @@ class Prince
      *
      * Add a file attachment that will be attached to the PDF file
      *
-     * @param  string $filePath - The filename of the file attachment.
+     * @param  string $filePath The filename of the file attachment.
      * @return void
      */
     public function addFileAttachment($filePath)
@@ -156,7 +270,7 @@ class Prince
      *
      * Specify the license file.
      *
-     * @param  string $file - The filename of the license file.
+     * @param  string $file The filename of the license file.
      * @return void
      */
     public function setLicenseFile($file)
@@ -169,7 +283,7 @@ class Prince
      *
      * Specify the license key.
      *
-     * @param  string $key - The license key
+     * @param  string $key The license key
      * @return void
      */
     public function setLicenseKey($key)
@@ -182,7 +296,7 @@ class Prince
      *
      * Specify the input type of the document.
      *
-     * @param  string $inputType - Can take a value of : "xml", "html" or "auto".
+     * @param  string $inputType Can take a value of : "xml", "html" or "auto".
      * @return void
      */
     public function setInputType($inputType)
@@ -195,7 +309,7 @@ class Prince
      *
      * Specify whether JavaScript found in documents should be run.
      *
-     * @param  boolean $js - True if document scripts should be run.
+     * @param  boolean $js True if document scripts should be run.
      * @return void
      */
     public function setJavaScript($js)
@@ -208,7 +322,7 @@ class Prince
      *
      * Specify whether documents should be parsed as HTML or XML/XHTML.
      *
-     * @param  boolean $html - True if all documents should be treated as HTML.
+     * @param  boolean $html True if all documents should be treated as HTML.
      * @return void
      */
     public function setHTML($html)
@@ -227,7 +341,7 @@ class Prince
      *
      * Specify whether to use verbose logging
      *
-     * @param  boolean $verbose - True to use verbose logging.
+     * @param  boolean $verbose True to use verbose logging.
      * @return void
      */
     public function setVerbose($verbose)
@@ -240,8 +354,8 @@ class Prince
      *
      * Specify a file that Prince should use to log error/warning messages.
      *
-     * @param  string $logFile - The filename that Prince should use to log error/warning
-     *                          messages, or '' to disable logging.
+     * @param  string $logFile The filename that Prince should use to log error/warning
+     *                         messages, or '' to disable logging.
      * @return void
      */
     public function setLog($logFile)
@@ -254,7 +368,7 @@ class Prince
      *
      * Specify the base URL of the input document.
      *
-     * @param  string $baseUrl - The base URL or path of the input document, or ''.
+     * @param  string $baseURL The base URL or path of the input document, or ''.
      * @return void
      */
     public function setBaseURL($baseURL)
@@ -269,7 +383,7 @@ class Prince
      * to input documents. XInclude processing will be performed by default
      * unless explicitly disabled.
      *
-     * @param  boolean $xinclude - False to disable XInclude processing.
+     * @param  boolean $xinclude False to disable XInclude processing.
      * @return void
      */
     public function setXInclude($xinclude)
@@ -282,7 +396,7 @@ class Prince
      *
      * Specify a username to use when fetching remote resources over HTTP.
      *
-     * @param  string $user - The username to use for basic HTTP authentication.
+     * @param  string $user The username to use for basic HTTP authentication.
      * @return void
      */
     public function setHttpUser($user)
@@ -295,7 +409,7 @@ class Prince
      *
      * Specify a password to use when fetching remote resources over HTTP.
      *
-     * @param  string $password - The password to use for basic HTTP authentication.
+     * @param  string $password The password to use for basic HTTP authentication.
      * @return void
      */
     public function setHttpPassword($password)
@@ -379,7 +493,7 @@ class Prince
      * Specify whether artificial bold/italic fonts should be generated if
      * necessary. Artificial fonts are enabled by default.
      *
-     * @param  boolean $jsPath - False to disable artificial bold/italic fonts.
+     * @param  boolean $artificialFonts - False to disable artificial bold/italic fonts.
      * @return void
      */
     public function setArtificialFonts($artificialFonts)
@@ -401,7 +515,6 @@ class Prince
         $this->compress = $compress;
     }
 
-    // Specify the document title for PDF metadata.
     /**
      * Set PDF Title
      *
@@ -473,7 +586,7 @@ class Prince
      * Specify whether encryption should be applied to the output PDF file.
      * Encryption will not be applied by default unless explicitly enabled.
      *
-     * @param  boolean $encrypt - True to enable PDF encryption.
+     * @param  boolean $encrypt True to enable PDF encryption.
      * @return void
      */
     public function setEncrypt($encrypt)
@@ -487,13 +600,13 @@ class Prince
      * Set the parameters used for PDF encryption. Calling this method will
      * also enable PDF encryption, equivalent to calling setEncrypt(true).
      *
-     * @param  integer $keyBits          - The size of the encryption key in bits (must be 40 or 128)
-     * @param  string  $userPassword     - The user password for the PDF file.
-     * @param  string  $ownerPassword    - The owner password for the PDF file.
-     * @param  boolean $disallowPrint    - True to disallow printing of the PDF file.
-     * @param  boolean $disallowModify   - True to disallow modification of the PDF file.
-     * @param  boolean $disallowCopy     - True to disallow copying from the PDF file.
-     * @param  boolean $disallowAnnotate - True to disallow annotation of the PDF file.
+     * @param  integer $keyBits          The size of the encryption key in bits (must be 40 or 128)
+     * @param  string  $userPassword     The user password for the PDF file.
+     * @param  string  $ownerPassword    The owner password for the PDF file.
+     * @param  boolean $disallowPrint    True to disallow printing of the PDF file.
+     * @param  boolean $disallowModify   True to disallow modification of the PDF file.
+     * @param  boolean $disallowCopy     True to disallow copying from the PDF file.
+     * @param  boolean $disallowAnnotate True to disallow annotation of the PDF file.
      * @return void
      */
     public function setEncryptInfo($keyBits,
@@ -538,8 +651,8 @@ class Prince
     /**
      * Convert File
      *
-     * @param  array $xmlPath - The filename of the input XML or HTML document.
-     * @param  array &$msgs   - An optional array in which to return error and warning messages.
+     * @param  array $xmlPath The filename of the input XML or HTML document.
+     * @param  array $msgs    An optional array in which to return error and warning messages.
      * @return boolean
      */
     public function convert_file($xmlPath, &$msgs = array())
@@ -554,9 +667,9 @@ class Prince
     /**
      * Convert File to FIle
      *
-     * @param  array  $xmlPath - The filename of the input XML or HTML document.
-     * @param  string $pdfPath - The filename of the output PDF file.
-     * @param  array  &$msgs   - An optional array in which to return error and warning messages.
+     * @param  array  $xmlPath The filename of the input XML or HTML document.
+     * @param  string $pdfPath The filename of the output PDF file.
+     * @param  array  $msgs    An optional array in which to return error and warning messages.
      * @return boolean
      */
     public function convert_file_to_file($xmlPath, $pdfPath, &$msgs = array())
@@ -571,9 +684,9 @@ class Prince
     /**
      * Convert Multiple Files
      *
-     * @param  array  $xmlPaths - An array of the input XML or HTML documents.
-     * @param  string $pdfPath  - The filename of the output PDF file.
-     * @param  array  &$msgs    - An optional array in which to return error and warning messages.
+     * @param  array  $xmlPaths An array of the input XML or HTML documents.
+     * @param  string $pdfPath  The filename of the output PDF file.
+     * @param  array  $msgs     An optional array in which to return error and warning messages.
      * @return boolean
      */
     public function convert_multiple_files($xmlPaths, $pdfPath, &$msgs = array())
@@ -593,8 +706,8 @@ class Prince
     /**
      * Convert Multiple Files to Passthru
      *
-     * @param  array $xmlPaths - An array of the input XML or HTML documents.
-     * @param  array &$msgs    - An optional array in which to return error and warning messages.
+     * @param  array $xmlPaths An array of the input XML or HTML documents.
+     * @param  array $msgs     An optional array in which to return error and warning messages.
      * @return boolean
      */
     public function convert_multiple_files_to_passthru($xmlPaths, &$msgs = array())
@@ -614,8 +727,8 @@ class Prince
     /**
      * Convert File to Passthru
      *
-     * @param  string $xmlPath - The filename of the input XML or HTML document.
-     * @param  array  &$msgs   - An optional array in which to return error and warning messages.
+     * @param  string $xmlPath The filename of the input XML or HTML document.
+     * @param  array  $msgs    An optional array in which to return error and warning messages.
      * @return boolean
      */
     public function convert_file_to_passthru($xmlPath, &$msgs = array())
@@ -629,8 +742,8 @@ class Prince
     /**
      * Convert String to Passthru
      *
-     * @param  string $xmlString - A string containing an XML or HTML document.
-     * @param  array  &$msgs     - An optional array in which to return error and warning messages.
+     * @param  string $xmlString A string containing an XML or HTML document.
+     * @param  array  $msgs      An optional array in which to return error and warning messages.
      * @return boolean
      */
     public function convert_string_to_passthru($xmlString, &$msgs = array())
@@ -644,9 +757,9 @@ class Prince
     /**
      * Convert String to File
      *
-     * @param  string $xmlString - A string containing an XML or HTML document.
-     * @param  string $pdfPath   - The filename of the output PDF file.
-     * @param  array  &$msgs     - An optional array in which to return error and warning messages.
+     * @param  string $xmlString A string containing an XML or HTML document.
+     * @param  string $pdfPath   The filename of the output PDF file.
+     * @param  array  $msgs      An optional array in which to return error and warning messages.
      * @return boolean
      */
     public function convert_string_to_file($xmlString, $pdfPath, &$msgs = array())
@@ -768,8 +881,8 @@ class Prince
     /**
      * Convert Internal File to File
      *
-     * @param  string $pathAndArgs
-     * @param  array  &$msgs
+     * @param  string $pathAndArgs Path and arguments to execute.
+     * @param  array  $msgs        An optional array in which to return error and warning messages.
      * @return string
      */
     private function convert_internal_file_to_file($pathAndArgs, &$msgs)
@@ -802,9 +915,9 @@ class Prince
     /**
      * Convert Internal String to File
      *
-     * @param  string $pathAndArgs
-     * @param  string $xmlString
-     * @param  array  &$msgs
+     * @param  string $pathAndArgs Path and arguments to execute.
+     * @param  string $xmlString   Contents of the XML file.
+     * @param  array  $msgs        An optional array in which to return error and warning messages.
      * @return string
      */
     private function convert_internal_string_to_file($pathAndArgs, $xmlString, &$msgs)
@@ -839,9 +952,8 @@ class Prince
     /**
      * Convert Internal File to Passthru
      *
-     * @param  string $pathAndArgs
-     * @param  array  &$msgs
-     * @return string
+     * @param  string $pathAndArgs Path and arguments to execute.
+     * @param  array  $msgs        An optional array in which to return error and warning messages.
      */
     private function convert_internal_file_to_passthru($pathAndArgs, &$msgs)
     {
@@ -875,9 +987,9 @@ class Prince
     /**
      * Convert Internal String to Passthru
      *
-     * @param  string $pathAndArgs
-     * @param  string $xmlString
-     * @param  array  &$msgs
+     * @param  string $pathAndArgs Path and arguments to execute.
+     * @param  string $xmlString   Contents of the XML file.
+     * @param  array  $msgs        An optional array in which to return error and warning messages.
      * @return string
      */
     private function convert_internal_string_to_passthru($pathAndArgs, $xmlString, &$msgs)
@@ -913,8 +1025,9 @@ class Prince
     /**
      * Read Messages
      *
-     * @param pipe  $pipe
-     * @param array &$msgs
+     * @param  resource $pipe File hanndle.
+     * @param  array    $msgs An optional array in which to return error and warning messages.
+     * @return string
      */
     private function readMessages($pipe, &$msgs)
     {
