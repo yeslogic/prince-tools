@@ -6,6 +6,10 @@
  * @link      http://www.princexml.com
  */
 
+namespace Prince;
+
+use Exception;
+
 /**
  * Prince Wrapper Class
  *
