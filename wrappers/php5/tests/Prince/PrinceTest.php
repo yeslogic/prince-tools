@@ -29,6 +29,7 @@ class PrinceTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->object = new Prince($this->path_to_binary);
+        $this->object->setLog('/tmp/prince.log');
     }
 
     /**
@@ -451,79 +452,105 @@ class PrinceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Prince\Prince::convert_file
-     * @todo   Implement testConvert_file().
      */
     public function testConvert_file()
     {
         $this->checkBinary();
 
-        $this->markTestIncomplete('Not yet implemented');
+        $this->object->convert_file('./tests/Prince/fixtures/document.html');
+
+        $this->assertFileExists('./tests/Prince/fixtures/document.pdf');
+        $this->assertGreaterThan(0, filesize('./tests/Prince/fixtures/document.pdf'));
+        unlink('./tests/Prince/fixtures/document.pdf');
     }
 
     /**
      * @covers Prince\Prince::convert_file_to_file
-     * @todo   Implement testConvert_file_to_file().
      */
     public function testConvert_file_to_file()
     {
         $this->checkBinary();
 
-        $this->markTestIncomplete('Not yet implemented');
+        $this->object->convert_file_to_file(
+            './tests/Prince/fixtures/document.html',
+            './tests/Prince/fixtures/document-renamed.pdf'
+        );
+
+        $this->assertFileExists('./tests/Prince/fixtures/document-renamed.pdf');
+        $this->assertGreaterThan(0, filesize('./tests/Prince/fixtures/document-renamed.pdf'));
+        unlink('./tests/Prince/fixtures/document-renamed.pdf');
     }
 
     /**
      * @covers Prince\Prince::convert_multiple_files
-     * @todo   Implement testConvert_multiple_files().
      */
     public function testConvert_multiple_files()
     {
         $this->checkBinary();
 
-        $this->markTestIncomplete('Not yet implemented');
+        $files = array(
+            './tests/Prince/fixtures/document.html',
+            './tests/Prince/fixtures/document-2.html'
+        );
+        $this->object->convert_multiple_files($files, './tests/Prince/fixtures/document-consolidated.pdf');
+
+        $this->assertFileExists('./tests/Prince/fixtures/document-consolidated.pdf');
+        $this->assertGreaterThan(0, filesize('./tests/Prince/fixtures/document-consolidated.pdf'));
+        unlink('./tests/Prince/fixtures/document-consolidated.pdf');
     }
 
     /**
      * @covers Prince\Prince::convert_multiple_files_to_passthru
-     * @todo   Implement testConvert_multiple_files_to_passthru().
      */
     public function testConvert_multiple_files_to_passthru()
     {
-        $this->checkBinary();
+        $files = array(
+            './tests/Prince/fixtures/document.html',
+            './tests/Prince/fixtures/document-2.html'
+        );
+        $this->object->convert_multiple_files_to_passthru($files);
 
-        $this->markTestIncomplete('Not yet implemented');
+        $this->expectOutputRegex('/.{100,}/');
     }
 
     /**
      * @covers Prince\Prince::convert_file_to_passthru
-     * @todo   Implement testConvert_file_to_passthru().
      */
     public function testConvert_file_to_passthru()
     {
         $this->checkBinary();
 
-        $this->markTestIncomplete('Not yet implemented');
+        $this->object->convert_file_to_passthru('./tests/Prince/fixtures/document.html');
+
+        $this->expectOutputRegex('/.{100,}/');
     }
 
     /**
      * @covers Prince\Prince::convert_string_to_passthru
-     * @todo   Implement testConvert_string_to_passthru().
      */
     public function testConvert_string_to_passthru()
     {
         $this->checkBinary();
 
-        $this->markTestIncomplete('Not yet implemented');
+        $string = file_get_contents('./tests/Prince/fixtures/document.html');
+        $this->object->convert_string_to_passthru($string);
+
+        $this->expectOutputRegex('/.{100,}/');
     }
 
     /**
      * @covers Prince\Prince::convert_string_to_file
-     * @todo   Implement testConvert_string_to_file().
      */
     public function testConvert_string_to_file()
     {
         $this->checkBinary();
 
-        $this->markTestIncomplete('Not yet implemented');
+        $string = file_get_contents('./tests/Prince/fixtures/document.html');
+        $this->object->convert_string_to_file($string, './tests/Prince/fixtures/document.pdf');
+
+        $this->assertFileExists('./tests/Prince/fixtures/document.pdf');
+        $this->assertGreaterThan(0, filesize('./tests/Prince/fixtures/document.pdf'));
+        unlink('./tests/Prince/fixtures/document.pdf');
     }
 
     /* Private Methods */
