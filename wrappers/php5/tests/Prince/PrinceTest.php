@@ -504,6 +504,8 @@ class PrinceTest extends \PHPUnit_Framework_TestCase
      */
     public function testConvert_multiple_files_to_passthru()
     {
+        $this->checkBinary();
+
         $files = array(
             './tests/Prince/fixtures/document.html',
             './tests/Prince/fixtures/document-2.html'
