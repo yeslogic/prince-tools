@@ -1,6 +1,6 @@
-Imports System.Diagnostics
-Imports System.io
-Imports System.text
+﻿Imports System.Diagnostics
+Imports System.IO
+Imports System.Text
 Imports System
 
 Public Interface IPrince
@@ -146,6 +146,7 @@ Public Class Prince
     Private mEncrypt As Boolean
     Private mEncryptInfo As String
     Private mOptions As String
+
     Public Sub New()
         Me.mPrincePath = ""
         Me.mStyleSheets = ""
@@ -202,6 +203,14 @@ Public Class Prince
         Implements IPrince.SetLicensekey
         mLicenseKey = key
     End Sub
+    Public Sub SetOptions(ByVal options As String) _
+        Implements IPrince.SetOptions
+        mOptions = options
+    End Sub
+    Public Sub SetInputType(ByVal inputType As String) _
+        Implements IPrince.SetInputType
+        mInputType = inputType
+    End Sub
     Public Sub SetHTML(ByVal html As Boolean) _
         Implements IPrince.SetHTML
         If html Then
@@ -209,10 +218,6 @@ Public Class Prince
         Else
             mInputType = "xml"
         End If
-    End Sub
-    Public Sub SetInputType(ByVal inputType As String) _
-         Implements IPrince.SetInputType
-        mInputType = inputType
     End Sub
     Public Sub SetJavaScript(ByVal js As Boolean) _
         Implements IPrince.SetJavaScript
@@ -303,13 +308,9 @@ Public Class Prince
             End If
         End If
     End Sub
-    Public Sub SetOptions(ByVal options As String) _
-        Implements IPrince.SetOptions
-        mOptions = options
-    End Sub
     Public Sub AddStyleSheet(ByVal cssPath As String) _
         Implements IPrince.AddStyleSheet
-        mStyleSheets = mStyleSheets + "-s " + """" + cssPath + """" + " "
+        mStyleSheets = mStyleSheets + "-s " + """" + cmdline_arg_escape_2(cmdline_arg_escape_1(cssPath)) + """ "
     End Sub
     Public Sub ClearStyleSheets() _
         Implements IPrince.ClearStyleSheets
@@ -317,24 +318,24 @@ Public Class Prince
     End Sub
     Public Sub AddScript(ByVal jsPath As String) _
         Implements IPrince.AddScript
-        mJavaScripts = mJavaScripts + "--script " + """" + jsPath + """" + " "
+        mJavaScripts = mJavaScripts + "--script " + """" + cmdline_arg_escape_2(cmdline_arg_escape_1(jsPath)) + """ "
     End Sub
     Public Sub ClearScripts() _
         Implements IPrince.ClearScripts
         mJavaScripts = ""
     End Sub
     Public Sub AddFileAttachment(ByVal filePath As String) _
-          Implements IPrince.AddFileAttachment
-        mFileAttachments = mFileAttachments + "--attach=" + Chr(34) + filePath + Chr(34) + " "
+        Implements IPrince.AddFileAttachment
+        mFileAttachments = mFileAttachments + "--attach=""" + cmdline_arg_escape_2(cmdline_arg_escape_1(filePath)) + """ "
     End Sub
     Public Sub ClearFileAttachments() _
-         Implements IPrince.ClearFileAttachments
+        Implements IPrince.ClearFileAttachments
         mFileAttachments = ""
     End Sub
-    Private Function getArgs(ByVal LogType As String) As String
+    Private Function getArgs(ByVal logType As String) As String
         Dim args As String
 
-        args = "--structured-log=" + LogType + " " + mStyleSheets + mJavaScripts + mFileAttachments
+        args = "--structured-log=" + logType + " " + mStyleSheets + mJavaScripts + mFileAttachments
 
         If mEncrypt Then
             args = args + mEncryptInfo
@@ -343,7 +344,7 @@ Public Class Prince
         If mInputType = "auto" Then
 
         Else
-            args = args + "-i " + Chr(34) + mInputType + Chr(34) + " "
+            args = args + "-i """ + cmdline_arg_escape_2(cmdline_arg_escape_1(mInputType)) + """ "
         End If
 
         If mJavaScript Then
@@ -359,7 +360,7 @@ Public Class Prince
         End If
 
         If mHttpProxy <> "" Then
-            args = args + "--http-proxy=""" + mHttpProxy + """ "
+            args = args + "--http-proxy=""" + cmdline_arg_escape_2(cmdline_arg_escape_1(mHttpProxy)) + """ "
         End If
 
         If mInsecure Then
@@ -367,23 +368,23 @@ Public Class Prince
         End If
 
         If mLog <> "" Then
-            args = args + "--log=""" + mLog + """ "
+            args = args + "--log=""" + cmdline_arg_escape_2(cmdline_arg_escape_1(mLog)) + """ "
         End If
 
         If mBaseURL <> "" Then
-            args = args + "--baseurl=""" + mBaseURL + """ "
+            args = args + "--baseurl=""" + cmdline_arg_escape_2(cmdline_arg_escape_1(mBaseURL)) + """ "
         End If
 
         If mFileRoot <> "" Then
-            args = args + "--fileroot=""" + mFileRoot + """ "
+            args = args + "--fileroot=""" + cmdline_arg_escape_2(cmdline_arg_escape_1(mFileRoot)) + """ "
         End If
 
         If mLicenseFile <> "" Then
-            args = args + "--license-file=""" + mLicenseFile + """ "
+            args = args + "--license-file=""" + cmdline_arg_escape_2(cmdline_arg_escape_1(mLicenseFile)) + """ "
         End If
 
         If mLicenseKey <> "" Then
-            args = args + "--license-key=""" + mLicenseKey + """ "
+            args = args + "--license-key=""" + cmdline_arg_escape_2(cmdline_arg_escape_1(mLicenseKey)) + """ "
         End If
 
         If Not mXInclude Then
@@ -412,7 +413,7 @@ Public Class Prince
         Implements IPrince.Convert
         Dim args As String
 
-        args = getArgs("normal") + Chr(34) + xmlPath + Chr(34)
+        args = getArgs("normal") + Chr(34) + cmdline_arg_escape_2(cmdline_arg_escape_1(xmlPath)) + Chr(34)
 
         Return Convert1(args)
     End Function
@@ -420,7 +421,8 @@ Public Class Prince
         Implements IPrince.convert
         Dim args As String
 
-        args = getArgs("normal") + Chr(34) + xmlPath + Chr(34) + " -o " + Chr(34) + pdfPath + Chr(34)
+        args = getArgs("normal") + Chr(34) + cmdline_arg_escape_2(cmdline_arg_escape_1(xmlPath)) + Chr(34) + _
+               " -o " + Chr(34) + cmdline_arg_escape_2(cmdline_arg_escape_1(pdfPath)) + Chr(34)
 
         Return Convert1(args)
     End Function
@@ -432,10 +434,10 @@ Public Class Prince
 
         docPaths = ""
         For Each doc In xmlPaths
-            docPaths = docPaths + Chr(34) + doc + Chr(34) + " "
+            docPaths = docPaths + Chr(34) + cmdline_arg_escape_2(cmdline_arg_escape_1(doc)) + Chr(34) + " "
         Next
 
-        args = getArgs("normal") + docPaths + " -o " + Chr(34) + pdfPath + Chr(34)
+        args = getArgs("normal") + docPaths + " -o " + Chr(34) + cmdline_arg_escape_2(cmdline_arg_escape_1(pdfPath)) + Chr(34)
 
         Return Convert1(args)
     End Function
@@ -450,7 +452,7 @@ Public Class Prince
         If Not pdfOutput.CanWrite Then
             Throw New ApplicationException("The pdfOutput stream is not writable")
         Else
-            args = getArgs("buffered") + """" + xmlPath + """ -o -"
+            args = getArgs("buffered") + """" + cmdline_arg_escape_2(cmdline_arg_escape_1(xmlPath)) + """ -o -"
             prs = StartPrince(args)
 
             prs.StandardInput.Close()
@@ -480,7 +482,7 @@ Public Class Prince
         If Not xmlInput.CanRead Then
             Throw New ApplicationException("The xmlInput stream is not readable")
         Else
-            args = getArgs("buffered") + "- -o """ + pdfPath + """"
+            args = getArgs("buffered") + "- -o """ + cmdline_arg_escape_2(cmdline_arg_escape_1(pdfPath)) + """"
             prs = StartPrince(args)
 
             bytesRead = xmlInput.Read(buf, 0, 4096)
@@ -741,4 +743,6 @@ Public Class Prince
 
     End Function
 End Class
+
+
 

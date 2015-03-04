@@ -1,2 +1,7 @@
-vbc /target:library /out:Prince /imports:Microsoft.visualbasic /reference:Microsoft.visualbasic.dll,System.dll,System.data.dll,System.Drawing.dll,System.Windows.Forms.dll,
-System.XML.dll Prince.vb
+Command line to make prince.dll in .NET framework 3.5:
+
+
+
+c:\Windows\Microsoft.NET\Framework\v3.5>vbc /target:library /out:c:\mywork\wrappers\Prince\prince.dll c:\mywork\wrappers\Prince\Prince.vb
+Microsoft (R) Visual Basic Compiler version 9.0.30729.5420
+Copyright (c) Microsoft Corporation.  All rights reserved.

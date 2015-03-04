@@ -1,0 +1,75 @@
+There are two ways to use the .NET interface in VB.NET: 
+
+1) Use the DLL file Prince.dll.
+2) Use the class file Prince.vb
+
+If you are using Prince.dll, include the class library in your .NET project by 
+adding a reference and browsing to the DLL file.
+
+If you are using the Prince.vb, simply include this class file in your
+.NET project and it is ready to go. 
+
+
+To convert HTML (or XML) files into PDF, instantiate a Prince object with the Prince path.
+This is the path of the prince.exe file.  Once this is done, style sheets, JavaScripts 
+or other properties can be added by calling the appropriate subroutines. Finally, conversion 
+can be done by calling one of the Convert functions in the Prince class:
+
+
+The following code example demonstrates how to convert test1.html and test2.html
+and merge them into one PDF file:
+
+	Dim prn As Prince
+        Dim doc_array() As String
+
+	'instantiate Prince with princePath:
+        prn = New Prince("C:\Program Files\Prince\Engine\bin\prince.exe")
+
+	'add a stle sheet
+        prn.AddStyleSheet("C:\docs\css\stylesheet-1.css")
+
+	'add a JavaScript
+        prn.AddJavaScript("C:\docs\js\test.js")
+
+	'set the log file
+	prn.SetLog("C:\docs\log.txt")
+
+        'make an array of documents
+        doc_array = {"C:\docs\test1.html", "C:\docs\test2.html"}
+
+	'call convertMultiple to convert the documents to a PDF file
+        prn.ConvertMultiple(doc_array, "C:\docs\pdf\merged.pdf")
+
+
+To convert just a single document, call Convert instead of ConvertMultiple:
+
+	prn.Convert("C:\docs\test1.html", "C:\docs\pdf\test1.pdf")
+
+
+
+For C# users, the best way to use the Prince .NET interface is using the DLL.
+Add a reference and browse to the Prince.dll file.
+
+Prince object can be instantiated. Properties can be added and convert functions
+can be called in a similar way:
+
+	//instantiate Prince with princePath:
+     	Prince prn =  new Prince("C:\\Program Files\\Prince\\Engine\\bin\\prince.exe");
+          
+    	//make an array of documents
+    	String[] doc_array = {"C:\\docs\\test1.html", "C:\\docs\\test2.html"};
+
+	//add a stle sheet
+    	prn.AddStyleSheet("C:\\docs\\css\\stylesheet-1.css");
+
+	//add a JavaScript
+    	prn.AddJavaScript("C:\\docs\\js\\test.js");
+
+	//set the log file
+	prn.SetLog("C:\\docs\\log.txt");
+
+	//call convertMultiple to convert the documents to a PDF file
+    	prn.ConvertMultiple(doc_array, "C:\\docs\\pdf\\merged.pdf");
+
+
+
