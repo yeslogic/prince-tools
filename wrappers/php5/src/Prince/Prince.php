@@ -662,6 +662,7 @@ class Prince
     public function convert_file($xmlPath, &$msgs = array())
     {
         $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= '"' . $xmlPath . '"';
 
         return $this->convert_internal_file_to_file($pathAndArgs, $msgs);
@@ -678,6 +679,7 @@ class Prince
     public function convert_file_to_file($xmlPath, $pdfPath, &$msgs = array())
     {
         $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= '"' . $xmlPath . '" -o "' . $pdfPath . '"';
 
         return $this->convert_internal_file_to_file($pathAndArgs, $msgs);
@@ -694,6 +696,7 @@ class Prince
     public function convert_multiple_files($xmlPaths, $pdfPath, &$msgs = array())
     {
         $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=normal ';
 
         foreach($xmlPaths as $xmlPath)
         {
@@ -714,6 +717,7 @@ class Prince
     public function convert_multiple_files_to_passthru($xmlPaths, &$msgs = array())
     {
         $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=buffered ';
 
         foreach($xmlPaths as $xmlPath)
         {
@@ -734,7 +738,7 @@ class Prince
     public function convert_file_to_passthru($xmlPath, &$msgs = array())
     {
         $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '"' . $xmlPath . '" -o -';
+        $pathAndArgs .= '--structured-log=buffered "' . $xmlPath . '" -o -';
 
         return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs);
     }
@@ -749,7 +753,7 @@ class Prince
     public function convert_string_to_passthru($xmlString, &$msgs = array())
     {
         $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '-';
+        $pathAndArgs .= '--structured-log=buffered -';
 
         return $this->convert_internal_string_to_passthru($pathAndArgs, $xmlString, $msgs);
     }
@@ -765,6 +769,7 @@ class Prince
     public function convert_string_to_file($xmlString, $pdfPath, &$msgs = array())
     {
         $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= ' - -o "' . $pdfPath . '"';
 
         return $this->convert_internal_string_to_file($pathAndArgs, $xmlString, $msgs);
