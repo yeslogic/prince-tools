@@ -1,0 +1,13 @@
+body {
+  font-family: 'Helvetica', arial, sans-serf;
+  font-size: 10pt;
+}
+
+h1 {
+  font-weight: bold;
+  font-style: underline;
+}
+
+p {
+  line-height: 2em;
+}
