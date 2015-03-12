@@ -36,7 +36,7 @@ class Prince
 
     public function __construct($exePath)
     {
-	$this->exePath = $this->addDoubleQuotes(ltrim($exePath));
+	$this->exePath =$exePath;
 	$this->styleSheets = '';
 	$this->scripts = '';
 	$this->fileAttachments = '';
@@ -440,7 +440,7 @@ class Prince
 
     private function getCommandLine()
     {
-	$cmdline = $this->exePath . ' ' . $this->styleSheets . $this->scripts . $this->fileAttachments;
+	$cmdline = '"' . $this->exePath . '" ' . $this->styleSheets . $this->scripts . $this->fileAttachments;
 
 	if ($this->inputType == "auto")
 	{
