@@ -1,7 +1,7 @@
 <?php
 
 // Prince - PHP interface
-// Copyright 2005-2014 YesLogic Pty. Ltd.
+// Copyright 2005-2015 YesLogic Pty. Ltd.
 // http://www.princexml.com
 
 class Prince
@@ -36,7 +36,7 @@ class Prince
 
     public function __construct($exePath)
     {
-	$this->exePath =$exePath;
+	$this->exePath = $exePath;
 	$this->styleSheets = '';
 	$this->scripts = '';
 	$this->fileAttachments = '';
@@ -712,50 +712,6 @@ class Prince
 	return '';
     }
     
-    
-    	//Puts double-quotes around space(s) in file path,
-    	//and also around semicolon(;), comma(,), ampersand(&), up-arrow(^) and parentheses.
-	//This is needed if the file path is used in a command line.
-	private function addDoubleQuotes($str)
-	{
-		$len = strlen($str);
-		
-		$outputStr = '';
-		$numWeirdChars = 0;
-		$subStrStart = 0;
-		for ($i = 0; $i < $len; $i++)
-		{
-			if(($str[$i] == ' ') ||
-			   ($str[$i] == ';') ||
-			   ($str[$i] == ',') ||
-			   ($str[$i] == '&') ||
-			   ($str[$i] == '^') ||
-			   ($str[$i] == '(') ||
-			   ($str[$i] == ')'))
-			{
-				if($numWeirdChars == 0)
-				{
-					$outputStr .= substr($str, $subStrStart, ($i - $subStrStart));
-					$weirdCharsStart = $i;
-				}
-				$numWeirdChars += 1;
-			}
-			else
-			{
-				if($numWeirdChars > 0)
-				{
-					$outputStr .=  chr(34) . substr($str, $weirdCharsStart, $numWeirdChars) . chr(34);
-				
-					$subStrStart = $i;
-					$numWeirdChars = 0;
-				}
-			}
-		}
-		$outputStr .= substr($str, $subStrStart, ($i - $subStrStart));
-		
-		return $outputStr;
-	}
-	
 	private function cmdlineArgEscape($argStr)
 	{
 		return $this->cmdlineArgEscape2($this->cmdlineArgEscape1($argStr));
