@@ -1,6 +1,6 @@
 #! /bin/sh
 
-SRC="Prince.java PrinceEvents.java"
+SRC="Prince.java PrinceControl.java PrinceEvents.java"
 NO_QUALIFY="java.lang:java.io:java.util"
 OUTPUT="api"
 

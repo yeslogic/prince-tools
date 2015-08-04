@@ -1,7 +1,10 @@
 #! /bin/sh
 
 LIBSRC="\
+    Chunk.java \
+    Json.java \
     Prince.java \
+    PrinceControl.java \
     PrinceEvents.java \
     Util.java"
 
@@ -9,7 +12,7 @@ LIBSRC="\
 rm -rf com prince.jar
 
 # build new class files
-javac -d . $LIBSRC
+javac -Xlint:unchecked -d . $LIBSRC
 
 # create JAR file
 jar cf prince.jar com
