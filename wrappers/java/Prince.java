@@ -1,4 +1,4 @@
-// Copyright (C) 2005-2006, 2010, 2012, 2014 YesLogic Pty. Ltd.
+// Copyright (C) 2005-2006, 2010, 2012, 2014-2015 YesLogic Pty. Ltd.
 // All rights reserved.
 
 package com.princexml;
@@ -11,6 +11,7 @@ import java.io.OutputStream;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * The main Prince class.
@@ -568,7 +569,70 @@ public class Prince
 
 	return readMessages(process);
     }
-    
+
+    private static ConcurrentLinkedQueue<Process> processQueue = new ConcurrentLinkedQueue<Process>();
+
+    /**
+     * Prestart a Prince process for use with convertWithPrestart. This may
+     * help to reduce latency when many documents need to be converted
+     * consecutively.
+     */
+    public void prestartProcess()
+	throws IOException
+    {
+	List cmdline = getCommandLine();
+
+	cmdline.add("--structured-log=buffered");
+	cmdline.add("-");
+
+	Process process = Util.invokeProcess(cmdline);
+
+	processQueue.add(process);
+    }
+
+    /**
+     * Convert an XML or HTML file to a PDF file. This method is useful for
+     * servlets as it allows Prince to write the PDF output directly to the
+     * OutputStream of the servlet response.
+     * <p>
+     * Note that it may be helpful to specify a base URL or path for the input
+     * document using the setBaseURL() method. This allows relative URLs and
+     * paths in the document (eg. for images) to be resolved correctly.
+     * <p>
+     * The prestart mechanism can reduce latency when many documents need to
+     * be converted consecutively. Just call prestartProcess() once before any
+     * calls to convertWithPrestart.
+     * @param xmlInput The InputStream from which Prince will read the XML or
+     * HTML document.
+     * @param pdfOutput The OutputStream to which Prince will write the PDF
+     * output.
+     * @return True if a PDF file was generated successfully.
+     */
+    public boolean convertWithPrestart(InputStream xmlInput, OutputStream pdfOutput)
+	throws IOException
+    {
+	prestartProcess();
+
+	Process process = processQueue.remove();
+
+	OutputStream inputToPrince = process.getOutputStream();
+	InputStream outputFromPrince = process.getInputStream();
+
+	// copy the XML input to Prince stdin
+	Util.copyInputToOutput(xmlInput, inputToPrince);
+
+	// close Prince stdin
+	inputToPrince.close();
+
+	// copy the PDF output from Prince stdout
+	Util.copyInputToOutput(outputFromPrince, pdfOutput);
+
+	// close Prince stdout
+        outputFromPrince.close();
+
+	return readMessages(process);
+    }
+
     /**
      * Get the command line used to call Prince. The command line is returned
      * as a list of strings rather than a single string in order to avoid
