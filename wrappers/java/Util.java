@@ -1,4 +1,4 @@
-// Copyright (C) 2005-2006 YesLogic Pty. Ltd.
+// Copyright (C) 2005-2006, 2015 YesLogic Pty. Ltd.
 // All rights reserved.
 
 package com.princexml;
@@ -19,7 +19,7 @@ public class Util
      * @param cmdline A list of command line arguments (Strings).
      * @return The new Process.
      */
-    public static Process invokeProcess(List cmdline)
+    public static Process invokeProcess(List<String> cmdline)
 	throws IOException
     {
 	String[] dummy = { };
@@ -39,7 +39,7 @@ public class Util
     public static void copyInputToOutput(InputStream input, OutputStream output)
 	throws IOException
     {
-	final int BUFSIZE = 4096;
+	final int BUFSIZE = 65536;
         byte buf[] = new byte[BUFSIZE];
 	int bytesRead;
 	

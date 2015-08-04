@@ -1,4 +1,4 @@
-// Copyright (C) 2005-2006, 2010, 2012, 2014 YesLogic Pty. Ltd.
+// Copyright (C) 2005-2006, 2010, 2012, 2014-2015 YesLogic Pty. Ltd.
 // All rights reserved.
 
 package com.princexml;
@@ -19,15 +19,15 @@ public class Prince
 {
     private PrinceEvents mEvents;
     private String mExePath;
-    private ArrayList mStyleSheets;
-    private ArrayList mScripts;
+    protected ArrayList<String> mStyleSheets;
+    protected ArrayList<String> mScripts;
 
     // Input settings
-    private String mInputType;
-    private String mBaseURL;
-    private String mFileRoot;
-    private boolean mJavaScript;
-    private boolean mXInclude;
+    protected String mInputType;
+    protected String mBaseURL;
+    protected String mFileRoot;
+    protected boolean mJavaScript;
+    protected boolean mXInclude;
 
     // Network settings
     private boolean mNetwork;
@@ -41,19 +41,20 @@ public class Prince
     private boolean mDebug;
 
     // PDF settings
-    private boolean mEmbedFonts;
-    private boolean mSubsetFonts;
-    private boolean mCompress;
+    protected boolean mEmbedFonts;
+    protected boolean mSubsetFonts;
+    protected boolean mForceIdentityEncoding;
+    protected boolean mCompress;
     
     // Encryption settings
-    private boolean mEncrypt;
-    private int mKeyBits;
-    private String mUserPassword;
-    private String mOwnerPassword;
-    private boolean mDisallowPrint;
-    private boolean mDisallowModify;
-    private boolean mDisallowCopy;
-    private boolean mDisallowAnnotate;
+    protected boolean mEncrypt;
+    protected int mKeyBits;
+    protected String mUserPassword;
+    protected String mOwnerPassword;
+    protected boolean mDisallowPrint;
+    protected boolean mDisallowModify;
+    protected boolean mDisallowCopy;
+    protected boolean mDisallowAnnotate;
 
     // Other command-line options
     private String[] mOptions;
@@ -84,8 +85,8 @@ public class Prince
     {
 	mEvents = events;
 	mExePath = exePath;
-	mStyleSheets = new ArrayList();
-	mScripts = new ArrayList();
+	mStyleSheets = new ArrayList<String>();
+	mScripts = new ArrayList<String>();
 
 	// Input settings
 	mInputType = "auto";
@@ -108,6 +109,7 @@ public class Prince
 	// PDF settings
 	mEmbedFonts = true;
 	mSubsetFonts = true;
+        mForceIdentityEncoding = false;
 	mCompress = true;
 	
 	// Encryption settings
@@ -335,6 +337,15 @@ public class Prince
     }
 
     /**
+     * Specify whether fonts should be forced to use identity encoding.
+     * @param forceIdentityEncoding True to force identity encoding.
+     */
+    public void setForceIdentityEncoding(boolean forceIdentityEncoding)
+    {
+	mForceIdentityEncoding = forceIdentityEncoding;
+    }
+
+    /**
      * Specify whether compression should be applied to the output PDF file.
      * Compression will be applied by default unless explicitly disabled.
      * @param compress False to disable PDF compression.
@@ -440,14 +451,14 @@ public class Prince
     public boolean convert(String xmlPath)
 	throws IOException
     {
-	List cmdline = getCommandLine();
+	List<String> cmdline = getJobCommandLine();
 
 	cmdline.add("--structured-log=normal");
 	cmdline.add(xmlPath);
         
 	Process process = Util.invokeProcess(cmdline);
 	
-	return readMessages(process);
+	return readMessagesFromStderr(process);
     }
     
     /**
@@ -459,7 +470,7 @@ public class Prince
     public boolean convert(String xmlPath, String pdfPath)
 	throws IOException
     {
-	List cmdline = getCommandLine();
+	List<String> cmdline = getJobCommandLine();
 
 	cmdline.add("--structured-log=normal");
 	cmdline.add(xmlPath);
@@ -467,7 +478,7 @@ public class Prince
         
 	Process process = Util.invokeProcess(cmdline);
 	
-	return readMessages(process);
+	return readMessagesFromStderr(process);
     }
 
     /**
@@ -479,7 +490,7 @@ public class Prince
     public boolean convertMultiple(List xmlPaths, String pdfPath)
 	throws IOException
     {
-	List cmdline = getCommandLine();
+	List<String> cmdline = getJobCommandLine();
 
 	cmdline.add("--structured-log=normal");
 	cmdline.add("--output="+pdfPath);
@@ -492,7 +503,7 @@ public class Prince
         
 	Process process = Util.invokeProcess(cmdline);
 	
-	return readMessages(process);
+	return readMessagesFromStderr(process);
     }
 
     /**
@@ -507,7 +518,7 @@ public class Prince
     public boolean convert(String xmlPath, OutputStream pdfOutput)
 	throws IOException
     {
-	List cmdline = getCommandLine();
+	List<String> cmdline = getJobCommandLine();
 
 	cmdline.add("--structured-log=buffered");
 	cmdline.add(xmlPath);
@@ -524,7 +535,7 @@ public class Prince
 	// close Prince stdout
         outputFromPrince.close();
 
-	return readMessages(process);
+	return readMessagesFromStderr(process);
     }
     
     /**
@@ -544,7 +555,7 @@ public class Prince
     public boolean convert(InputStream xmlInput, OutputStream pdfOutput)
 	throws IOException
     {
-	List cmdline = getCommandLine();
+	List<String> cmdline = getJobCommandLine();
 
 	cmdline.add("--structured-log=buffered");
 	cmdline.add("-");
@@ -566,55 +577,26 @@ public class Prince
 	// close Prince stdout
         outputFromPrince.close();
 
-	return readMessages(process);
+	return readMessagesFromStderr(process);
     }
-    
+
     /**
      * Get the command line used to call Prince. The command line is returned
      * as a list of strings rather than a single string in order to avoid
      * potential problems with arguments that contain spaces.
+     *
+     * getBaseCommandLine() includes only the executable path and basic
+     * options which are not job-specific, for use by PrinceControl.
      */
-    private List getCommandLine()
+    protected List<String> getBaseCommandLine()
     {
-	List cmdline = new ArrayList();
+	List<String> cmdline = new ArrayList<String>();
 
 	cmdline.add(mExePath);
-	
-	for (int i = 0; i < mStyleSheets.size(); ++i)
-	{
-	    String cssPath = (String) mStyleSheets.get(i);
-	    cmdline.add("--style=" + cssPath);
-	}
-
-	for (int i = 0; i < mScripts.size(); ++i)
-	{
-	    String jsPath = (String) mScripts.get(i);
-	    cmdline.add("--script=" + jsPath);
-	}
-
-	if (mInputType != null && !mInputType.equals("auto"))
-	{
-	    cmdline.add("--input="+mInputType);
-	}
-
-	if (mBaseURL != null)
-	{
-	    cmdline.add("--baseurl="+mBaseURL);
-	}
 
 	if (mFileRoot != null)
 	{
 	    cmdline.add("--fileroot="+mFileRoot);
-	}
-
-	if (mJavaScript)
-	{
-	    cmdline.add("--javascript");
-	}
-
-	if (!mXInclude)
-	{
-	    cmdline.add("--no-xinclude");
 	}
 
 	if (!mNetwork)
@@ -652,6 +634,53 @@ public class Prince
 	    cmdline.add("--debug");
 	}
 
+	return cmdline;
+    }
+
+    /**
+     * Get the command line used to call Prince. The command line is returned
+     * as a list of strings rather than a single string in order to avoid
+     * potential problems with arguments that contain spaces.
+     *
+     * getJobCommandLine() extends getBaseCommandLine() and adds the
+     * job-specific options.
+     */
+    protected List<String> getJobCommandLine()
+    {
+	List<String> cmdline = getBaseCommandLine();
+
+	for (int i = 0; i < mStyleSheets.size(); ++i)
+	{
+	    String cssPath = (String) mStyleSheets.get(i);
+	    cmdline.add("--style=" + cssPath);
+	}
+
+	for (int i = 0; i < mScripts.size(); ++i)
+	{
+	    String jsPath = (String) mScripts.get(i);
+	    cmdline.add("--script=" + jsPath);
+	}
+
+	if (mInputType != null && !mInputType.equals("auto"))
+	{
+	    cmdline.add("--input="+mInputType);
+	}
+
+	if (mBaseURL != null)
+	{
+	    cmdline.add("--baseurl="+mBaseURL);
+	}
+
+	if (mJavaScript)
+	{
+	    cmdline.add("--javascript");
+	}
+
+	if (!mXInclude)
+	{
+	    cmdline.add("--no-xinclude");
+	}
+
 	if (!mEmbedFonts)
 	{
 	    cmdline.add("--no-embed-fonts");
@@ -662,6 +691,11 @@ public class Prince
 	    cmdline.add("--no-subset-fonts");
 	}
 	
+	if (mForceIdentityEncoding)
+	{
+	    cmdline.add("--force-identity-encoding");
+	}
+
 	if (!mCompress)
 	{
 	    cmdline.add("--no-compress");
@@ -721,20 +755,19 @@ public class Prince
      * @param process The Prince process.
      * @return True if Prince finished successfully.
      */
-    private boolean readMessages(Process process)
+    private boolean readMessagesFromStderr(Process process)
 	throws IOException
     {
-        String line;
-        String result;
-        InputStream errMsgs;
-        BufferedReader bufRead;
-        
-        errMsgs = process.getErrorStream();
-        bufRead = new BufferedReader(new InputStreamReader(errMsgs));
-        
-        line = "";
-        result = "";
-        line = bufRead.readLine();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+	return readMessages(reader);
+    }
+
+    protected boolean readMessages(BufferedReader reader)
+	throws IOException
+    {
+        String result = "";
+        String line = reader.readLine();
 
         while (line != null)
 	{
@@ -761,7 +794,7 @@ public class Prince
 		// ignore too short log messages
 	    }
 	    
-            line = bufRead.readLine();
+            line = reader.readLine();
         }
 
         return result.equals("success");
