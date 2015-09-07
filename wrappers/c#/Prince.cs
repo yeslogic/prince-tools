@@ -203,6 +203,36 @@ public class Prince : IPrince
 
     #region Public methods
 
+    public void AddStyleSheet(string cssPath)
+    {
+        mStyleSheets += "-s \"" + escape(cssPath) + "\" ";
+    }
+
+    public void ClearStyleSheets()
+    {
+        mStyleSheets = "";
+    }
+
+    public void AddScript(string jsPath)
+    {
+        mJavaScripts += "--script \"" + escape(jsPath) + "\" " ;
+    }
+
+    public void ClearScripts()
+    {
+        mJavaScripts = "";
+    }
+
+    public void AddFileAttachment(string filePath)
+    {
+        mFileAttachments += "--attach=\"" +  escape(filePath) + "\" ";
+    }
+
+    public void ClearFileAttachments()
+    {
+        mFileAttachments = "";
+    }
+    
     public void SetLicenseFile(string file)
     {
         mLicenseFile = file;
@@ -340,7 +370,7 @@ public class Prince : IPrince
 
         for (int i = 0; i < xmlPaths.Length; i++)
         {
-            docPaths +=  "\"" + escape(xmlPaths[i]) + "\"";
+            docPaths +=  "\"" + escape(xmlPaths[i]) + "\" ";
         }
 
         string args = getArgs("normal") + docPaths + " -o \"" + escape(pdfPath) + "\"";
@@ -576,7 +606,7 @@ public class Prince : IPrince
 
                 if((mEvents != null) && msgTag.Equals("msg|"))
                 {
-                   //handleMessage(msgBody);
+                   handleMessage(msgBody);
                 }
                 else if (msgTag.Equals("fin|"))
                 {
