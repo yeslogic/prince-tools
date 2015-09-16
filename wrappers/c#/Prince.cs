@@ -172,6 +172,12 @@ public class Prince : IPrince
     private bool mEmbedFonts;
     private bool mSubsetFonts;
     private bool mCompress;
+    private bool mArtificialFonts;
+    private string mPdfTitle;
+    private string mPdfSubject;
+    private string mPdfAuthor;
+    private string mPdfKeywords;
+    private string mPdfCreator;
     private bool mEncrypt;
     private string mEncryptInfo;
     private string mOptions;
@@ -241,11 +247,6 @@ public class Prince : IPrince
     public void SetLicensekey(string key)
     {
         mLicenseKey = key;
-    }
-
-    public void SetOptions(string options)
-    {
-        mOptions = options;
     }
 
     public void SetInputType(string inputType)
@@ -318,6 +319,36 @@ public class Prince : IPrince
         mCompress = compress;
     }
 
+    public void SetArtificialFonts(bool artificialFonts)
+    {
+        mArtificialFonts = artificialFonts;
+    }
+
+    public void SetPDFTitle(string pdfTitle)
+    {
+        mPdfTitle = pdfTitle;
+    }
+
+    public void SetPDFSubject(string pdfSubject)
+    {
+        mPdfSubject = pdfSubject;
+    }
+
+    public void SetPDFAuthor(string pdfAuthor)
+    {
+        mPdfAuthor = pdfAuthor;
+    }
+
+    public void SetPDFKeywords(string keywords)
+    {
+        mPdfKeywords = keywords;
+    }
+
+    public void SetPDFCreator(string creator)
+    {
+        mPdfCreator = creator;
+    }
+
     public void SetEncrypt(bool encrypt)
     {
         mEncrypt = encrypt;
@@ -350,6 +381,12 @@ public class Prince : IPrince
         if (disallowCopy) { mEncryptInfo += "--disallow-copy "; }
         if (disallowAnnotate) { mEncryptInfo += "--disallow-annotate "; }
     }
+
+    public void SetOptions(string options)
+    {
+        mOptions = options;
+    }
+
 
 
     public bool Convert(string xmlPath)
@@ -529,6 +566,12 @@ public class Prince : IPrince
         if (!mEmbedFonts) { args += "--no-embed-fonts "; }
         if (!mSubsetFonts) { args += "--no-subset-fonts "; }
         if (!mCompress) { args += "--no-compress "; }
+        if (!mArtificialFonts) { args += "--no-artificial-fonts "; }
+        if (!string.IsNullOrEmpty(mPdfTitle)) { args += "--pdf-title=\"" + escape(mPdfTitle) + "\" "; }
+        if (!string.IsNullOrEmpty(mPdfSubject)) { args += "--pdf-subject=\"" + escape(mPdfSubject) + "\" "; }
+        if (!string.IsNullOrEmpty(mPdfAuthor)) { args += "--pdf-author=\"" + escape(mPdfAuthor) + "\" "; }
+        if (!string.IsNullOrEmpty(mPdfKeywords)) { args += "--pdf-keywords=\"" + escape(mPdfKeywords) + "\" "; }
+        if (!string.IsNullOrEmpty(mPdfCreator)) { args += "--pdf-creator=\"" + escape(mPdfCreator) + "\" "; }
         if(!string.IsNullOrEmpty(mOptions)) {args += escape(mOptions) + " ";}
 
         return args;
