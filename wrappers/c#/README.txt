@@ -211,7 +211,7 @@ Configuration methods
 	Compression is applied by default unless explicitly disabled. 
 
 
-23)  public void SetArtificialFonts(bool artificialFonts)
+23)  public void SetNoArtificialFonts(bool noArtificialFonts)
 	
 	Specify whether artificial bold/italic fonts should be generated if necessary. 
 	Artificial fonts are enabled by default. 
@@ -242,13 +242,53 @@ Configuration methods
 	Specify the document creator for PDF metadata.
 
 
-29)  public void SetEncrypt(bool encrypt)
+29)  public void SetAuthMethod(string authMethod)
+
+	Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
+
+
+30)  public void SetAuthUser(string user)
+
+	Specify username for HTTP authentication.
+
+
+31)  public void SetAuthPassword(string password)
+
+	Specify password for HTTP authentication.
+
+
+32)  public void SetAuthServer(string server)
+
+	Only send USER:PASS to this server.
+
+
+33)  public void SetAuthScheme(string scheme)
+
+	Only send USER:PASS for this scheme. (HTTP, HTTPS)
+
+
+34)  public void SetNoAuthPreemptive(bool noAuthPreemtive)
+
+	Do not authenticate with named servers until asked.
+
+
+35)  public void SetPageSize(string pageSize)
+
+	Specify the page size (eg. A4).
+
+
+36)  public void SetPageMargin(string pageMargin)
+
+	Specify the page margin (eg. 20mm).
+
+
+37)  public void SetEncrypt(bool encrypt)
 
 	Specify whether to apply encryption to the output PDF file. 
 	The default is no encryption.
 
 
-30)  public void SetEncryptInfo(int keyBits, 
+38)  public void SetEncryptInfo(int keyBits, 
                                string userPassword, 
                                string ownerPassword, 
                                bool disallowPrint, 
@@ -269,7 +309,7 @@ Configuration methods
 	disallowAnnotate:	True to disallow annotation of the PDF file.
 
 
-31)  public void SetOptions(string options)
+39)  public void SetOptions(string options)
 
 	Set other options.
 	

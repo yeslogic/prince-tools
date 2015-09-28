@@ -172,12 +172,20 @@ public class Prince : IPrince
     private bool mEmbedFonts;
     private bool mSubsetFonts;
     private bool mCompress;
-    private bool mArtificialFonts;
+    private bool mNoArtificialFonts;
     private string mPdfTitle;
     private string mPdfSubject;
     private string mPdfAuthor;
     private string mPdfKeywords;
     private string mPdfCreator;
+    private string mAuthMethod;
+    private string mAuthUser;
+    private string mAuthPassword;
+    private string mAuthServer;
+    private string mAuthScheme;
+    private bool mNoAuthPreemptive;
+    private string mPageSize;
+    private string mPageMargin;
     private bool mEncrypt;
     private string mEncryptInfo;
     private string mOptions;
@@ -193,6 +201,8 @@ public class Prince : IPrince
         mEmbedFonts = true;
         mSubsetFonts = true;
         mCompress = true;
+        mNoArtificialFonts = false;
+        mNoAuthPreemptive = false;
         mEncrypt = false;           
     }
 
@@ -319,9 +329,9 @@ public class Prince : IPrince
         mCompress = compress;
     }
 
-    public void SetArtificialFonts(bool artificialFonts)
+    public void SetNoArtificialFonts(bool noArtificialFonts)
     {
-        mArtificialFonts = artificialFonts;
+        mNoArtificialFonts = noArtificialFonts;
     }
 
     public void SetPDFTitle(string pdfTitle)
@@ -347,6 +357,76 @@ public class Prince : IPrince
     public void SetPDFCreator(string creator)
     {
         mPdfCreator = creator;
+    }
+
+    public void SetAuthMethod(string authMethod)
+    {
+        if (String.Equals(authMethod, "basic", StringComparison.OrdinalIgnoreCase))
+        {
+            mAuthMethod = "basic";
+        }
+        else if (String.Equals(authMethod, "digest", StringComparison.OrdinalIgnoreCase))
+        {
+            mAuthMethod = "digest";
+        }
+        else if (String.Equals(authMethod, "ntlm", StringComparison.OrdinalIgnoreCase))
+        {
+            mAuthMethod = "ntlm";
+        }
+        else if (String.Equals(authMethod, "negotiate", StringComparison.OrdinalIgnoreCase))
+        {
+            mAuthMethod = "negotiate";
+        }
+        else
+        {
+            mAuthMethod = "";
+        }
+    }
+
+    public void SetAuthUser(string user)
+    {
+        mAuthUser = user;
+    }
+
+    public void SetAuthPassword(string password)
+    {
+        mAuthPassword = password;
+    }
+
+    public void SetAuthServer(string server)
+    {
+        mAuthServer = server;
+    }
+
+    public void SetAuthScheme(string scheme)
+    {
+        if (String.Equals(scheme, "http", StringComparison.OrdinalIgnoreCase))
+        {
+            mAuthScheme = "http";
+        }
+        else if (String.Equals(scheme, "https", StringComparison.OrdinalIgnoreCase))
+        {
+            mAuthScheme = "https";
+        }
+        else
+        {
+            mAuthScheme = "";
+        }
+    }
+
+    public void SetNoAuthPreemptive(bool noAuthPreemtive)
+    {
+        mNoAuthPreemptive = noAuthPreemtive;
+    }
+
+    public void SetPageSize(string pageSize)
+    {
+        mPageSize = pageSize;
+    }
+
+    public void SetPageMargin(string pageMargin)
+    {
+        mPageMargin = pageMargin;
     }
 
     public void SetEncrypt(bool encrypt)
@@ -566,12 +646,20 @@ public class Prince : IPrince
         if (!mEmbedFonts) { args += "--no-embed-fonts "; }
         if (!mSubsetFonts) { args += "--no-subset-fonts "; }
         if (!mCompress) { args += "--no-compress "; }
-        if (!mArtificialFonts) { args += "--no-artificial-fonts "; }
+        if (mNoArtificialFonts) { args += "--no-artificial-fonts "; }
         if (!string.IsNullOrEmpty(mPdfTitle)) { args += "--pdf-title=\"" + escape(mPdfTitle) + "\" "; }
         if (!string.IsNullOrEmpty(mPdfSubject)) { args += "--pdf-subject=\"" + escape(mPdfSubject) + "\" "; }
         if (!string.IsNullOrEmpty(mPdfAuthor)) { args += "--pdf-author=\"" + escape(mPdfAuthor) + "\" "; }
         if (!string.IsNullOrEmpty(mPdfKeywords)) { args += "--pdf-keywords=\"" + escape(mPdfKeywords) + "\" "; }
         if (!string.IsNullOrEmpty(mPdfCreator)) { args += "--pdf-creator=\"" + escape(mPdfCreator) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthMethod)) { args += "--auth-method=\"" + escape(mAuthMethod) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthUser)) { args += "--auth-user=\"" + escape(mAuthUser) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthPassword)) { args += "--auth-password=\"" + escape(mAuthPassword) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthServer)) { args += "--auth-server=\"" + escape(mAuthServer) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthScheme)) { args += "--auth-scheme=\"" + escape(mAuthScheme) + "\" "; }
+        if (mNoAuthPreemptive) { args += "--no-auth-preemtive "; }
+        if (!string.IsNullOrEmpty(mPageSize)) { args += "--page-size=\"" + escape(mPageSize) + "\" "; }
+        if (!string.IsNullOrEmpty(mPageMargin)) { args += "--page-margin=\"" + escape(mPageMargin) + "\" "; }
         if(!string.IsNullOrEmpty(mOptions)) {args += escape(mOptions) + " ";}
 
         return args;
