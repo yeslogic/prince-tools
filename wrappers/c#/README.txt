@@ -232,12 +232,12 @@ Configuration methods
 	Specify the document author for PDF metadata.
 
 
-27)  public void SetPDFKeywords(string keywords)
+27)  public void SetPDFKeywords(string pdfKeywords)
 
 	Specify the document keywords for PDF metadata.
 
 
-28)  public void SetPDFCreator(string creator)
+28)  public void SetPDFCreator(string pdfCreator)
 
 	Specify the document creator for PDF metadata.
 
@@ -247,27 +247,27 @@ Configuration methods
 	Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
 
 
-30)  public void SetAuthUser(string user)
+30)  public void SetAuthUser(string authUser)
 
 	Specify username for HTTP authentication.
 
 
-31)  public void SetAuthPassword(string password)
+31)  public void SetAuthPassword(string authPassword)
 
 	Specify password for HTTP authentication.
 
 
-32)  public void SetAuthServer(string server)
+32)  public void SetAuthServer(string authServer)
 
 	Only send USER:PASS to this server.
 
 
-33)  public void SetAuthScheme(string scheme)
+33)  public void SetAuthScheme(string authScheme)
 
 	Only send USER:PASS for this scheme. (HTTP, HTTPS)
 
 
-34)  public void SetNoAuthPreemptive(bool noAuthPreemtive)
+34)  public void SetNoAuthPreemptive(bool noAuthPreemptive)
 
 	Do not authenticate with named servers until asked.
 

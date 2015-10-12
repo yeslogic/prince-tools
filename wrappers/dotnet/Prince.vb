@@ -33,6 +33,20 @@ Public Interface IPrince
     Sub SetEmbedFonts(ByVal embed As Boolean)
     Sub SetSubsetFonts(ByVal embedSubset As Boolean)
     Sub SetCompress(ByVal compress As Boolean)
+    Sub SetNoArtificialFonts(ByVal noArtificialFonts As Boolean)
+    Sub SetPDFTitle(ByVal pdfTitle As String)
+    Sub SetPDFSubject(ByVal pdfSubject As String)
+    Sub SetPDFAuthor(ByVal pdfAuthor As String)
+    Sub SetPDFKeywords(ByVal pdfKeywords As String)
+    Sub SetPDFCreator(ByVal pdfCreator As String)
+    Sub SetAuthMethod(ByVal authMethod As String)
+    Sub SetAuthUser(ByVal authUser As String)
+    Sub SetAuthPassword(ByVal authPassword As String)
+    Sub SetAuthServer(ByVal authServer As String)
+    Sub SetAuthScheme(ByVal authScheme As String)
+    Sub SetNoAuthPreemptive(ByVal noAuthPreemptive As Boolean)
+    Sub SetPageSize(ByVal pageSize As String)
+    Sub SetPageMargin(ByVal pageMargin As String)
     Sub SetEncrypt(ByVal encrypt As Boolean)
     Sub SetOptions(ByVal options As String)
     Function Convert(ByVal xmlPath As String) As Boolean
@@ -143,6 +157,20 @@ Public Class Prince
     Private mEmbedFonts As Boolean
     Private mSubsetFonts As Boolean
     Private mCompress As Boolean
+    Private mNoArtificialFonts As Boolean
+    Private mPdfTitle As String
+    Private mPdfSubject As String
+    Private mPdfAuthor As String
+    Private mPdfKeywords As String
+    Private mPdfCreator As String
+    Private mAuthMethod As String
+    Private mAuthUser As String
+    Private mAuthPassword As String
+    Private mAuthServer As String
+    Private mAuthScheme As String
+    Private mNoAuthPreemptive As Boolean
+    Private mPageSize As String
+    Private mPageMargin As String
     Private mEncrypt As Boolean
     Private mEncryptInfo As String
     Private mOptions As String
@@ -167,6 +195,20 @@ Public Class Prince
         Me.mEmbedFonts = True
         Me.mSubsetFonts = True
         Me.mCompress = True
+        Me.mNoArtificialFonts = False
+        Me.mPdfTitle = ""
+        Me.mPdfSubject = ""
+        Me.mPdfAuthor = ""
+        Me.mPdfKeywords = ""
+        Me.mPdfCreator = ""
+        Me.mAuthMethod = ""
+        Me.mAuthUser = ""
+        Me.mAuthPassword = ""
+        Me.mAuthServer = ""
+        Me.mAuthScheme = ""
+        Me.mNoAuthPreemptive = False
+        Me.mPageSize = ""
+        Me.mPageMargin = ""
         Me.mEncrypt = False
         Me.mEncryptInfo = ""
         Me.mOptions = ""
@@ -191,9 +233,48 @@ Public Class Prince
         Me.mEmbedFonts = True
         Me.mSubsetFonts = True
         Me.mCompress = True
+        Me.mNoArtificialFonts = False
+        Me.mPdfTitle = ""
+        Me.mPdfSubject = ""
+        Me.mPdfAuthor = ""
+        Me.mPdfKeywords = ""
+        Me.mPdfCreator = ""
+        Me.mAuthMethod = ""
+        Me.mAuthUser = ""
+        Me.mAuthPassword = ""
+        Me.mAuthServer = ""
+        Me.mAuthScheme = ""
+        Me.mNoAuthPreemptive = False
+        Me.mPageSize = ""
+        Me.mPageMargin = ""
         Me.mEncrypt = False
         Me.mEncryptInfo = ""
         Me.mOptions = ""
+    End Sub
+
+    Public Sub AddStyleSheet(ByVal cssPath As String) _
+      Implements IPrince.AddStyleSheet
+        mStyleSheets = mStyleSheets + "-s " + """" + escape(cssPath) + """ "
+    End Sub
+    Public Sub ClearStyleSheets() _
+        Implements IPrince.ClearStyleSheets
+        mStyleSheets = ""
+    End Sub
+    Public Sub AddScript(ByVal jsPath As String) _
+        Implements IPrince.AddScript
+        mJavaScripts = mJavaScripts + "--script " + """" + escape(jsPath) + """ "
+    End Sub
+    Public Sub ClearScripts() _
+        Implements IPrince.ClearScripts
+        mJavaScripts = ""
+    End Sub
+    Public Sub AddFileAttachment(ByVal filePath As String) _
+        Implements IPrince.AddFileAttachment
+        mFileAttachments = mFileAttachments + "--attach=""" + escape(filePath) + """ "
+    End Sub
+    Public Sub ClearFileAttachments() _
+        Implements IPrince.ClearFileAttachments
+        mFileAttachments = ""
     End Sub
     Public Sub SetLicenseFile(ByVal file As String) _
         Implements IPrince.SetLicenseFile
@@ -202,10 +283,6 @@ Public Class Prince
     Public Sub SetLicensekey(ByVal key As String) _
         Implements IPrince.SetLicensekey
         mLicenseKey = key
-    End Sub
-    Public Sub SetOptions(ByVal options As String) _
-        Implements IPrince.SetOptions
-        mOptions = options
     End Sub
     Public Sub SetInputType(ByVal inputType As String) _
         Implements IPrince.SetInputType
@@ -267,6 +344,62 @@ Public Class Prince
         Implements IPrince.SetCompress
         mCompress = compress
     End Sub
+    Public Sub SetNoArtificialFonts(ByVal noArtificialFonts As Boolean) _
+        Implements IPrince.SetNoArtificialFonts
+        mNoArtificialFonts = noArtificialFonts
+    End Sub
+    Public Sub SetPDFTitle(ByVal pdfTitle As String) _
+        Implements IPrince.SetPDFTitle
+        mPdfTitle = pdfTitle
+    End Sub
+    Public Sub SetPDFSubject(ByVal pdfSubject As String) _
+        Implements IPrince.SetPDFSubject
+        mPdfSubject = pdfSubject
+    End Sub
+    Public Sub SetPDFAuthor(ByVal pdfAuthor As String) _
+        Implements IPrince.SetPDFAuthor
+        mPdfAuthor = pdfAuthor
+    End Sub
+    Public Sub SetPDFKeywords(ByVal pdfKeywords As String) _
+        Implements IPrince.SetPDFKeywords
+        mPdfKeywords = pdfKeywords
+    End Sub
+    Public Sub SetPDFCreator(ByVal pdfCreator As String) _
+        Implements IPrince.SetPDFCreator
+        mPdfCreator = pdfCreator
+    End Sub
+    Public Sub SetAuthMethod(ByVal authMethod As String) _
+        Implements IPrince.SetAuthMethod
+        mAuthMethod = authMethod
+    End Sub
+    Public Sub SetAuthUser(ByVal authUser As String) _
+        Implements IPrince.SetAuthUser
+        mAuthUser = authUser
+    End Sub
+    Public Sub SetAuthPassword(ByVal authPassword As String) _
+        Implements IPrince.SetAuthPassword
+        mAuthPassword = authPassword
+    End Sub
+    Public Sub SetAuthServer(ByVal authServer As String) _
+        Implements IPrince.SetAuthServer
+        mAuthServer = authServer
+    End Sub
+    Public Sub SetAuthScheme(ByVal authScheme As String) _
+        Implements IPrince.SetAuthScheme
+        mAuthScheme = authScheme
+    End Sub
+    Public Sub SetNoAuthPreemptive(ByVal noAuthPreemptive As Boolean) _
+        Implements IPrince.SetNoAuthPreemptive
+        mNoAuthPreemptive = noAuthPreemptive
+    End Sub
+    Public Sub SetPageSize(ByVal pageSize As String) _
+        Implements IPrince.SetPageSize
+        mPageSize = pageSize
+    End Sub
+    Public Sub SetPageMargin(ByVal pageMargin As String) _
+        Implements IPrince.SetPageMargin
+        mPageMargin = pageMargin
+    End Sub
     Public Sub SetEncrypt(ByVal encrypt As Boolean) _
         Implements IPrince.SetEncrypt
         mEncrypt = encrypt
@@ -308,30 +441,12 @@ Public Class Prince
             End If
         End If
     End Sub
-    Public Sub AddStyleSheet(ByVal cssPath As String) _
-        Implements IPrince.AddStyleSheet
-        mStyleSheets = mStyleSheets + "-s " + """" + escape(cssPath) + """ "
+
+    Public Sub SetOptions(ByVal options As String) _
+        Implements IPrince.SetOptions
+        mOptions = options
     End Sub
-    Public Sub ClearStyleSheets() _
-        Implements IPrince.ClearStyleSheets
-        mStyleSheets = ""
-    End Sub
-    Public Sub AddScript(ByVal jsPath As String) _
-        Implements IPrince.AddScript
-        mJavaScripts = mJavaScripts + "--script " + """" + escape(jsPath) + """ "
-    End Sub
-    Public Sub ClearScripts() _
-        Implements IPrince.ClearScripts
-        mJavaScripts = ""
-    End Sub
-    Public Sub AddFileAttachment(ByVal filePath As String) _
-        Implements IPrince.AddFileAttachment
-        mFileAttachments = mFileAttachments + "--attach=""" + escape(filePath) + """ "
-    End Sub
-    Public Sub ClearFileAttachments() _
-        Implements IPrince.ClearFileAttachments
-        mFileAttachments = ""
-    End Sub
+
     Private Function getArgs(ByVal logType As String) As String
         Dim args As String
 
@@ -403,8 +518,64 @@ Public Class Prince
             args = args + "--no-compress "
         End If
 
+        If mNoArtificialFonts Then
+            args = args + "--no-artificial-fonts "
+        End If
+
+        If mPdfTitle <> "" Then
+            args = args + "--pdf-title=""" + escape(mPdfTitle) + """ "
+        End If
+
+        If mPdfSubject <> "" Then
+            args = args + "--pdf-subject=""" + escape(mPdfSubject) + """ "
+        End If
+
+        If mPdfAuthor <> "" Then
+            args = args + "--pdf-author=""" + escape(mPdfAuthor) + """ "
+        End If
+
+        If mPdfKeywords <> "" Then
+            args = args + "--pdf-keywords=""" + escape(mPdfKeywords) + """ "
+        End If
+
+        If mPdfCreator <> "" Then
+            args = args + "--pdf-creator=""" + escape(mPdfCreator) + """ "
+        End If
+
+        If mAuthMethod <> "" Then
+            args = args + "--auth-method=""" + escape(mAuthMethod) + """ "
+        End If
+
+        If mAuthUser <> "" Then
+            args = args + "--auth-user=""" + escape(mAuthUser) + """ "
+        End If
+
+        If mAuthPassword <> "" Then
+            args = args + "--auth-password=""" + escape(mAuthPassword) + """ "
+        End If
+
+        If mAuthServer <> "" Then
+            args = args + "--auth-server=""" + escape(mAuthServer) + """ "
+        End If
+
+        If mAuthScheme <> "" Then
+            args = args + "--auth-scheme=""" + escape(mAuthScheme) + """ "
+        End If
+
+        If mNoAuthPreemptive Then
+            args = args + "--no-auth-preemptive "
+        End If
+
+        If mPageSize <> "" Then
+            args = args + "--page-size=""" + escape(mPageSize) + """ "
+        End If
+
+        If mPageMargin <> "" Then
+            args = args + "--page-margin=""" + escape(mPageMargin) + """ "
+        End If
+
         If mOptions <> "" Then
-            args = args + mOptions + " "
+            args = args + escape(mOptions) + " "
         End If
 
         Return args

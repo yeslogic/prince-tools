@@ -28,6 +28,20 @@ Public Interface IPrince
     Sub SetEmbedFonts(ByVal embed As Boolean)
     Sub SetSubsetFonts(ByVal embedSubset As Boolean)
     Sub SetCompress(ByVal compress As Boolean)
+    Sub SetNoArtificialFonts(ByVal noArtificialFonts As Boolean)
+    Sub SetPDFTitle(ByVal pdfTitle As String)
+    Sub SetPDFSubject(ByVal pdfSubject As String)
+    Sub SetPDFAuthor(ByVal pdfAuthor As String)
+    Sub SetPDFKeywords(ByVal pdfKeywords As String)
+    Sub SetPDFCreator(ByVal pdfCreator As String)
+    Sub SetAuthMethod(ByVal authMethod As String)
+    Sub SetAuthUser(ByVal authUser As String)
+    Sub SetAuthPassword(ByVal authPassword As String)
+    Sub SetAuthServer(ByVal authServer As String)
+    Sub SetAuthScheme(ByVal authScheme As String)
+    Sub SetNoAuthPreemptive(ByVal noAuthPreemptive As Boolean)
+    Sub SetPageSize(ByVal pageSize As String)
+    Sub SetPageMargin(ByVal pageMargin As String)
     Sub SetEncrypt(ByVal encrypt As Boolean)
     Sub SetOptions(ByVal options As String)
     Function Convert(ByVal xmlPath As String) As Boolean
@@ -38,6 +52,7 @@ Public Interface IPrince
     Function ConvertMemoryStream(ByVal xmlInput As MemoryStream, ByVal pdfOutput As Stream) As Boolean
     Function ConvertString(ByVal xmlInput As String, ByVal pdfOutput As Stream) As Boolean
     Function ConvertMultiple(ByVal xmlPaths As String(), ByVal pdfPath As String) As Boolean
+
 
 End Interface
 

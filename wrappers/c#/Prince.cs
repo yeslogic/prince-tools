@@ -363,14 +363,14 @@ public class Prince : IPrince
         mPdfAuthor = pdfAuthor;
     }
 
-    public void SetPDFKeywords(string keywords)
+    public void SetPDFKeywords(string pdfKeywords)
     {
-        mPdfKeywords = keywords;
+        mPdfKeywords = pdfKeywords;
     }
 
-    public void SetPDFCreator(string creator)
+    public void SetPDFCreator(string pdfCreator)
     {
-        mPdfCreator = creator;
+        mPdfCreator = pdfCreator;
     }
 
     public void SetAuthMethod(string authMethod)
@@ -397,28 +397,28 @@ public class Prince : IPrince
         }
     }
 
-    public void SetAuthUser(string user)
+    public void SetAuthUser(string authUser)
     {
-        mAuthUser = user;
+        mAuthUser = authUser;
     }
 
-    public void SetAuthPassword(string password)
+    public void SetAuthPassword(string authPassword)
     {
-        mAuthPassword = password;
+        mAuthPassword = authPassword;
     }
 
-    public void SetAuthServer(string server)
+    public void SetAuthServer(string authServer)
     {
-        mAuthServer = server;
+        mAuthServer = authServer;
     }
 
-    public void SetAuthScheme(string scheme)
+    public void SetAuthScheme(string authScheme)
     {
-        if (String.Equals(scheme, "http", StringComparison.OrdinalIgnoreCase))
+        if (String.Equals(authScheme, "http", StringComparison.OrdinalIgnoreCase))
         {
             mAuthScheme = "http";
         }
-        else if (String.Equals(scheme, "https", StringComparison.OrdinalIgnoreCase))
+        else if (String.Equals(authScheme, "https", StringComparison.OrdinalIgnoreCase))
         {
             mAuthScheme = "https";
         }
@@ -428,9 +428,9 @@ public class Prince : IPrince
         }
     }
 
-    public void SetNoAuthPreemptive(bool noAuthPreemtive)
+    public void SetNoAuthPreemptive(bool noAuthPreemptive)
     {
-        mNoAuthPreemptive = noAuthPreemtive;
+        mNoAuthPreemptive = noAuthPreemptive;
     }
 
     public void SetPageSize(string pageSize)
@@ -671,7 +671,7 @@ public class Prince : IPrince
         if (!string.IsNullOrEmpty(mAuthPassword)) { args += "--auth-password=\"" + escape(mAuthPassword) + "\" "; }
         if (!string.IsNullOrEmpty(mAuthServer)) { args += "--auth-server=\"" + escape(mAuthServer) + "\" "; }
         if (!string.IsNullOrEmpty(mAuthScheme)) { args += "--auth-scheme=\"" + escape(mAuthScheme) + "\" "; }
-        if (mNoAuthPreemptive) { args += "--no-auth-preemtive "; }
+        if (mNoAuthPreemptive) { args += "--no-auth-preemptive "; }
         if (!string.IsNullOrEmpty(mPageSize)) { args += "--page-size=\"" + escape(mPageSize) + "\" "; }
         if (!string.IsNullOrEmpty(mPageMargin)) { args += "--page-margin=\"" + escape(mPageMargin) + "\" "; }
         if(!string.IsNullOrEmpty(mOptions)) {args += escape(mOptions) + " ";}
