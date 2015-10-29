@@ -336,14 +336,15 @@ class Prince
     // input file but with an extension of ".pdf".
     // xmlPath: The filename of the input XML or HTML document.
     // msgs: An optional array in which to return error and warning messages.
+    // dats: An optional array in which to return data messages.
     // Returns true if a PDF file was generated successfully.
-    public function convert_file($xmlPath, &$msgs = array())
+    public function convert_file($xmlPath, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= '"' . $xmlPath . '"';
    
-        return $this->convert_internal_file_to_file($pathAndArgs, $msgs);
+        return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
 
     }
     
@@ -351,21 +352,23 @@ class Prince
     // xmlPath: The filename of the input XML or HTML document.
     // pdfPath: The filename of the output PDF file.
     // msgs: An optional array in which to return error and warning messages.
+    // dats: An optional array in which to return data messages.
     // Returns true if a PDF file was generated successfully.
-    public function convert_file_to_file($xmlPath, $pdfPath, &$msgs = array())
+    public function convert_file_to_file($xmlPath, $pdfPath, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= '"' . $xmlPath . '" -o "' . $pdfPath . '"';
             
-        return $this->convert_internal_file_to_file($pathAndArgs, $msgs);
+        return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
     }
     
     //Convert multiple XML or HTML files to a PDF file.
     // xmlPaths: An array of the input XML or HTML documents.
     // msgs: An optional array in which to return error and warning messages.
+    // dats: An optional array in which to return data messages.
     // Returns true if a PDF file was generated successfully.
-    public function convert_multiple_files($xmlPaths, $pdfPath, &$msgs = array())
+    public function convert_multiple_files($xmlPaths, $pdfPath, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
@@ -376,15 +379,16 @@ class Prince
         }
         $pathAndArgs .= '-o "' . $pdfPath . '"';
   
-         return $this->convert_internal_file_to_file($pathAndArgs, $msgs);
+         return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
     }
     
     // Convert multiple XML or HTML files to a PDF file, which will be passed
     // through to the output buffer of the current PHP page.
     // xmlPaths: An array of the input XML or HTML documents.
     // msgs: An optional array in which to return error and warning messages.
+    // dats: An optional array in which to return data messages.
     // Returns true if a PDF file was generated successfully.
-    public function convert_multiple_files_to_passthru($xmlPaths, &$msgs = array())
+    public function convert_multiple_files_to_passthru($xmlPaths, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=buffered ';
@@ -395,47 +399,50 @@ class Prince
         }
         $pathAndArgs .= '-o -';
         
-         return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs);
+         return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs, $dats);
     }
     
     // Convert an XML or HTML file to a PDF file, which will be passed
     // through to the output buffer of the current PHP page.
     // xmlPath: The filename of the input XML or HTML document.
     // msgs: An optional array in which to return error and warning messages.
+    // dats: An optional array in which to return data messages.
     // Returns true if a PDF file was generated successfully.
-    public function convert_file_to_passthru($xmlPath, &$msgs = array())
+    public function convert_file_to_passthru($xmlPath, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=buffered "' . $xmlPath . '" -o -';
             
-        return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs);
+        return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs, $dats);
     }
     
     // Convert an XML or HTML string to a PDF file, which will be passed
     // through to the output buffer of the current PHP page.
     // xmlString: A string containing an XML or HTML document.
     // msgs: An optional array in which to return error and warning messages.
+    // dats: An optional array in which to return data messages.
     // Returns true if a PDF file was generated successfully.
-    public function convert_string_to_passthru($xmlString, &$msgs = array())
+    public function convert_string_to_passthru($xmlString, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=buffered -';
             
-        return $this->convert_internal_string_to_passthru($pathAndArgs, $xmlString, $msgs);
+        return $this->convert_internal_string_to_passthru($pathAndArgs, $xmlString, $msgs, $dats);
     }
     
     // Convert an XML or HTML string to a PDF file.
     // xmlString: A string containing an XML or HTML document.
     // pdfPath: The filename of the output PDF file.
     // msgs: An optional array in which to return error and warning messages.
+    // dats: An optional array in which to return data messages.
     // Returns true if a PDF file was generated successfully.
-    public function convert_string_to_file($xmlString, $pdfPath, &$msgs = array())
+    public function convert_string_to_file($xmlString, $pdfPath, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= ' - -o "' . $pdfPath . '"';
             
-        return $this->convert_internal_string_to_file($pathAndArgs, $xmlString, $msgs);
+        return $this->convert_internal_string_to_file($pathAndArgs, $xmlString, $msgs, $dats);
     }
 
     private function getCommandLine()
@@ -558,7 +565,7 @@ class Prince
         return $cmdline;
     }
 
-    private function convert_internal_file_to_file($pathAndArgs, &$msgs)
+    private function convert_internal_file_to_file($pathAndArgs, &$msgs, &$dats)
     {
         $descriptorspec = array(
                                 0 => array("pipe", "r"),
@@ -570,7 +577,7 @@ class Prince
         
         if (is_resource($process))
         {
-            $result = $this->readMessages($pipes[2], $msgs);
+            $result = $this->readMessages($pipes[2], $msgs, $dats);
 
             fclose($pipes[0]);
             fclose($pipes[1]);
@@ -586,7 +593,7 @@ class Prince
         }
     }
 
-    private function convert_internal_string_to_file($pathAndArgs, $xmlString, &$msgs)
+    private function convert_internal_string_to_file($pathAndArgs, $xmlString, &$msgs, &$dats)
     {
         $descriptorspec = array(
                             0 => array("pipe", "r"),
@@ -602,7 +609,7 @@ class Prince
             fclose($pipes[0]);
             fclose($pipes[1]);
 
-            $result = $this->readMessages($pipes[2], $msgs);
+            $result = $this->readMessages($pipes[2], $msgs, $dats);
             
             fclose($pipes[2]);
         
@@ -616,7 +623,7 @@ class Prince
         }
     }
 
-    private function convert_internal_file_to_passthru($pathAndArgs, &$msgs)
+    private function convert_internal_file_to_passthru($pathAndArgs, &$msgs, &$dats)
     {
         $descriptorspec = array(
                             0 => array("pipe", "r"),
@@ -632,7 +639,7 @@ class Prince
             fpassthru($pipes[1]);
             fclose($pipes[1]);
 
-            $result = $this->readMessages($pipes[2], $msgs);
+            $result = $this->readMessages($pipes[2], $msgs, $dats);
             
             fclose($pipes[2]);
         
@@ -646,7 +653,7 @@ class Prince
         }
     }
 
-    private function convert_internal_string_to_passthru($pathAndArgs, $xmlString, &$msgs)
+    private function convert_internal_string_to_passthru($pathAndArgs, $xmlString, &$msgs, &$dats)
     {
         $descriptorspec = array(
                             0 => array("pipe", "r"),
@@ -663,7 +670,7 @@ class Prince
             fpassthru($pipes[1]);
             fclose($pipes[1]);
 
-            $result = $this->readMessages($pipes[2], $msgs);
+            $result = $this->readMessages($pipes[2], $msgs, $dats);
             
             fclose($pipes[2]);
         
@@ -677,7 +684,7 @@ class Prince
         }
     }
 
-    private function readMessages($pipe, &$msgs)
+    private function readMessages($pipe, &$msgs, &$dats)
     {
         while (!feof($pipe))
         {
@@ -702,6 +709,12 @@ class Prince
 
                     $msgs[] = $msg;
                 }
+		else if ($msgtag == 'dat|')
+		{
+		    $dat = explode('|', $msgbody, 2);
+
+		    $dats[] = $dat;
+		}
                 else
                 {
                     // ignore other messages
