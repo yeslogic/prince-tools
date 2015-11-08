@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import java.nio.charset.Charset;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -567,6 +569,48 @@ public class Prince
 
 	// copy the XML input to Prince stdin
 	Util.copyInputToOutput(xmlInput, inputToPrince);
+
+	// close Prince stdin
+	inputToPrince.close();
+
+	// copy the PDF output from Prince stdout
+	Util.copyInputToOutput(outputFromPrince, pdfOutput);
+
+	// close Prince stdout
+        outputFromPrince.close();
+
+	return readMessagesFromStderr(process);
+    }
+
+    /**
+     * Convert an XML or HTML file to a PDF file. This method is useful for
+     * servlets as it allows Prince to process the input document from a
+     * string and write the PDF output directly to the OutputStream of the
+     * servlet response.
+     * <p>
+     * Note that it may be helpful to specify a base URL or path for the input
+     * document using the setBaseURL() method. This allows relative URLs and
+     * paths in the document (eg. for images) to be resolved correctly.
+     * @param html The HTML to convert, in the form of a String.
+     * @param pdfOutput The OutputStream to which Prince will write the PDF
+     * output.
+     * @return True if a PDF file was generated successfully.
+     */
+    public boolean convertString(String html, OutputStream pdfOutput)
+	throws IOException
+    {
+	List<String> cmdline = getJobCommandLine();
+
+	cmdline.add("--structured-log=buffered");
+	cmdline.add("-");
+
+	Process process = Util.invokeProcess(cmdline);
+
+	OutputStream inputToPrince = process.getOutputStream();
+	InputStream outputFromPrince = process.getInputStream();
+
+	// copy the HTML to Prince stdin
+        inputToPrince.write(html.getBytes(Charset.forName("UTF-8")));
 
 	// close Prince stdin
 	inputToPrince.close();
