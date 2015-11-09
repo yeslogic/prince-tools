@@ -583,6 +583,40 @@ public class Prince
     }
 
     /**
+     * Convert an XML or HTML file to a PDF file.
+     * Note that it may be helpful to specify a base URL or path for the input
+     * document using the setBaseURL() method. This allows relative URLs and
+     * paths in the document (eg. for images) to be resolved correctly.
+     * @param html The HTML to convert, in the form of a String.
+     * @param pdfPath The filename of the output PDF file.
+     * @return True if a PDF file was generated successfully.
+     */
+    public boolean convertString(String html, String pdfPath)
+	throws IOException
+    {
+	List<String> cmdline = getJobCommandLine();
+
+	cmdline.add("--structured-log=buffered");
+	cmdline.add("--output="+pdfPath);
+
+	Process process = Util.invokeProcess(cmdline);
+
+	OutputStream inputToPrince = process.getOutputStream();
+	InputStream outputFromPrince = process.getInputStream();
+
+	// copy the HTML to Prince stdin
+        inputToPrince.write(html.getBytes(Charset.forName("UTF-8")));
+
+	// close Prince stdin
+	inputToPrince.close();
+
+	// close Prince stdout
+        outputFromPrince.close();
+
+	return readMessagesFromStderr(process);
+    }
+
+    /**
      * Convert an XML or HTML file to a PDF file. This method is useful for
      * servlets as it allows Prince to process the input document from a
      * string and write the PDF output directly to the OutputStream of the
