@@ -597,6 +597,7 @@ public class Prince
 	List<String> cmdline = getJobCommandLine();
 
 	cmdline.add("--structured-log=buffered");
+        cmdline.add("-");
 	cmdline.add("--output="+pdfPath);
 
 	Process process = Util.invokeProcess(cmdline);
