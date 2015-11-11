@@ -24,15 +24,24 @@ class Prince
     private $fileRoot;
     private $embedFonts;
     private $subsetFonts;
-    private $artificialFonts;
+    private $noArtificialFonts;
     private $compress;
     private $pdfTitle;
     private $pdfSubject;
     private $pdfAuthor;
     private $pdfKeywords;
     private $pdfCreator;
+    private $authMethod;
+    private $authUser;
+    private $authPassword;
+    private $authServer;
+    private $authScheme;
+    private $noAuthPreemptive;
+    private $pageSize;
+    private $pageMargin;
     private $encrypt;
     private $encryptInfo;
+    private $options;
 
     public function __construct($exePath)
     {
@@ -54,15 +63,24 @@ class Prince
         $this->fileRoot = '';
         $this->embedFonts = true;
         $this->subsetFonts = true;
-        $this->artificialFonts = true;
+        $this->noArtificialFonts = false;
         $this->compress = true;
         $this->pdfTitle = '';
         $this->pdfSubject = '';
         $this->pdfAuthor = '';
         $this->pdfKeywords = '';
         $this->pdfCreator = '';
+        $this->authMethod = '';
+        $this->authUser = '';
+        $this->authPassword = '';
+        $this->authServer = '';
+        $this->authScheme = '';
+        $this->noAuthPreemptive = false;
+        $this->pageSize = '';
+        $this->pageMargin = '';
         $this->encrypt = false;
         $this->encryptInfo = '';
+        $this->options = '';
     }
 
     // Add a CSS style sheet that will be applied to each document.
@@ -227,9 +245,9 @@ class Prince
     // Specify whether artificial bold/italic fonts should be generated if
     // necessary. Artificial fonts are enabled by default.
     // artificialFonts: False to disable artificial bold/italic fonts.
-    public function setArtificialFonts($artificialFonts)
+    public function setNoArtificialFonts($noArtificialFonts)
     {
-        $this->artificialFonts = $artificialFonts;
+        $this->noArtificialFonts = $noArtificialFonts;
     }
 
     // Specify whether compression should be applied to the output PDF file.
@@ -269,6 +287,84 @@ class Prince
     {
         $this->pdfCreator = $pdfCreator;
     }
+   
+    //Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
+    public function setAuthMethod($authMethod)
+    {
+    	  if(strcasecmp($authMethod, 'basic') == 0)
+    	  {
+   	  	$this->authMethod = 'basic';
+   	  }
+   	  else if(strcasecmp($authMethod, 'digest') == 0)
+   	  {
+   	  	$this->authMethod = 'digest';
+   	  }
+   	  else if(strcasecmp($authMethod, 'ntlm') == 0)
+   	  {
+   	  	$this->authMethod = 'ntlm';
+   	  } 
+   	  else if(strcasecmp($authMethod, 'negotiate') == 0)
+   	  {
+   	  	$this->authMethod = 'negotiate';
+   	  }
+   	  else
+   	  {
+   	  	$this->authMethod = '';
+   	  }
+    }
+    
+    //Specify username for HTTP authentication.
+    public function setAuthUser($authUser)
+    {
+    	 $this->authUser = $authUser;
+    }
+    
+    //Specify password for HTTP authentication.
+    public function setAuthPassword($authPassword)
+    {
+    	 $this->authPassword = $authPassword;
+    }
+    
+    //Only send USER:PASS to this server.
+    public function setAuthServer($authServer)
+    {
+       $this->authServer = $authServer;
+    }
+    
+    //Only send USER:PASS for this scheme. (HTTP, HTTPS)
+    public function setAuthScheme($authScheme)
+    {
+    	  if(strcasecmp($authScheme, 'http') == 0)
+    	  {
+    	 	$this->authScheme = 'http';
+    	  }
+    	  else if(strcasecmp($authScheme, 'https') == 0)
+    	  {
+    	 	$this->authScheme = 'https';
+    	  }
+    	  else
+    	  {
+    	 	$this->authScheme = '';
+    	  }
+    }
+    
+    //Do not authenticate with named servers until asked.
+    public function setNoAuthPreemptive($noAuthPreemptive)
+    {
+    	 $this->noAuthPreemptive = $noAuthPreemptive;
+    }
+
+    //Specify the page size (eg. A4).
+    public function setPageSize($pageSize)
+    {
+    	 $this->pageSize = $pageSize;
+    }
+    
+    //Specify the page margin (eg. 20mm).
+    public function setPageMargin($pageMargin)
+    {
+    	 $this->pageMargin = $pageMargin;
+    }
 
     // Specify whether encryption should be applied to the output PDF file.
     // Encryption will not be applied by default unless explicitly enabled.
@@ -287,7 +383,7 @@ class Prince
     // disallowModify: True to disallow modification of the PDF file.
     // disallowCopy: True to disallow copying from the PDF file.
     // disallowAnnotate: True to disallow annotation of the PDF file.
-    public function setEncryptInfo($keyBits,
+      public function setEncryptInfo($keyBits,
                                    $userPassword,
                                    $ownerPassword,
                                    $disallowPrint = false,
@@ -328,8 +424,14 @@ class Prince
             $this->encryptInfo .= '--disallow-annotate ';
         }
     }
-
-
+    
+  
+    //Set other options.
+    public function setOptions($options)
+    {
+    	  $this->options = $options;
+    }
+	
 
     // Convert an XML or HTML file to a PDF file.
     // The name of the output PDF file will be the same as the name of the
@@ -449,7 +551,7 @@ class Prince
     {
         $cmdline = '"' . $this->exePath . '" ' . $this->styleSheets . $this->scripts . $this->fileAttachments;
 
-        if ($this->inputType == "auto")
+        if (strcasecmp($this->inputType, 'auto') == 0)
         {
         }
         else
@@ -522,11 +624,51 @@ class Prince
             $cmdline .= '--no-subset-fonts ';
         }
 
-        if ($this->artificialFonts == false)
+        if ($this->noArtificialFonts == true)
         {
             $cmdline .= '--no-artificial-fonts ';
         }
-
+        
+        if($this->authMethod != '')
+        {
+        	$cmdline .=  '--auth-method="' . $this->cmdlineArgEscape($this->authMethod) . '" ';
+        }
+        
+        if($this->authUser != '')
+        {
+        	$cmdline .= '--auth-user="' . $this->cmdlineArgEscape($this->authUser) . '" ';
+        }
+        
+        if($this->authPassword != '')
+        {
+        	$cmdline .= '--auth-password="' . $this->cmdlineArgEscape($this->authPassword) . '" ';
+        }
+        
+        if($this->authServer != '')
+        {
+        	$cmdline .= '--auth-server="' . $this->cmdlineArgEscape($this->authServer) . '" ';
+        }
+        
+        if($this->authScheme != '')
+        {
+        	$cmdline .= '--auth-scheme="' . $this->cmdlineArgEscape($this->authScheme) . '" ';
+        }
+        
+        if($this->noAuthPreemptive)
+        {
+        	$cmdline .= '--no-auth-preemptive ';
+        }
+        
+        if($this->pageSize != '')
+        {
+        	$cmdline .= '--page-size="' . $this->cmdlineArgEscape($this->pageSize) . '" ';
+        }
+        
+        if($this->pageMargin != '')
+        {
+        	$cmdline .= '--page-margin="' . $this->cmdlineArgEscape($this->pageMargin) . '" ';
+        }
+        
         if ($this->compress == false)
         {
             $cmdline .= '--no-compress ';
@@ -560,6 +702,11 @@ class Prince
         if ($this->encrypt)
         {
             $cmdline .= '--encrypt ' . $this->encryptInfo;
+        }
+        
+        if($this->options != '')
+        {
+        	$cmdline .= $this->cmdlineArgEscape($this->options) . ' ';
         }
 
         return $cmdline;

@@ -85,7 +85,15 @@ installation.
 <li><a href="#setfileroot"><code>setFileRoot</code></a></li>
 <li><a href="#setembedfonts"><code>setEmbedFonts</code></a></li>
 <li><a href="#setsubsetfonts"><code>setSubsetFonts</code></a></li>
-<li><a href="#setartificialfonts"><code>setArtificialFonts</code></a></li>
+<li><a href="#setnoartificialfonts"><code>setNoArtificialFonts</code></a></li>
+<li><a href="#setauthmethod"><code>setAuthMethod</code></a></li>
+<li><a href="#setauthuser"><code>setAuthUser</code></a></li>
+<li><a href="#setauthpassword"><code>setAuthPassword</code></a></li>
+<li><a href="#setauthserver"><code>setAuthServer</code></a></li>
+<li><a href="#setauthscheme"><code>setAuthScheme</code></a></li>
+<li><a href="#setnoauthpreemptive"><code>setNoAuthPreemptive</code></a></li>
+<li><a href="#setpagesize"><code>setPageSize</code></a></li>
+<li><a href="#setpagemargin"><code>setPageMargin</code></a></li>
 <li><a href="#setcompress"><code>setCompress</code></a></li>
 <li><a href="#setpdftitle"><code>setPDFTitle</code></a></li>
 <li><a href="#setpdfsubject"><code>setPDFSubject</code></a></li>
@@ -94,6 +102,7 @@ installation.
 <li><a href="#setpdfcreator"><code>setPDFCreator</code></a></li>
 <li><a href="#setencrypt"><code>setEncrypt</code></a></li>
 <li><a href="#setencryptinfo"><code>setEncryptInfo</code></a></li>
+<li><a href="#setoptions"><code>setOptions</code></a></li>
 </ul>
 
 <hr/>
@@ -686,10 +695,10 @@ will be subset by default unless explicitly disabled.
 
 <hr>
 
-<a name="setartificialfonts">
+<a name="setnoartificialfonts">
 
 <pre>
-public function setArtificialFonts($artificialFonts)
+public function setNoArtificialFonts($noArtificialFonts)
 </pre>
 
 <p>
@@ -697,8 +706,136 @@ Specify whether artificial bold/italic fonts should be generated if
 necessary. Artificial fonts are enabled by default.
 </p>
 <dl>
-<dt><code>artificialFonts</code></dt>
-<dd>False to disable artificial bold/italic fonts.</dd>
+<dt><code>noArtificialFonts</code></dt>
+<dd>True to disable artificial bold/italic fonts.</dd>
+</dl>
+
+<hr>
+
+<a name="setauthmethod">
+
+<pre>
+public function setAuthMethod($authMethod)
+</pre>
+
+<p>
+Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
+</p>
+<dl>
+<dt><code>authMethod</code></dt>
+<dd>The authentication method to use.</dd>
+</dl>
+
+<hr>
+
+<a name="setauthuser">
+
+<pre>
+public function setAuthUser($authUser)
+</pre>
+
+<p>
+Specify username for HTTP authentication.
+</p>
+<dl>
+<dt><code>authUser</code></dt>
+<dd>The authentication username to use.</dd>
+</dl>
+
+<hr>
+
+<a name="setauthpassword">
+
+<pre>
+public function setAuthPassword($authPassword)
+</pre>
+
+<p>
+Specify password for HTTP authentication.
+</p>
+<dl>
+<dt><code>authPassword</code></dt>
+<dd>The authentication password to use.</dd>
+</dl>
+
+<hr>
+
+<a name="setauthserver">
+
+<pre>
+public function setAuthServer($authServer)
+</pre>
+
+<p>
+Only send USER:PASS to this server.
+</p>
+<dl>
+<dt><code>authServer</code></dt>
+<dd>The server to send USER:PASS.</dd>
+</dl>
+
+<hr>
+
+<a name="setauthscheme">
+
+<pre>
+public function setAuthScheme($authScheme)
+</pre>
+
+<p>
+Only send USER:PASS for this scheme. (HTTP, HTTPS)
+</p>
+<dl>
+<dt><code>authScheme</code></dt>
+<dd>The scheme to use for authentication.</dd>
+</dl>
+
+<hr>
+
+<a name="setnoauthpreemptive">
+
+<pre>
+public function setNoAuthPreemptive($noAuthPreemptive)
+</pre>
+
+<p>
+Do not authenticate with named servers until asked.
+</p>
+<dl>
+<dt><code>noAuthPreemptive</code></dt>
+<dd>True to disable authentication preemptive.</dd>
+</dl>
+
+<hr>
+
+<a name="setpagesize">
+
+<pre>
+public function setPageSize($pageSize)
+</pre>
+
+<p>
+Specify the page size (eg. A4).
+</p>
+<dl>
+<dt><code>pageSize</code></dt>
+<dd>The page size to use.</dd>
+</dl>
+
+<hr>
+
+<a name="setpagemargin">
+
+<pre>
+public function setPageMargin($pageMargin)
+</pre>
+
+<p>
+Specify the page margin (eg. 20mm).
+</p>
+<dl>
+<dt><code>pageMargin</code></dt>
+<dd>The page magin to use.</dd>
 </dl>
 
 <hr>
@@ -814,6 +951,22 @@ method for encryption information to be applied.
 <dd>True to disallow copying from the PDF file.</dd>
 <dt><code>disallowAnnotate</code></dt>
 <dd>True to disallow annotation of the PDF file.</dd>
+</dl>
+
+<hr>
+
+<a name="setoptions">
+
+<pre>
+public function setOptions($options)
+</pre>
+
+<p>
+Set other options.
+</p>
+<dl>
+<dt><code>options</code></dt>
+<dd>Other options to set.</dd>
 </dl>
 
 <hr>
