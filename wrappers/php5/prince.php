@@ -1,7 +1,7 @@
 <?php
 
 // Prince - PHP interface
-// Copyright 2005-2015 YesLogic Pty. Ltd.
+// Copyright 2005-2016 YesLogic Pty. Ltd.
 // http://www.princexml.com
 
 class Prince
@@ -19,6 +19,7 @@ class Prince
     private $httpUser;
     private $httpPassword;
     private $httpProxy;
+    private $httpTimeout;
     private $insecure;
     private $logFile;
     private $fileRoot;
@@ -58,6 +59,7 @@ class Prince
         $this->httpUser = '';
         $this->httpPassword = '';
         $this->httpProxy = '';
+        $this->httpTimeout = '';
         $this->insecure = false;
         $this->logFile = '';
         $this->fileRoot = '';
@@ -208,7 +210,14 @@ class Prince
     {
         $this->httpProxy = $proxy;
     }
-    
+
+    //Specify the timeout for HTTP requests.
+    //timeout: The HTTP timeout in seconds.
+    public function setHttpTimeout($timeout)
+    {
+        $this->httpTimeout = $timeout;
+    }
+
     //Specify whether to disable SSL verification.
     //insecure: If set to true, SSL verification is disabled. (not recommended)
     public function setInsecure($insecure)
@@ -587,6 +596,11 @@ class Prince
         if($this->httpProxy != '')
         {
                 $cmdline .= '--http-proxy="' . $this->httpProxy . '" ';
+        }
+        
+        if($this->httpTimeout != '')
+        {
+                $cmdline .= '--http-timeout="' . $this->httpTimeout . '" ';
         }
         
         if($this->insecure)
