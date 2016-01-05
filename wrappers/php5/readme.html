@@ -81,6 +81,7 @@ installation.
 <li><a href="#sethttpuser"><code>setHttpUser</code></a></li>
 <li><a href="#sethttppassword"><code>setHttpPassword</code></a></li>
 <li><a href="#sethttpproxy"><code>setHttpProxy</code></a></li>
+<li><a href="#sethttptimeout"><code>setHttpTimeout</code></a></li>
 <li><a href="#setinsecure"><code>setInsecure</code></a></li>
 <li><a href="#setfileroot"><code>setFileRoot</code></a></li>
 <li><a href="#setembedfonts"><code>setEmbedFonts</code></a></li>
@@ -619,6 +620,23 @@ Specify the URL for the HTTP proxy server, if needed.
 <dl>
 <dt><code>proxy</code></dt>
 <dd>The URL for the HTTP proxy server.</dd>
+</dl>
+
+<hr>
+
+<a name="sethttptimeout">
+
+<pre>
+public function setHttpTimeout($timeout)
+</pre>
+
+<p>
+Specify the timeout for HTTP requests.
+</p>
+
+<dl>
+<dt><code>timeout</code></dt>
+<dd>The HTTP timeout in seconds.</dd>
 </dl>
 
 <hr>
