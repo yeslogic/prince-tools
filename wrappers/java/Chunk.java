@@ -1,4 +1,4 @@
-// Copyright (C) 2015 YesLogic Pty. Ltd.
+// Copyright (C) 2015-2016 YesLogic Pty. Ltd.
 // All rights reserved.
 
 package com.princexml;
@@ -51,8 +51,10 @@ public class Chunk
     {
 	byte[] tagBytes = new byte[3];
 
-	if (input.read(tagBytes, 0, 3) != 3)
+        if (!readBytes(input, tagBytes))
+        {
 	    throw new IOException("failed to read chunk tag");
+        }
 
 	String tag = new String(tagBytes, Charset.forName("ASCII"));
 
@@ -81,16 +83,31 @@ public class Chunk
 	if (num_length < 1 || num_length > max_num_length)
 	    throw new IOException("invalid chunk length");
 	
-	byte[] bytes = new byte[length];
+	byte[] dataBytes = new byte[length];
 
+        if (!readBytes(input, dataBytes))
+        {
+	    throw new IOException("failed to read chunk data");
+        }
+
+	b = input.read();
+
+	if (b != '\n') throw new IOException("expected newline after chunk data");
+
+	return new Chunk(tag, dataBytes);
+    }
+
+    private static boolean readBytes(InputStream input, byte[] buf)
+        throws IOException
+    {
+        int length = buf.length;
 	int offset = 0;
 
 	while (length > 0)
 	{
-	    int count = input.read(bytes, offset, length);
+	    int count = input.read(buf, offset, length);
 
-	    if (count < 0)
-		throw new IOException("failed to read chunk data");
+	    if (count < 0) return false;
 
 	    if (count > length)
 		throw new IOException("unexpected read overrun");
@@ -98,13 +115,26 @@ public class Chunk
 	    length -= count;
 	    offset += count;
 	}
-	
-	b = input.read();
 
-	if (b != '\n') throw new IOException("expected newline after chunk data");
-
-	return new Chunk(tag, bytes);
+        return true;
     }
+
+    /* EQUIVALENT TO:
+    private static boolean readBytes(InputStream input, byte[] buf)
+        throws IOException
+    {
+        for (int i = 0; i < buf.length; ++i)
+        {
+            int b = input.read();
+
+            if (b < 0) return false;
+
+            buf[i] = (byte) b;
+        }
+
+        return true;
+    }
+    */
 
     public static void writeChunk(OutputStream output, String tag, String data)
 	throws IOException
