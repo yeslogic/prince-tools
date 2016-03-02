@@ -168,24 +168,38 @@ public class Prince : IPrince
 {
     private PrinceEvents mEvents;
     private readonly string mPrincePath;
-    private string mStyleSheets;
-    private string mJavaScripts;
+    protected string mStyleSheets;
+    protected string mJavaScripts;
     private string mFileAttachments;
     private string mLicenseFile;
     private string mLicenseKey;
-    private string mInputType;
-    private bool mJavaScript;
+
+    //Input settings
+    protected string mInputType;
+    protected string mBaseURL;
+    private string mFileRoot;
+    protected bool mJavaScript; 
+    protected bool mXInclude;
+
+    //Network settings
+    private bool mNetwork;
     private string mHttpUser;
     private string mHttpPassword;
     private string mHttpProxy;
     private bool mInsecure;
-    private string mLog;
-    private string mBaseURL;
-    private string mFileRoot;
-    private bool mXInclude;
-    private bool mEmbedFonts;
-    private bool mSubsetFonts;
-    private bool mCompress;
+
+    //Log Settings
+    private string mLogFile;
+    private bool mVerbose;
+    private bool mDebug;
+    
+    //PDF settings
+    protected bool mEmbedFonts;
+    protected bool mSubsetFonts;
+    protected bool mForceIdentityEncoding;
+    protected bool mCompress;
+
+
     private bool mNoArtificialFonts;
     private string mPdfTitle;
     private string mPdfSubject;
@@ -200,8 +214,18 @@ public class Prince : IPrince
     private bool mNoAuthPreemptive;
     private string mPageSize;
     private string mPageMargin;
-    private bool mEncrypt;
-    private string mEncryptInfo;
+
+    //Encryption settings
+    protected bool mEncrypt;
+    protected int mKeyBits;
+    protected string mUserPassword;
+    protected string mOwnerPasssword;
+    protected bool mDisallowPrint;
+    protected bool mDisallowModify;
+    protected bool mDisallowCopy;
+    protected bool mDisallowAnnotate;
+
+    //Other command-line options
     private string mOptions;
 
 
@@ -210,14 +234,24 @@ public class Prince : IPrince
         mEvents = null;
         mInputType = "auto";
         mJavaScript = false;
+        mNetwork = true;
+        mVerbose = false;
+        mDebug = false;
         mInsecure = false;
         mXInclude = true;
         mEmbedFonts = true;
         mSubsetFonts = true;
+        mForceIdentityEncoding = false;
         mCompress = true;
         mNoArtificialFonts = false;
         mNoAuthPreemptive = false;
-        mEncrypt = false;           
+        mEncrypt = false;
+        mKeyBits = 40;
+        mDisallowPrint = false;
+        mDisallowModify = false;
+        mDisallowCopy = false;
+        mDisallowAnnotate = false;
+
     }
 
     public Prince(string princePath) : this()
@@ -288,6 +322,11 @@ public class Prince : IPrince
         mJavaScript = js;
     }
 
+    public void SetNetwork(bool network)
+    {
+        mNetwork = network;
+    }
+
     public void SetHttpUser(string user)
     {
         mHttpUser = user;
@@ -310,7 +349,17 @@ public class Prince : IPrince
 
     public void SetLog(string logFile)
     {
-        mLog = logFile;
+        mLogFile = logFile;
+    }
+
+    public void SetVerbose(bool verbose)
+    {
+        mVerbose = verbose;
+    }
+
+    public void SetDebug(bool debug)
+    {
+        mDebug = debug;
     }
 
     public void SetBaseURL(string baseURL)
@@ -336,6 +385,11 @@ public class Prince : IPrince
     public void SetSubsetFonts(bool subset)
     {
         mSubsetFonts = subset;
+    }
+
+    public void SetForceIdentityEncoding(bool forceIdentityEncoding)
+    {
+        mForceIdentityEncoding = forceIdentityEncoding;
     }
 
     public void SetCompress(bool compress)
@@ -456,24 +510,22 @@ public class Prince : IPrince
                                bool disallowCopy, 
                                bool disallowAnnotate)
     {
-        mEncrypt = true;
-
+      
         if ((keyBits != 40) && (keyBits != 128))
         {
-            mEncryptInfo = "";
-            throw new ApplicationException("Invalid value for keyBits: must be 40 or 128.");
+            throw new ApplicationException("Invalid value for keyBits: " + keyBits.ToString() + " (must be 40 or 128)");
         }
 
 
-        mEncryptInfo = "--encrypt --key-bits " +  keyBits.ToString() +
-                       " --user-password=\"" + escape(userPassword) +
-                       "\" --owner-password=\"" + escape(ownerPassword) + "\" ";
-        
+        mEncrypt = true;
+        mKeyBits = keyBits;
+        mUserPassword = userPassword;
+        mOwnerPasssword = ownerPassword;
+        mDisallowPrint = disallowPrint;
+        mDisallowModify = disallowModify;
+        mDisallowCopy = disallowCopy;
+        mDisallowAnnotate = disallowAnnotate;
 
-        if (disallowPrint) { mEncryptInfo += "--disallow-print "; }
-        if (disallowModify) { mEncryptInfo += "--disallow-modify "; }
-        if (disallowCopy) { mEncryptInfo += "--disallow-copy "; }
-        if (disallowAnnotate) { mEncryptInfo += "--disallow-annotate "; }
     }
 
     public void SetOptions(string options)
@@ -636,6 +688,11 @@ public class Prince : IPrince
         return (ReadMessages(prs) == "success");
     }
 
+    public static string escape(string arg)
+    {
+        return cmdline_arg_escape_2(cmdline_arg_escape_1(arg));
+    }
+
     #endregion
 
     #region Private methods
@@ -644,39 +701,73 @@ public class Prince : IPrince
     {
         string args = "--structured-log=" + logType + " " + mStyleSheets + mJavaScripts + mFileAttachments;
 
-        if (mEncrypt) { args += mEncryptInfo; }
-        if (mInputType != "auto") { args +=  "-i \"" + escape(mInputType) + "\" "; }
-        if (mJavaScript) { args += "--javascript "; }
-        if (!string.IsNullOrEmpty(mHttpUser)) { args += "--http-user=\"" + escape(mHttpUser) + "\" "; }
-        if (!string.IsNullOrEmpty(mHttpPassword)) { args += "--http-password=\"" + escape(mHttpPassword) + "\" "; }
-        if (!string.IsNullOrEmpty(mHttpProxy)) { args += "--http-proxy=\"" + escape(mHttpProxy) + "\" "; }
-        if (mInsecure) { args += "--insecure "; }
-        if (!string.IsNullOrEmpty(mLog)) { args += "--log=\"" + escape(mLog) + "\" "; }
-        if (!string.IsNullOrEmpty(mBaseURL)) { args += "--baseurl=\"" + escape(mBaseURL) + "\" "; }
-        if (!string.IsNullOrEmpty(mFileRoot)) { args += "--fileroot=\"" + escape(mFileRoot) + "\" "; }
-        if (!string.IsNullOrEmpty(mLicenseFile)) { args += "--license-file=\"" + escape(mLicenseFile) + "\" "; }
-        if (!string.IsNullOrEmpty(mLicenseKey)) { args += "--license-key=\"" + escape(mLicenseKey) + "\" "; }
-        if (!mXInclude) { args += "--no-xinclude "; }
-        if (!mEmbedFonts) { args += "--no-embed-fonts "; }
-        if (!mSubsetFonts) { args += "--no-subset-fonts "; }
-        if (!mCompress) { args += "--no-compress "; }
-        if (mNoArtificialFonts) { args += "--no-artificial-fonts "; }
-        if (!string.IsNullOrEmpty(mPdfTitle)) { args += "--pdf-title=\"" + escape(mPdfTitle) + "\" "; }
-        if (!string.IsNullOrEmpty(mPdfSubject)) { args += "--pdf-subject=\"" + escape(mPdfSubject) + "\" "; }
-        if (!string.IsNullOrEmpty(mPdfAuthor)) { args += "--pdf-author=\"" + escape(mPdfAuthor) + "\" "; }
-        if (!string.IsNullOrEmpty(mPdfKeywords)) { args += "--pdf-keywords=\"" + escape(mPdfKeywords) + "\" "; }
-        if (!string.IsNullOrEmpty(mPdfCreator)) { args += "--pdf-creator=\"" + escape(mPdfCreator) + "\" "; }
-        if (!string.IsNullOrEmpty(mAuthMethod)) { args += "--auth-method=\"" + escape(mAuthMethod) + "\" "; }
-        if (!string.IsNullOrEmpty(mAuthUser)) { args += "--auth-user=\"" + escape(mAuthUser) + "\" "; }
-        if (!string.IsNullOrEmpty(mAuthPassword)) { args += "--auth-password=\"" + escape(mAuthPassword) + "\" "; }
-        if (!string.IsNullOrEmpty(mAuthServer)) { args += "--auth-server=\"" + escape(mAuthServer) + "\" "; }
-        if (!string.IsNullOrEmpty(mAuthScheme)) { args += "--auth-scheme=\"" + escape(mAuthScheme) + "\" "; }
-        if (mNoAuthPreemptive) { args += "--no-auth-preemptive "; }
-        if (!string.IsNullOrEmpty(mPageSize)) { args += "--page-size=\"" + escape(mPageSize) + "\" "; }
-        if (!string.IsNullOrEmpty(mPageMargin)) { args += "--page-margin=\"" + escape(mPageMargin) + "\" "; }
-        if(!string.IsNullOrEmpty(mOptions)) {args += escape(mOptions) + " ";}
+        args += getBaseCommandLine();
+
+        args += getJobCommandLine();
 
         return args;
+    }
+
+    protected string getBaseCommandLine()
+    {
+        string baseCommandLine = "";
+
+        if (!string.IsNullOrEmpty(mFileRoot)) { baseCommandLine += "--fileroot=\"" + escape(mFileRoot) + "\" "; }
+        if (!mNetwork) { baseCommandLine += "--no-network "; }
+        if (!string.IsNullOrEmpty(mHttpUser)) { baseCommandLine += "--http-user=\"" + escape(mHttpUser) + "\" "; }
+        if (!string.IsNullOrEmpty(mHttpPassword)) { baseCommandLine += "--http-password=\"" + escape(mHttpPassword) + "\" "; }
+        if (!string.IsNullOrEmpty(mHttpProxy)) { baseCommandLine += "--http-proxy=\"" + escape(mHttpProxy) + "\" "; }
+        if (!string.IsNullOrEmpty(mLogFile)) { baseCommandLine += "--log=\"" + escape(mLogFile) + "\" "; }
+        if (mVerbose) { baseCommandLine += "--verbose "; }
+        if (mDebug) { baseCommandLine += "--debug "; }
+
+        return baseCommandLine;
+    }
+
+    protected string getJobCommandLine()
+    {
+        string jobCommandLine = "";
+
+        if (!string.IsNullOrEmpty(mInputType) && !mInputType.Equals("auto")) { jobCommandLine +=  "--input=\"" + escape(mInputType) + "\" "; }
+        if (mJavaScript) { jobCommandLine += "--javascript "; }
+        if (mInsecure) { jobCommandLine += "--insecure "; }
+        if (!string.IsNullOrEmpty(mBaseURL)) { jobCommandLine += "--baseurl=\"" + escape(mBaseURL) + "\" "; }
+        if (!string.IsNullOrEmpty(mLicenseFile)) { jobCommandLine += "--license-file=\"" + escape(mLicenseFile) + "\" "; }
+        if (!string.IsNullOrEmpty(mLicenseKey)) { jobCommandLine += "--license-key=\"" + escape(mLicenseKey) + "\" "; }
+        if (!mXInclude) { jobCommandLine += "--no-xinclude "; }
+        if (!mEmbedFonts) { jobCommandLine += "--no-embed-fonts "; }
+        if (!mSubsetFonts) { jobCommandLine += "--no-subset-fonts "; }
+        if (mForceIdentityEncoding) {jobCommandLine += "--force-identity-encoding "; }
+        if (!mCompress) { jobCommandLine += "--no-compress "; }
+        if (mEncrypt)
+        {
+            jobCommandLine += "--encrypt --key-bits " + mKeyBits.ToString() + " ";
+            if(!string.IsNullOrEmpty(mUserPassword)) { jobCommandLine += "--user-password=\"" + escape(mUserPassword) + "\" "; }
+            if(!string.IsNullOrEmpty(mOwnerPasssword)) { jobCommandLine += "--owner-password=\"" + escape(mOwnerPasssword) + "\" "; }
+            if(mDisallowPrint) { jobCommandLine += "--disallow-print "; }
+            if(mDisallowModify) { jobCommandLine += "--disallow-modify "; }
+            if(mDisallowCopy) { jobCommandLine += "--disallow-copy "; }
+            if(mDisallowAnnotate) { jobCommandLine += "--disallow-annotate "; }
+        }
+
+        if (mNoArtificialFonts) { jobCommandLine += "--no-artificial-fonts "; }
+        if (!string.IsNullOrEmpty(mPdfTitle)) { jobCommandLine += "--pdf-title=\"" + escape(mPdfTitle) + "\" "; }
+        if (!string.IsNullOrEmpty(mPdfSubject)) { jobCommandLine += "--pdf-subject=\"" + escape(mPdfSubject) + "\" "; }
+        if (!string.IsNullOrEmpty(mPdfAuthor)) { jobCommandLine += "--pdf-author=\"" + escape(mPdfAuthor) + "\" "; }
+        if (!string.IsNullOrEmpty(mPdfKeywords)) { jobCommandLine += "--pdf-keywords=\"" + escape(mPdfKeywords) + "\" "; }
+        if (!string.IsNullOrEmpty(mPdfCreator)) { jobCommandLine += "--pdf-creator=\"" + escape(mPdfCreator) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthMethod)) { jobCommandLine += "--auth-method=\"" + escape(mAuthMethod) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthUser)) { jobCommandLine += "--auth-user=\"" + escape(mAuthUser) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthPassword)) { jobCommandLine += "--auth-password=\"" + escape(mAuthPassword) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthServer)) { jobCommandLine += "--auth-server=\"" + escape(mAuthServer) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthScheme)) { jobCommandLine += "--auth-scheme=\"" + escape(mAuthScheme) + "\" "; }
+        if (mNoAuthPreemptive) { jobCommandLine += "--no-auth-preemptive "; }
+        if (!string.IsNullOrEmpty(mPageSize)) { jobCommandLine += "--page-size=\"" + escape(mPageSize) + "\" "; }
+        if (!string.IsNullOrEmpty(mPageMargin)) { jobCommandLine += "--page-margin=\"" + escape(mPageMargin) + "\" "; }
+        if(!string.IsNullOrEmpty(mOptions)) {jobCommandLine += escape(mOptions) + " ";}
+
+
+        return jobCommandLine;
     }
 
     private bool Convert1(string args)
@@ -685,7 +776,7 @@ public class Prince : IPrince
         return (pr != null && ReadMessages(pr) == "success");
     }
 
-    private Process StartPrince(string args)
+    protected Process StartPrince(string args)
     {
         const int ERROR_FILE_NOT_FOUND = 2;
         const int ERROR_PATH_NOT_FOUND = 3;
@@ -734,6 +825,11 @@ public class Prince : IPrince
 
             throw new ApplicationException(msg);
         }
+    }
+
+    protected bool readMessages(Process prs)
+    {
+        return ReadMessages(prs).Equals("success");
     }
 
     private string ReadMessages(Process prs)
@@ -801,7 +897,7 @@ public class Prince : IPrince
         }
     }
 
-    private string cmdline_arg_escape_1(string arg)
+    private static string cmdline_arg_escape_1(string arg)
     {
         if (arg.Length == 0)
             return arg; /* return empty string */
@@ -839,7 +935,7 @@ public class Prince : IPrince
         return arg;
     }
 
-    private string cmdline_arg_escape_2(string arg)
+    private static string cmdline_arg_escape_2(string arg)
     {
         int numEndingSlashes = 0;
 
@@ -857,12 +953,466 @@ public class Prince : IPrince
         return arg;
     }
 
+    #endregion
 
-    private string escape(string arg)
+}
+
+
+public class Chunk
+{
+    private string mTag;
+    private byte[] mBytes;
+
+    private Chunk(string tag, byte[] bytes)
     {
-        return cmdline_arg_escape_2(cmdline_arg_escape_1(arg));
+        mTag = tag;
+        mBytes = bytes;
     }
 
-    #endregion
+    public string GetTag()
+    {
+        return mTag;
+    }
+
+    public byte[] GetBytes()
+    {
+        return mBytes;
+    }
+
+    public string GetString()
+    {
+        return System.Text.Encoding.UTF8.GetString(mBytes);
+    }
+
+    public StreamReader getReader()
+    {
+        return new StreamReader(new MemoryStream(mBytes));
+    }
+
+    public static Chunk readChunk(StreamReader input)
+    {
+        byte[] tagBytes = new byte[3];
+
+        if (input.BaseStream.Read(tagBytes, 0, 3) != 3)
+        {
+            throw new IOException("failed to read chunk tag");
+        }
+
+        string tag = System.Text.Encoding.ASCII.GetString(tagBytes);
+
+        byte[] b = new byte[1];
+        
+        if(input.BaseStream.Read(b, 0, 1) != 1)
+        {
+            throw new IOException("failed to read byte after chunk tag");
+        }
+
+        if (b[0] != ' ')
+        {
+            throw new IOException("missing space after chunk tag");
+        }
+
+        int length = 0;
+        int maxNumLength = 9;
+        int numLength = 0;
+
+        for (; numLength < maxNumLength+1; numLength++)
+        {
+            input.BaseStream.Read(b, 0, 1);
+
+            if (b[0] == '\n') break;
+
+            if (b[0] < '0' || b[0] > '9')
+                throw new IOException("unexpected character in chunk length");
+
+            length *= 10;
+            length += b[0] - '0';
+        }
+
+        if (numLength < 1 || numLength > maxNumLength)
+            throw new IOException("invalid chunk length");
+
+        byte[] bytes = new byte[length];
+
+        int offset = 0;
+
+        while (length > 0)
+        {
+            int count = input.BaseStream.Read(bytes, offset, length);
+
+            if (count < 0)
+                throw new IOException("failed to read chunk data");
+
+            if (count > length)
+                throw new IOException("unexpected read overrun");
+
+            length -= count;
+            offset += count;
+        }
+
+        input.BaseStream.Read(b, 0, 1);
+
+        if (b[0] != '\n')
+            throw new IOException("missing newline after chunk data");
+
+        return new Chunk(tag, bytes);
+    }
+
+    public static void writeChunk(Stream output, string tag, string data)
+    {
+        writeChunk(output, tag, Encoding.UTF8.GetBytes(data));
+    }
+
+    public static void writeChunk(Stream output, string tag, byte[] data)
+    {
+        string s = tag + " " + data.Length + "\n";
+
+        if (!output.CanWrite)
+            throw new ApplicationException("The output stream is not writable");
+
+        byte[] b = Encoding.UTF8.GetBytes(s);
+
+        output.Write(b, 0, b.Length);
+        output.Write(data, 0, data.Length);
+
+        byte[] nl = Encoding.UTF8.GetBytes("\n");
+        output.Write(nl, 0, nl.Length);
+
+    }
+
+}
+
+public class PrinceControl : Prince
+{
+    private Process mProcess;
+    private string mVersion;
+
+    /** Constructor for PrinceControl.
+     * @param exePath is the path of the Prince executable.
+     */
+    public PrinceControl(string exePath)
+        : base(exePath)
+    {
+    }
+
+    /** Constructor for PrinceControl.
+     * @param exePath The path of the Prince executable. 
+     * @param events An instance of the PrinceEvents interface that will
+     * receive error/warning messages returned from Prince.
+     */
+    public PrinceControl(string exePath, PrinceEvents events)
+        : base(exePath, events)
+    {
+    }
+
+    /** Get the version string for the running Prince process.
+     */
+    public string getVersion()
+    {
+        return mVersion;
+    }
+
+    /**
+     * Start a Prince control process that can be used for multiple
+     * consecutive document conversions.
+     */
+    public void start()
+    {
+        if (mProcess != null)
+        {
+            throw new SystemException("control process has already been started");
+        }
+
+        string cmdLine = getBaseCommandLine();
+
+        cmdLine += "--control";
+
+        mProcess = StartPrince(cmdLine);
+
+        StreamReader outputFromPrince = mProcess.StandardOutput;
+
+        Chunk chunk = Chunk.readChunk(outputFromPrince);
+
+        if (chunk.GetTag().Equals("ver"))
+        {
+            mVersion = chunk.GetString();
+        }
+        else if(chunk.GetTag().Equals("err"))
+        {
+            throw new IOException("error: " + chunk.GetString());
+        }
+        else
+        {
+            throw new IOException("unknown chunk: " + chunk.GetTag());
+        }
+    }
+
+
+    public void stop()
+    {
+        if (mProcess == null)
+        {
+            throw new SystemException("control process has not been started");
+        }
+
+        StreamWriter inputToPrince = mProcess.StandardInput;
+        StreamReader outputFromPrince = mProcess.StandardOutput;
+
+        mProcess = null;
+
+        Chunk.writeChunk(inputToPrince.BaseStream, "end", "");
+
+        inputToPrince.Close();
+        outputFromPrince.Close();
+    }
+
+    public string getJobJSON()
+    {
+        Json json = new Json();
+
+        json.beginObj();
+        json.beginObj("input");
+        if (!string.IsNullOrEmpty(mInputType)) json.field("type", mInputType);
+        if (!string.IsNullOrEmpty(mBaseURL)) json.field("base", mBaseURL);
+        json.field("javascript", mJavaScript);
+        json.field("xinclude", mXInclude);
+        json.beginList("styles");
+        string[] separators = new string[] { "-s \"", "\" -s \"", "\" " };
+        string[] result = mStyleSheets.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+        foreach (string s in result)
+        {
+            json.value(s);
+        }
+        json.endList();
+
+        json.beginList("scripts");
+        string[] separators2 = new string[] { "--script \"", "\" --script \"", "\" " };
+        string[] result2 = mJavaScripts.Split(separators2, StringSplitOptions.RemoveEmptyEntries);
+        foreach (string s in result2)
+        {
+            json.value(s);
+        }
+        json.endList();
+        json.endObj();
+
+        json.beginObj("pdf");
+        json.field("embed-fonts", mEmbedFonts);
+        json.field("subset-fonts", mSubsetFonts);
+        json.field("force-identity-encoding", mForceIdentityEncoding);
+        json.field("compress", mCompress);
+        if (mEncrypt)
+        {
+            json.beginObj("encrypt");
+            json.field("key-bits", mKeyBits);
+            if (!string.IsNullOrEmpty(mUserPassword)) json.field("user-password", Prince.escape(mUserPassword));
+            if (!string.IsNullOrEmpty(mOwnerPasssword)) json.field("owner-password", Prince.escape(mOwnerPasssword));
+            json.field("disallow-print", mDisallowPrint);
+            json.field("disallow-modify", mDisallowModify);
+            json.field("disallow-copy", mDisallowCopy);
+            json.field("disallow-annotate", mDisallowAnnotate);
+            json.endObj();
+        }
+        json.endObj();
+        json.endObj();
+
+        return json.toString();
+    }
+
+
+    public bool convert(Stream xmlInput, Stream pdfOutput)
+    {
+        MemoryStream mstream = new MemoryStream();
+
+        copyInputToOutput(xmlInput, mstream);
+
+        byte[] input = mstream.ToArray();
+
+        return convert(input, pdfOutput);
+    }
+
+
+    public bool convert(byte[] xmlInput, Stream pdfOutput)
+    {
+        if (mProcess == null)
+        {
+            throw new SystemException("control process has not been started");
+        }
+
+        StreamWriter inputToPrince = mProcess.StandardInput;
+        StreamReader outputFromPrince = mProcess.StandardOutput;
+
+        Chunk.writeChunk(inputToPrince.BaseStream, "job", getJobJSON());
+        Chunk.writeChunk(inputToPrince.BaseStream, "dat", xmlInput);
+
+        inputToPrince.Flush();
+
+        Chunk chunk = Chunk.readChunk(outputFromPrince);
+
+        if (chunk.GetTag().Equals("pdf"))
+        {
+            byte[] bytes = chunk.GetBytes();
+            pdfOutput.Write(bytes, 0, bytes.Length);
+
+            chunk = Chunk.readChunk(outputFromPrince);
+        }
+
+        if (chunk.GetTag().Equals("log"))
+        {
+            return readMessages(mProcess);
+        }
+        else if (chunk.GetTag().Equals("err"))
+        {
+            throw new IOException("error: " + chunk.GetString());
+        }
+        else
+        {
+            throw new IOException("unknown chunk: " + chunk.GetTag());
+        }
+    }
+
+
+    public static void copyInputToOutput(Stream input, MemoryStream output)
+    {
+        const int BUFSIZE = 65536;
+        byte[] buf = new byte[BUFSIZE];
+        int bytesRead;
+
+        bytesRead = input.Read(buf, 0, BUFSIZE);
+        while(bytesRead != 0)
+        {
+            output.Write(buf, 0, bytesRead);
+            bytesRead = input.Read(buf, 0, BUFSIZE);
+        }
+    }
+
+
+}
+
+public class Json
+{
+    private StringBuilder mStr;
+    private Boolean mComma;
+
+    public Json()
+    {
+        mStr = new StringBuilder();
+        mComma = false;
+    }
+
+    public Json beginObj()
+    {
+        if (mComma) mStr.Append(',');
+        mStr.Append('{');
+        mComma = false;
+        return this;
+    }
+
+    public Json beginObj(String name)
+    {
+        if (mComma) mStr.Append(',');
+
+        mStr.Append('"');
+        mStr.Append(Prince.escape(name));
+        mStr.Append("\":{");
+
+        mComma = false;
+
+        return this;
+    }
+
+    public Json endObj()
+    {
+        mStr.Append('}');
+        mComma = true;
+        return this;
+    }
+
+    public Json beginList(string name)
+    {
+        if (mComma) mStr.Append(',');
+
+        mStr.Append('"');
+        mStr.Append(Prince.escape(name));
+        mStr.Append("\":[");
+
+        mComma = false;
+
+        return this;
+    }
+
+    public Json endList()
+    {
+        mStr.Append(']');
+        mComma = true;
+        return this;
+    }
+
+    public Json field(string name)
+    {
+        if (mComma) mStr.Append(',');
+
+        mStr.Append('"');
+        mStr.Append(Prince.escape(name));
+        mStr.Append("\":");
+
+        mComma = false;
+
+        return this;
+    }
+
+    public Json field(string name, string v)
+    {
+        field(name);
+        value(v);
+        return this;
+    }
+
+    public Json field(string name, Boolean v)
+    {
+        field(name);
+        value(v);
+        return this;
+    }
+
+    public Json field(string name, int v)
+    {
+        field(name);
+        value(v);
+        return this;
+    }
+
+    public Json value(string v)
+    {
+        if (mComma) mStr.Append(',');
+
+        mStr.Append('"');
+        mStr.Append(Prince.escape(v));
+        mStr.Append('"');
+        mComma = true;
+
+        return this;
+    }
+
+    public Json value(int v)
+    {
+        if (mComma) mStr.Append(',');
+        mStr.Append(v.ToString());
+        mComma = true;
+        return this;
+    }
+
+    public Json value(Boolean v)
+    {
+        if (mComma) mStr.Append(',');
+
+        mStr.Append(v ? "true" : "false");
+        mComma = true;
+        return this;
+    }
+
+    public string toString()
+    {
+        return mStr.ToString();
+    }
 
 }
