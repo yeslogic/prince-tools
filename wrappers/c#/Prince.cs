@@ -5,7 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-
+using System.Windows.Forms;
 
 public interface IPrince
 {
@@ -580,7 +580,7 @@ public class Prince : IPrince
         }
 
         prs.StandardOutput.Close();
-        return (ReadMessages(prs) == "success");
+        return (ReadMessages(prs.StandardError) == "success");
     }
 
     public bool Convert(Stream xmlInput, string pdfPath)
@@ -603,7 +603,7 @@ public class Prince : IPrince
         prs.StandardInput.Close();
         prs.StandardOutput.Close();
 
-        return (ReadMessages(prs) == "success");
+        return (ReadMessages(prs.StandardError) == "success");
     }
 
     public bool Convert(Stream xmlInput, Stream pdfOutput)
@@ -635,7 +635,7 @@ public class Prince : IPrince
         }
         prs.StandardOutput.Close();
 
-        return (ReadMessages(prs) == "success");
+        return (ReadMessages(prs.StandardError) == "success");
     }
 
     public bool ConvertMemoryStream(MemoryStream xmlInput, Stream pdfOutput)
@@ -659,7 +659,7 @@ public class Prince : IPrince
         }
         prs.StandardOutput.Close();
 
-        return (ReadMessages(prs) == "success");
+        return (ReadMessages(prs.StandardError) == "success");
     }
 
     public bool ConvertString(string xmlInput, Stream pdfOutput)
@@ -685,7 +685,7 @@ public class Prince : IPrince
         }
         prs.StandardOutput.Close();
 
-        return (ReadMessages(prs) == "success");
+        return (ReadMessages(prs.StandardError) == "success");
     }
 
     public static string escape(string arg)
@@ -773,7 +773,7 @@ public class Prince : IPrince
     private bool Convert1(string args)
     {
         Process pr = StartPrince(args);
-        return (pr != null && ReadMessages(pr) == "success");
+        return (pr != null && ReadMessages(pr.StandardError) == "success");
     }
 
     protected Process StartPrince(string args)
@@ -801,7 +801,9 @@ public class Prince : IPrince
             pr.Start();
 
             if (!pr.HasExited)
+            {
                 return pr;
+            }
 
             throw new ApplicationException("Error starting Prince: " + mPrincePath);
         }
@@ -827,16 +829,13 @@ public class Prince : IPrince
         }
     }
 
-    protected bool readMessages(Process prs)
-    {
-        return ReadMessages(prs).Equals("success");
-    }
 
-    private string ReadMessages(Process prs)
+    protected string ReadMessages(StreamReader strRdr)
     {
-        StreamReader stdErrFromPr = prs.StandardError;
-        string line = stdErrFromPr.ReadLine();
+        //StreamReader stdErrFromPr = prs.StandardError;
+        string line = strRdr.ReadLine();
         string result = "";
+
 
         while (line != null)
         {
@@ -858,7 +857,7 @@ public class Prince : IPrince
                     // ignore unknown log messages
                 }
 
-                line = stdErrFromPr.ReadLine();
+                line = strRdr.ReadLine();
             }
             else
             {
@@ -866,7 +865,8 @@ public class Prince : IPrince
             }
         }
 
-        stdErrFromPr.Close();
+        strRdr.Close();
+
         return result;
     }
 
@@ -1145,6 +1145,7 @@ public class PrinceControl : Prince
         {
             throw new IOException("unknown chunk: " + chunk.GetTag());
         }
+
     }
 
 
@@ -1176,6 +1177,8 @@ public class PrinceControl : Prince
         if (!string.IsNullOrEmpty(mBaseURL)) json.field("base", mBaseURL);
         json.field("javascript", mJavaScript);
         json.field("xinclude", mXInclude);
+
+        /*
         json.beginList("styles");
         string[] separators = new string[] { "-s \"", "\" -s \"", "\" " };
         string[] result = mStyleSheets.Split(separators, StringSplitOptions.RemoveEmptyEntries);
@@ -1184,6 +1187,7 @@ public class PrinceControl : Prince
             json.value(s);
         }
         json.endList();
+        
 
         json.beginList("scripts");
         string[] separators2 = new string[] { "--script \"", "\" --script \"", "\" " };
@@ -1193,6 +1197,7 @@ public class PrinceControl : Prince
             json.value(s);
         }
         json.endList();
+        */
         json.endObj();
 
         json.beginObj("pdf");
@@ -1258,7 +1263,7 @@ public class PrinceControl : Prince
 
         if (chunk.GetTag().Equals("log"))
         {
-            return readMessages(mProcess);
+            return ReadMessages(new StreamReader(new MemoryStream(chunk.GetBytes()))).Equals("success");
         }
         else if (chunk.GetTag().Equals("err"))
         {
