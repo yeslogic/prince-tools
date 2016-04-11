@@ -688,10 +688,6 @@ public class Prince : IPrince
         return (ReadMessages(prs.StandardError) == "success");
     }
 
-    public static string escape(string arg)
-    {
-        return cmdline_arg_escape_2(cmdline_arg_escape_1(arg));
-    }
 
     #endregion
 
@@ -953,6 +949,11 @@ public class Prince : IPrince
         return arg;
     }
 
+    private string escape(string arg)
+    {
+        return cmdline_arg_escape_2(cmdline_arg_escape_1(arg));
+    }
+
     #endregion
 
 }
@@ -1178,26 +1179,30 @@ public class PrinceControl : Prince
         json.field("javascript", mJavaScript);
         json.field("xinclude", mXInclude);
 
-        /*
-        json.beginList("styles");
-        string[] separators = new string[] { "-s \"", "\" -s \"", "\" " };
-        string[] result = mStyleSheets.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-        foreach (string s in result)
-        {
-            json.value(s);
-        }
-        json.endList();
         
-
-        json.beginList("scripts");
-        string[] separators2 = new string[] { "--script \"", "\" --script \"", "\" " };
-        string[] result2 = mJavaScripts.Split(separators2, StringSplitOptions.RemoveEmptyEntries);
-        foreach (string s in result2)
+        if(!string.IsNullOrEmpty(mStyleSheets))
         {
-            json.value(s);
+            json.beginList("styles");
+            string[] separators = new string[] { "-s \"", "\" -s \"", "\" " };
+            string[] result = mStyleSheets.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string s in result)
+            {
+                json.value(s);
+            }
+            json.endList();
         }
-        json.endList();
-        */
+
+        if (!string.IsNullOrEmpty(mJavaScripts))
+        {
+            json.beginList("scripts");
+            string[] separators = new string[] { "--script \"", "\" --script \"", "\" " };
+            string[] result = mJavaScripts.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string s in result)
+            {
+                json.value(s);
+            }
+            json.endList();
+        }
         json.endObj();
 
         json.beginObj("pdf");
@@ -1209,8 +1214,8 @@ public class PrinceControl : Prince
         {
             json.beginObj("encrypt");
             json.field("key-bits", mKeyBits);
-            if (!string.IsNullOrEmpty(mUserPassword)) json.field("user-password", Prince.escape(mUserPassword));
-            if (!string.IsNullOrEmpty(mOwnerPasssword)) json.field("owner-password", Prince.escape(mOwnerPasssword));
+            if (!string.IsNullOrEmpty(mUserPassword)) json.field("user-password", mUserPassword);
+            if (!string.IsNullOrEmpty(mOwnerPasssword)) json.field("owner-password", mOwnerPasssword);
             json.field("disallow-print", mDisallowPrint);
             json.field("disallow-modify", mDisallowModify);
             json.field("disallow-copy", mDisallowCopy);
@@ -1317,7 +1322,7 @@ public class Json
         if (mComma) mStr.Append(',');
 
         mStr.Append('"');
-        mStr.Append(Prince.escape(name));
+        mStr.Append(escape(name));
         mStr.Append("\":{");
 
         mComma = false;
@@ -1337,7 +1342,7 @@ public class Json
         if (mComma) mStr.Append(',');
 
         mStr.Append('"');
-        mStr.Append(Prince.escape(name));
+        mStr.Append(escape(name));
         mStr.Append("\":[");
 
         mComma = false;
@@ -1357,7 +1362,7 @@ public class Json
         if (mComma) mStr.Append(',');
 
         mStr.Append('"');
-        mStr.Append(Prince.escape(name));
+        mStr.Append(escape(name));
         mStr.Append("\":");
 
         mComma = false;
@@ -1391,7 +1396,7 @@ public class Json
         if (mComma) mStr.Append(',');
 
         mStr.Append('"');
-        mStr.Append(Prince.escape(v));
+        mStr.Append(escape(v));
         mStr.Append('"');
         mComma = true;
 
@@ -1418,6 +1423,11 @@ public class Json
     public string toString()
     {
         return mStr.ToString();
+    }
+
+    private string escape(string s)
+    {
+        return s.Replace("\\", "\\\\").Replace("\"", "\\\"");
     }
 
 }
