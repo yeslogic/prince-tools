@@ -24,17 +24,30 @@ public interface IPrince
     void SetInputType(string inputType);
     void SetHTML(bool html);
     void SetJavaScript(bool js);
-    void SetHttpUser(string user);
-    void SetHttpPassword(string password);
+    void SetNoNetwork(bool noNetwork);
     void SetHttpProxy(string proxy);
+    void SetHttpTimeout(string httpTimeout);
+    void SetCookie(string cookie);
+    void SetCookieJar(string cookieJar);
+    void SetSslCaCert(string sslCaCert);
+    void SetSslCaPath(string sslCaPath);
     void SetInsecure(bool insecure);
+    void SetNoParallelDownloads(bool noParallelDownloads);
     void SetLog(string logFile);
+    void SetVerbose(bool verbose);
+    void SetDebug(bool debug);
+    void SetNoWarnCss(bool noWarnCss);
     void SetBaseURL(string baseurl);
     void SetFileRoot(string fileroot);
-    void SetXInclude(bool xinclude);
+    void SetXInclude(bool xInclude);
+    void AddRemap(string url, string dir);
+    void ClearRemaps();
     void SetEmbedFonts(bool embed);
     void SetSubsetFonts(bool embedSubset);
+    void SetForceIdentityEncoding(bool forceIdentityEncoding);
     void SetCompress(bool compress);
+    void SetPDFOutputIntent(string pdfOutputIntent);
+    void SetPDFProfile(string pdfProfile);
     void SetNoArtificialFonts(bool noArtificialFonts);
     void SetPDFTitle(string pdfTitle);
     void SetPDFSubject(string pdfSubject);
@@ -47,8 +60,11 @@ public interface IPrince
     void SetAuthServer(string server);
     void SetAuthScheme(string scheme);
     void SetNoAuthPreemptive(bool noAuthPreemtive);
+    void SetMedia(string media);
     void SetPageSize(string pageSize);
     void SetPageMargin(string pageMargin);
+    void SetNoAuthorStyle(bool noAuthorStyle);
+    void SetNODefaultStyle(bool noDefaultStyle);
     void SetEncrypt(bool encrypt);
     void SetOptions(string options);
     bool Convert(Stream xmlInput, Stream pdfOutput);
@@ -167,7 +183,7 @@ public class Prince : IPrince
     private readonly string mPrincePath;
     protected string mStyleSheets;
     protected string mJavaScripts;
-    private string mFileAttachments;
+    
     private string mLicenseFile;
     private string mLicenseKey;
 
@@ -177,40 +193,54 @@ public class Prince : IPrince
     private string mFileRoot;
     protected bool mJavaScript; 
     protected bool mXInclude;
+    private string mRemaps;
 
     //Network settings
-    private bool mNetwork;
-    private string mHttpUser;
-    private string mHttpPassword;
+    private bool mNoNetwork;
     private string mHttpProxy;
+    private string mHttpTimeout;
+    private string mCookie;
+    private string mCookieJar;
+    private string mSslCaCert;
+    private string mSslCaPath;
     private bool mInsecure;
-
-    //Log Settings
-    private string mLogFile;
-    private bool mVerbose;
-    private bool mDebug;
-    
-    //PDF settings
-    protected bool mEmbedFonts;
-    protected bool mSubsetFonts;
-    protected bool mForceIdentityEncoding;
-    protected bool mCompress;
-
-
-    private bool mNoArtificialFonts;
-    private string mPdfTitle;
-    private string mPdfSubject;
-    private string mPdfAuthor;
-    private string mPdfKeywords;
-    private string mPdfCreator;
+    private bool mNoParallelDownloads;
     private string mAuthMethod;
     private string mAuthUser;
     private string mAuthPassword;
     private string mAuthServer;
     private string mAuthScheme;
     private bool mNoAuthPreemptive;
+
+    //Log Settings
+    private string mLogFile;
+    private bool mVerbose;
+    private bool mDebug;
+    private bool mNoWarnCss;
+    
+    //PDF settings
+    private string mPDFOutputIntent;
+    private string mPDFProfile;
+    protected string mFileAttachments;
+    private bool mNoArtificialFonts;
+    protected bool mEmbedFonts;
+    protected bool mSubsetFonts;
+    protected bool mForceIdentityEncoding;
+    protected bool mCompress;
+
+    protected string mPdfTitle;
+    protected string mPdfSubject;
+    protected string mPdfAuthor;
+    protected string mPdfKeywords;
+    protected string mPdfCreator;
+
+
+    //CSS settings
+    private string mMedia;
     private string mPageSize;
     private string mPageMargin;
+    private bool mNoAuthorStyle;
+    private bool mNoDefaultStyle;
 
     //Encryption settings
     protected bool mEncrypt;
@@ -231,10 +261,12 @@ public class Prince : IPrince
         mEvents = null;
         mInputType = "auto";
         mJavaScript = false;
-        mNetwork = true;
+        mNoNetwork = false;
         mVerbose = false;
         mDebug = false;
+        mNoWarnCss = false;
         mInsecure = false;
+        mNoParallelDownloads = false;
         mXInclude = true;
         mEmbedFonts = true;
         mSubsetFonts = true;
@@ -242,13 +274,18 @@ public class Prince : IPrince
         mCompress = true;
         mNoArtificialFonts = false;
         mNoAuthPreemptive = false;
+        mNoAuthorStyle = false;
+        mNoDefaultStyle = false;
         mEncrypt = false;
         mKeyBits = 40;
         mDisallowPrint = false;
         mDisallowModify = false;
         mDisallowCopy = false;
         mDisallowAnnotate = false;
-
+        mStyleSheets = "";
+        mJavaScripts = "";
+        mFileAttachments = "";
+        mRemaps = "";
     }
 
     public Prince(string princePath) : this()
@@ -319,19 +356,9 @@ public class Prince : IPrince
         mJavaScript = js;
     }
 
-    public void SetNetwork(bool network)
+    public void SetNoNetwork(bool noNetwork)
     {
-        mNetwork = network;
-    }
-
-    public void SetHttpUser(string user)
-    {
-        mHttpUser = user;
-    }
-
-    public void SetHttpPassword(string password)
-    {
-        mHttpPassword = password;
+        mNoNetwork = noNetwork;
     }
 
     public void SetHttpProxy(string proxy)
@@ -339,9 +366,39 @@ public class Prince : IPrince
         mHttpProxy = proxy;
     }
 
+    public void SetHttpTimeout(string httpTimeout)
+    {
+        mHttpTimeout = httpTimeout;
+    }
+
+    public void SetCookie(string cookie)
+    {
+        mCookie = cookie;
+    }
+
+    public void SetCookieJar(string cookieJar)
+    {
+        mCookieJar = cookieJar;
+    }
+
+    public void SetSslCaCert(string sslCaCert)
+    {
+        mSslCaCert = sslCaCert;
+    }
+
+    public void SetSslCaPath(string sslCaPath)
+    {
+        mSslCaPath = sslCaPath;
+    }
+
     public void SetInsecure(bool insecure)
     {
         mInsecure = insecure;
+    }
+
+    public void SetNoParallelDownloads(bool noParallelDownloads)
+    {
+        mNoParallelDownloads = noParallelDownloads;
     }
 
     public void SetLog(string logFile)
@@ -359,6 +416,11 @@ public class Prince : IPrince
         mDebug = debug;
     }
 
+    public void SetNoWarnCss(bool noWarnCss)
+    {
+        mNoWarnCss = noWarnCss;
+    }
+
     public void SetBaseURL(string baseURL)
     {
         mBaseURL = baseURL;
@@ -372,6 +434,16 @@ public class Prince : IPrince
     public void SetXInclude(bool xInclude)
     {
         mXInclude = xInclude;
+    }
+
+    public void AddRemap(string url, string dir)
+    {
+        mRemaps += "--remap=\"" + escape(url) + "\"=\"" + escape(dir) + "\" ";
+    }
+
+    public void ClearRemaps()
+    {
+        mRemaps = "";
     }
 
     public void SetEmbedFonts(bool embed)
@@ -392,6 +464,16 @@ public class Prince : IPrince
     public void SetCompress(bool compress)
     {
         mCompress = compress;
+    }
+
+    public void SetPDFOutputIntent(string pdfOutputIntent)
+    {
+        mPDFOutputIntent = pdfOutputIntent;
+    }
+
+    public void SetPDFProfile(string pdfProfile)
+    {
+        mPDFProfile = pdfProfile;
     }
 
     public void SetNoArtificialFonts(bool noArtificialFonts)
@@ -484,6 +566,11 @@ public class Prince : IPrince
         mNoAuthPreemptive = noAuthPreemptive;
     }
 
+    public void SetMedia(string media)
+    {
+        mMedia = media;
+    }
+
     public void SetPageSize(string pageSize)
     {
         mPageSize = pageSize;
@@ -492,6 +579,16 @@ public class Prince : IPrince
     public void SetPageMargin(string pageMargin)
     {
         mPageMargin = pageMargin;
+    }
+
+    public void SetNoAuthorStyle(bool noAuthorStyle)
+    {
+        mNoAuthorStyle = noAuthorStyle;
+    }
+
+    public void SetNODefaultStyle(bool noDefaultStyle)
+    {
+        mNoDefaultStyle = noDefaultStyle;
     }
 
     public void SetEncrypt(bool encrypt)
@@ -692,7 +789,7 @@ public class Prince : IPrince
 
     private string getArgs(string logType)
     {
-        string args = "--structured-log=" + logType + " " + mStyleSheets + mJavaScripts + mFileAttachments;
+        string args = "--structured-log=" + logType + " " + mStyleSheets + mJavaScripts + mFileAttachments + mRemaps;
 
         args += getBaseCommandLine();
 
@@ -706,13 +803,25 @@ public class Prince : IPrince
         string baseCommandLine = "";
 
         if (!string.IsNullOrEmpty(mFileRoot)) { baseCommandLine += "--fileroot=\"" + escape(mFileRoot) + "\" "; }
-        if (!mNetwork) { baseCommandLine += "--no-network "; }
-        if (!string.IsNullOrEmpty(mHttpUser)) { baseCommandLine += "--http-user=\"" + escape(mHttpUser) + "\" "; }
-        if (!string.IsNullOrEmpty(mHttpPassword)) { baseCommandLine += "--http-password=\"" + escape(mHttpPassword) + "\" "; }
+        if (mNoNetwork) { baseCommandLine += "--no-network "; }
+        if (!string.IsNullOrEmpty(mAuthMethod)) { baseCommandLine += "--auth-method=\"" + escape(mAuthMethod) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthUser)) { baseCommandLine += "--auth-user=\"" + escape(mAuthUser) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthPassword)) { baseCommandLine += "--auth-password=\"" + escape(mAuthPassword) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthServer)) { baseCommandLine += "--auth-server=\"" + escape(mAuthServer) + "\" "; }
+        if (!string.IsNullOrEmpty(mAuthScheme)) { baseCommandLine += "--auth-scheme=\"" + escape(mAuthScheme) + "\" "; }
+        if (mNoAuthPreemptive) { baseCommandLine += "--no-auth-preemptive "; }
         if (!string.IsNullOrEmpty(mHttpProxy)) { baseCommandLine += "--http-proxy=\"" + escape(mHttpProxy) + "\" "; }
+        if (!string.IsNullOrEmpty(mHttpTimeout)) { baseCommandLine += "--http-timeout=\"" + escape(mHttpTimeout) + "\" "; }
+        if (!string.IsNullOrEmpty(mCookie)) { baseCommandLine += "--cookie=\"" + escape(mCookie) + "\" "; }
+        if (!string.IsNullOrEmpty(mCookieJar)) { baseCommandLine += "--cookiejar=\"" + escape(mCookieJar) + "\" "; }
+        if (!string.IsNullOrEmpty(mSslCaCert)) { baseCommandLine += "--ssl-cacert=\"" + escape(mSslCaCert) + "\" "; }
+        if (!string.IsNullOrEmpty(mSslCaPath)) { baseCommandLine += "--ssl-capath=\"" + escape(mSslCaPath) + "\" "; }
+        if (mInsecure) { baseCommandLine += "--insecure "; }
+        if (mNoParallelDownloads) { baseCommandLine += "--no-parallel-downloads "; }
         if (!string.IsNullOrEmpty(mLogFile)) { baseCommandLine += "--log=\"" + escape(mLogFile) + "\" "; }
         if (mVerbose) { baseCommandLine += "--verbose "; }
         if (mDebug) { baseCommandLine += "--debug "; }
+        if (mNoWarnCss) { baseCommandLine += "--no-warn-css "; }
 
         return baseCommandLine;
     }
@@ -723,7 +832,6 @@ public class Prince : IPrince
 
         if (!string.IsNullOrEmpty(mInputType) && !mInputType.Equals("auto")) { jobCommandLine +=  "--input=\"" + escape(mInputType) + "\" "; }
         if (mJavaScript) { jobCommandLine += "--javascript "; }
-        if (mInsecure) { jobCommandLine += "--insecure "; }
         if (!string.IsNullOrEmpty(mBaseURL)) { jobCommandLine += "--baseurl=\"" + escape(mBaseURL) + "\" "; }
         if (!string.IsNullOrEmpty(mLicenseFile)) { jobCommandLine += "--license-file=\"" + escape(mLicenseFile) + "\" "; }
         if (!string.IsNullOrEmpty(mLicenseKey)) { jobCommandLine += "--license-key=\"" + escape(mLicenseKey) + "\" "; }
@@ -743,20 +851,19 @@ public class Prince : IPrince
             if(mDisallowAnnotate) { jobCommandLine += "--disallow-annotate "; }
         }
 
+        if (!string.IsNullOrEmpty(mPDFProfile)) { jobCommandLine += "--pdf-profile=\"" + escape(mPDFProfile) + "\" "; }
+        if (!string.IsNullOrEmpty(mPDFOutputIntent)) { jobCommandLine += "--pdf-output-intent=\"" + escape(mPDFOutputIntent) + "\" "; }
         if (mNoArtificialFonts) { jobCommandLine += "--no-artificial-fonts "; }
         if (!string.IsNullOrEmpty(mPdfTitle)) { jobCommandLine += "--pdf-title=\"" + escape(mPdfTitle) + "\" "; }
         if (!string.IsNullOrEmpty(mPdfSubject)) { jobCommandLine += "--pdf-subject=\"" + escape(mPdfSubject) + "\" "; }
         if (!string.IsNullOrEmpty(mPdfAuthor)) { jobCommandLine += "--pdf-author=\"" + escape(mPdfAuthor) + "\" "; }
         if (!string.IsNullOrEmpty(mPdfKeywords)) { jobCommandLine += "--pdf-keywords=\"" + escape(mPdfKeywords) + "\" "; }
         if (!string.IsNullOrEmpty(mPdfCreator)) { jobCommandLine += "--pdf-creator=\"" + escape(mPdfCreator) + "\" "; }
-        if (!string.IsNullOrEmpty(mAuthMethod)) { jobCommandLine += "--auth-method=\"" + escape(mAuthMethod) + "\" "; }
-        if (!string.IsNullOrEmpty(mAuthUser)) { jobCommandLine += "--auth-user=\"" + escape(mAuthUser) + "\" "; }
-        if (!string.IsNullOrEmpty(mAuthPassword)) { jobCommandLine += "--auth-password=\"" + escape(mAuthPassword) + "\" "; }
-        if (!string.IsNullOrEmpty(mAuthServer)) { jobCommandLine += "--auth-server=\"" + escape(mAuthServer) + "\" "; }
-        if (!string.IsNullOrEmpty(mAuthScheme)) { jobCommandLine += "--auth-scheme=\"" + escape(mAuthScheme) + "\" "; }
-        if (mNoAuthPreemptive) { jobCommandLine += "--no-auth-preemptive "; }
+        if (!string.IsNullOrEmpty(mMedia)) { jobCommandLine += "--media=\"" + escape(mMedia) + "\" "; }
         if (!string.IsNullOrEmpty(mPageSize)) { jobCommandLine += "--page-size=\"" + escape(mPageSize) + "\" "; }
         if (!string.IsNullOrEmpty(mPageMargin)) { jobCommandLine += "--page-margin=\"" + escape(mPageMargin) + "\" "; }
+        if (mNoAuthorStyle) { jobCommandLine += "--no-author-style "; }
+        if (mNoDefaultStyle) { jobCommandLine += "--no-default-style "; }
         if(!string.IsNullOrEmpty(mOptions)) {jobCommandLine += escape(mOptions) + " ";}
 
 
@@ -1200,6 +1307,18 @@ public class PrinceControl : Prince
             }
             json.endList();
         }
+
+        if (!string.IsNullOrEmpty(mFileAttachments))
+        {
+            json.beginList("attachments");
+            string[] separators = new string[] { "--attach=\"", "\" --attach=\"", "\" " };
+            string[] result = mFileAttachments.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string s in result)
+            {
+                json.value(s);
+            }
+            json.endList();
+        }
         json.endObj();
 
         json.beginObj("pdf");
@@ -1220,6 +1339,15 @@ public class PrinceControl : Prince
             json.endObj();
         }
         json.endObj();
+
+        json.beginObj("metadata");
+        if (!string.IsNullOrEmpty(mPdfTitle)) json.field("title", mPdfTitle);
+        if (!string.IsNullOrEmpty(mPdfSubject)) json.field("subject", mPdfSubject);
+        if (!string.IsNullOrEmpty(mPdfAuthor)) json.field("author", mPdfAuthor);
+        if (!string.IsNullOrEmpty(mPdfKeywords)) json.field("keywords", mPdfKeywords);
+        if (!string.IsNullOrEmpty(mPdfCreator)) json.field("creator", mPdfCreator);
+        json.endObj();
+
         json.endObj();
 
         return json.toString();
