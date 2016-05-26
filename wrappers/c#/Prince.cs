@@ -236,11 +236,11 @@ public class Prince : IPrince
 
 
     //CSS settings
-    private string mMedia;
+    protected string mMedia;
     private string mPageSize;
     private string mPageMargin;
-    private bool mNoAuthorStyle;
-    private bool mNoDefaultStyle;
+    protected bool mNoAuthorStyle;
+    protected bool mNoDefaultStyle;
 
     //Encryption settings
     protected bool mEncrypt;
@@ -1282,6 +1282,9 @@ public class PrinceControl : Prince
         if (!string.IsNullOrEmpty(mBaseURL)) json.field("base", mBaseURL);
         json.field("javascript", mJavaScript);
         json.field("xinclude", mXInclude);
+        json.field("media", mMedia);
+        json.field("default-style", !mNoDefaultStyle);
+        json.field("author-style", !mNoAuthorStyle);
 
         
         if(!string.IsNullOrEmpty(mStyleSheets))
@@ -1326,7 +1329,7 @@ public class PrinceControl : Prince
         json.field("subset-fonts", mSubsetFonts);
         json.field("pdf-profile", mPDFProfile);
         json.field("pdf-output-intent", mPDFOutputIntent);
-        json.field("no-artificial-fonts", mNoArtificialFonts);
+        json.field("artificial-fonts", !mNoArtificialFonts);
         json.field("force-identity-encoding", mForceIdentityEncoding);
         json.field("compress", mCompress);
         if (mEncrypt)
