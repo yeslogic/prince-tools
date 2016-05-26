@@ -219,10 +219,10 @@ public class Prince : IPrince
     private bool mNoWarnCss;
     
     //PDF settings
-    private string mPDFOutputIntent;
-    private string mPDFProfile;
+    protected string mPDFOutputIntent;
+    protected string mPDFProfile;
     protected string mFileAttachments;
-    private bool mNoArtificialFonts;
+    protected bool mNoArtificialFonts;
     protected bool mEmbedFonts;
     protected bool mSubsetFonts;
     protected bool mForceIdentityEncoding;
@@ -1324,6 +1324,9 @@ public class PrinceControl : Prince
         json.beginObj("pdf");
         json.field("embed-fonts", mEmbedFonts);
         json.field("subset-fonts", mSubsetFonts);
+        json.field("pdf-profile", mPDFProfile);
+        json.field("pdf-output-intent", mPDFOutputIntent);
+        json.field("no-artificial-fonts", mNoArtificialFonts);
         json.field("force-identity-encoding", mForceIdentityEncoding);
         json.field("compress", mCompress);
         if (mEncrypt)
