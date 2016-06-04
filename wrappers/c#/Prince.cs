@@ -40,6 +40,7 @@ public interface IPrince
     void SetBaseURL(string baseurl);
     void SetFileRoot(string fileroot);
     void SetXInclude(bool xInclude);
+    void SetXmlExternalEntities(bool xmlExternalEntities);
     void AddRemap(string url, string dir);
     void ClearRemaps();
     void SetEmbedFonts(bool embed);
@@ -193,6 +194,7 @@ public class Prince : IPrince
     private string mFileRoot;
     protected bool mJavaScript; 
     protected bool mXInclude;
+    protected bool mXmlExternalEntities;
     private string mRemaps;
 
     //Network settings
@@ -267,7 +269,8 @@ public class Prince : IPrince
         mNoWarnCss = false;
         mInsecure = false;
         mNoParallelDownloads = false;
-        mXInclude = true;
+        mXInclude = false;
+        mXmlExternalEntities = false;
         mEmbedFonts = true;
         mSubsetFonts = true;
         mForceIdentityEncoding = false;
@@ -434,6 +437,11 @@ public class Prince : IPrince
     public void SetXInclude(bool xInclude)
     {
         mXInclude = xInclude;
+    }
+
+    public void SetXmlExternalEntities(bool xmlExternalEntities)
+    {
+        mXmlExternalEntities = xmlExternalEntities;
     }
 
     public void AddRemap(string url, string dir)
@@ -830,12 +838,15 @@ public class Prince : IPrince
     {
         string jobCommandLine = "";
 
+        
         if (!string.IsNullOrEmpty(mInputType) && !mInputType.Equals("auto")) { jobCommandLine +=  "--input=\"" + escape(mInputType) + "\" "; }
         if (mJavaScript) { jobCommandLine += "--javascript "; }
         if (!string.IsNullOrEmpty(mBaseURL)) { jobCommandLine += "--baseurl=\"" + escape(mBaseURL) + "\" "; }
         if (!string.IsNullOrEmpty(mLicenseFile)) { jobCommandLine += "--license-file=\"" + escape(mLicenseFile) + "\" "; }
         if (!string.IsNullOrEmpty(mLicenseKey)) { jobCommandLine += "--license-key=\"" + escape(mLicenseKey) + "\" "; }
+        if (mXInclude) { jobCommandLine += "--xinclude "; }
         if (!mXInclude) { jobCommandLine += "--no-xinclude "; }
+        if (mXmlExternalEntities) { jobCommandLine += "--xml-external-entities "; }
         if (!mEmbedFonts) { jobCommandLine += "--no-embed-fonts "; }
         if (!mSubsetFonts) { jobCommandLine += "--no-subset-fonts "; }
         if (mForceIdentityEncoding) {jobCommandLine += "--force-identity-encoding "; }
@@ -1277,15 +1288,17 @@ public class PrinceControl : Prince
         Json json = new Json();
 
         json.beginObj();
+        
+        
         json.beginObj("input");
         if (!string.IsNullOrEmpty(mInputType)) json.field("type", mInputType);
         if (!string.IsNullOrEmpty(mBaseURL)) json.field("base", mBaseURL);
+        if (!string.IsNullOrEmpty(mMedia)) json.field("media", mMedia);
         json.field("javascript", mJavaScript);
         json.field("xinclude", mXInclude);
-        json.field("media", mMedia);
+        json.field("xml-external-entities", mXmlExternalEntities);
         json.field("default-style", !mNoDefaultStyle);
         json.field("author-style", !mNoAuthorStyle);
-
         
         if(!string.IsNullOrEmpty(mStyleSheets))
         {
@@ -1323,12 +1336,13 @@ public class PrinceControl : Prince
             json.endList();
         }
         json.endObj();
-
+        
+      
         json.beginObj("pdf");
         json.field("embed-fonts", mEmbedFonts);
         json.field("subset-fonts", mSubsetFonts);
-        json.field("pdf-profile", mPDFProfile);
-        json.field("pdf-output-intent", mPDFOutputIntent);
+        if (!string.IsNullOrEmpty(mPDFProfile)) json.field("pdf-profile", mPDFProfile);
+        if (!string.IsNullOrEmpty(mPDFOutputIntent)) json.field("pdf-output-intent", mPDFOutputIntent);
         json.field("artificial-fonts", !mNoArtificialFonts);
         json.field("force-identity-encoding", mForceIdentityEncoding);
         json.field("compress", mCompress);
@@ -1345,7 +1359,7 @@ public class PrinceControl : Prince
             json.endObj();
         }
         json.endObj();
-
+        
         json.beginObj("metadata");
         if (!string.IsNullOrEmpty(mPdfTitle)) json.field("title", mPdfTitle);
         if (!string.IsNullOrEmpty(mPdfSubject)) json.field("subject", mPdfSubject);
@@ -1353,7 +1367,7 @@ public class PrinceControl : Prince
         if (!string.IsNullOrEmpty(mPdfKeywords)) json.field("keywords", mPdfKeywords);
         if (!string.IsNullOrEmpty(mPdfCreator)) json.field("creator", mPdfCreator);
         json.endObj();
-
+        
         json.endObj();
 
         return json.toString();
@@ -1384,7 +1398,7 @@ public class PrinceControl : Prince
 
         Chunk.writeChunk(inputToPrince.BaseStream, "job", getJobJSON());
         Chunk.writeChunk(inputToPrince.BaseStream, "dat", xmlInput);
-
+        
         inputToPrince.Flush();
 
         Chunk chunk = Chunk.readChunk(outputFromPrince);
