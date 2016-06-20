@@ -195,6 +195,7 @@ public class Prince : IPrince
     protected bool mJavaScript; 
     protected bool mXInclude;
     protected bool mXmlExternalEntities;
+    protected bool mNoLocalFiles;
     private string mRemaps;
 
     //Network settings
@@ -271,6 +272,7 @@ public class Prince : IPrince
         mNoParallelDownloads = false;
         mXInclude = false;
         mXmlExternalEntities = false;
+        mNoLocalFiles = true;
         mEmbedFonts = true;
         mSubsetFonts = true;
         mForceIdentityEncoding = false;
@@ -442,6 +444,11 @@ public class Prince : IPrince
     public void SetXmlExternalEntities(bool xmlExternalEntities)
     {
         mXmlExternalEntities = xmlExternalEntities;
+    }
+
+    public void SetNoLocalFiles(bool noLocalFiles)
+    {
+        mNoLocalFiles = noLocalFiles;
     }
 
     public void AddRemap(string url, string dir)
@@ -847,6 +854,7 @@ public class Prince : IPrince
         if (mXInclude) { jobCommandLine += "--xinclude "; }
         if (!mXInclude) { jobCommandLine += "--no-xinclude "; }
         if (mXmlExternalEntities) { jobCommandLine += "--xml-external-entities "; }
+        if (mNoLocalFiles) { jobCommandLine += "--no-local-files "; }
         if (!mEmbedFonts) { jobCommandLine += "--no-embed-fonts "; }
         if (!mSubsetFonts) { jobCommandLine += "--no-subset-fonts "; }
         if (mForceIdentityEncoding) {jobCommandLine += "--force-identity-encoding "; }
@@ -1297,6 +1305,7 @@ public class PrinceControl : Prince
         json.field("javascript", mJavaScript);
         json.field("xinclude", mXInclude);
         json.field("xml-external-entities", mXmlExternalEntities);
+        json.field("no-local-files", mNoLocalFiles);
         json.field("default-style", !mNoDefaultStyle);
         json.field("author-style", !mNoAuthorStyle);
         
