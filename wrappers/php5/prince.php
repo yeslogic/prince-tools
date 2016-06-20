@@ -16,30 +16,46 @@ class Prince
     private $javascript;
     private $baseURL;
     private $doXInclude;
-    private $httpUser;
-    private $httpPassword;
+    private $xmlExternalEntities;
+    private $noLocalFiles;
+    private $remaps;
+    private $noNetwork;
+    private $authUser;
+    private $authPassword;
+    private $authServer;
+    private $authScheme;
+    private $authMethod;
+    private $noAuthPreemptive;
     private $httpProxy;
     private $httpTimeout;
+    private $cookie;
+    private $cookieJar;
+    private $sslCaCert;
+    private $sslCaPath;
     private $insecure;
+    private $noParallelDownloads;
     private $logFile;
+    private $verbose;
+    private $debug;
+    private $noWarnCss;
     private $fileRoot;
     private $embedFonts;
     private $subsetFonts;
     private $noArtificialFonts;
+    private $forceIdentityEncoding;
     private $compress;
+    private $pdfOutputIntent;
+    private $pdfProfile;
     private $pdfTitle;
     private $pdfSubject;
     private $pdfAuthor;
     private $pdfKeywords;
     private $pdfCreator;
-    private $authMethod;
-    private $authUser;
-    private $authPassword;
-    private $authServer;
-    private $authScheme;
-    private $noAuthPreemptive;
+    private $media;
     private $pageSize;
     private $pageMargin;
+    private $noAuthorStyle;
+    private $noDefaultStyle;
     private $encrypt;
     private $encryptInfo;
     private $options;
@@ -55,31 +71,47 @@ class Prince
         $this->inputType = 'auto';
         $this->javascript = false;
         $this->baseURL = '';
-        $this->doXInclude = true;
-        $this->httpUser = '';
-        $this->httpPassword = '';
+        $this->doXInclude = false;
+        $this->xmlExternalEntities = false;
+        $this->noLocalFiles = true;
+        $this->remaps = '';
+        $this->noNetwork = false;
+        $this->authUser = '';
+        $this->authPassword = '';
+        $this->authServer = '';
+        $this->authScheme = '';
+        $this->authMethod = '';
+        $this->noAuthPreemptive = false;
         $this->httpProxy = '';
         $this->httpTimeout = '';
+        $this->cookie = '';
+        $this->cookieJar = '';
+        $this->sslCaCert = '';
+        $this->sslCaPath = '';
         $this->insecure = false;
+        $this->noParallelDownloads = false;
         $this->logFile = '';
+        $this->verbose = false;
+        $this->debug = false;
+        $this->noWarnCss = false;
         $this->fileRoot = '';
         $this->embedFonts = true;
         $this->subsetFonts = true;
         $this->noArtificialFonts = false;
+        $this->forceIdentityEncoding = false;
         $this->compress = true;
+        $this->pdfOutputIntent = '';
+        $this->pdfProfile = '';
         $this->pdfTitle = '';
         $this->pdfSubject = '';
         $this->pdfAuthor = '';
         $this->pdfKeywords = '';
         $this->pdfCreator = '';
-        $this->authMethod = '';
-        $this->authUser = '';
-        $this->authPassword = '';
-        $this->authServer = '';
-        $this->authScheme = '';
-        $this->noAuthPreemptive = false;
+        $this->media = '';
         $this->pageSize = '';
         $this->pageMargin = '';
+        $this->noAuthorStyle = false;
+        $this->noDefaultStyle = false;
         $this->encrypt = false;
         $this->encryptInfo = '';
         $this->options = '';
@@ -174,6 +206,24 @@ class Prince
         $this->logFile = $logFile;
     }
 
+    //Specify whether to log informative messages.
+    public function setVerbose($verbose)
+    {
+        $this->verbose = $verbose;
+    }
+
+    //Specify whether to log debug messages.
+    public function setDebug($debug)
+    {
+        $this->debug = $debug;  
+    }
+
+    //Specify whether to warn about CSS.
+    public function setNoWarnCss($noWarnCss)
+    {
+        $this->noWarnCss = $noWarnCss;
+    }
+
     // Specify the base URL of the input document.
     // baseURL: The base URL or path of the input document, or ''.
     public function setBaseURL($baseURL)
@@ -190,32 +240,137 @@ class Prince
         $this->doXInclude = $xinclude;
     }
 
-    // Specify a username to use when fetching remote resources over HTTP.
-    // user: The username to use for basic HTTP authentication.
-    public function setHttpUser($user)
+    // Specifies whether XML external entities should be allowed to be used.
+    public function setXmlExternalEntities($xmlExternalEntities)
     {
-        $this->httpUser = $this->cmdlineArgEscape($user);
+        $this->xmlExternalEntities = $xmlExternalEntities ;
+    }
+
+    //Specify whether to disable access to local files.
+    public function setNoLocalFiles($noLocalFiles)
+    {
+        $this->noLocalFiles = $noLocalFiles;    
+    }
+
+    // Add a mapping of URL prefix to a local directory.
+    public function addRemap($url, $dir)
+    {
+        $this->remaps .= '--remap="' . $url . '"="' . $dir . '" ';
+    }
+
+    // Clear all of the remaps.
+    public function clearRemaps()
+    {
+        $this->remaps = '';
+    }
+ 
+    // Specify thether to disable network access.
+    public function setNoNetwork($noNetwork)
+    {
+        $this->noNetwork = $noNetwork;
+    }
+
+    //Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
+    public function setAuthMethod($authMethod)
+    {
+    	  if(strcasecmp($authMethod, 'basic') == 0)
+    	  {
+   	  	$this->authMethod = 'basic';
+   	  }
+   	  else if(strcasecmp($authMethod, 'digest') == 0)
+   	  {
+   	  	$this->authMethod = 'digest';
+   	  }
+   	  else if(strcasecmp($authMethod, 'ntlm') == 0)
+   	  {
+   	  	$this->authMethod = 'ntlm';
+   	  } 
+   	  else if(strcasecmp($authMethod, 'negotiate') == 0)
+   	  {
+   	  	$this->authMethod = 'negotiate';
+   	  }
+   	  else
+   	  {
+   	  	$this->authMethod = '';
+   	  }
     }
     
-    // Specify a password to use when fetching remote resources over HTTP.
-    // password: The password to use for basic HTTP authentication.
-    public function setHttpPassword($password)
+    //Specify username for HTTP authentication.
+    public function setAuthUser($authUser)
     {
-        $this->httpPassword = $this->cmdlineArgEscape($password);
+    	 $this->authUser = $this->cmdlineArgEscape($authUser);
     }
     
+    //Specify password for HTTP authentication.
+    public function setAuthPassword($authPassword)
+    {
+    	 $this->authPassword = $this->cmdlineArgEscape($authPassword);
+    }
+    
+    //Only send USER:PASS to this server.
+    public function setAuthServer($authServer)
+    {
+       $this->authServer = $authServer;
+    }
+    
+    //Only send USER:PASS for this scheme. (HTTP, HTTPS)
+    public function setAuthScheme($authScheme)
+    {
+    	  if(strcasecmp($authScheme, 'http') == 0)
+    	  {
+    	 	$this->authScheme = 'http';
+    	  }
+    	  else if(strcasecmp($authScheme, 'https') == 0)
+    	  {
+    	 	$this->authScheme = 'https';
+    	  }
+    	  else
+    	  {
+    	 	$this->authScheme = '';
+    	  }
+    }
+    
+    //Do not authenticate with named servers until asked.
+    public function setNoAuthPreemptive($noAuthPreemptive)
+    {
+    	 $this->noAuthPreemptive = $noAuthPreemptive;
+    }
+
     //Specify the URL for the HTTP proxy server, if needed.
     //proxy: The URL for the HTTP proxy server.
     public function setHttpProxy($proxy)
     {
         $this->httpProxy = $proxy;
     }
-
-    //Specify the timeout for HTTP requests.
-    //timeout: The HTTP timeout in seconds.
+    
+    //Specify the HTTP timeout in seconds.
     public function setHttpTimeout($timeout)
     {
-        $this->httpTimeout = $timeout;
+        $this->httpTimeout = $timeout;    
+    }
+
+    //Specify a Set-Cookie header value.
+    public function setCookie($cookie)
+    {
+        $this->cookie = $cookie;
+    }
+
+    //Specify a file containing HTTP cookies.
+    public function setCookieJar($cookieJar)
+    {
+        $this->cookieJar = $cookieJar;
+    }
+
+    //Specify an SSL certificate file.
+    public function setSslCaCert($sslCaCert)
+    {
+        $this->sslCaCert = $sslCaCert;
+    }
+
+    //Specify an SSL certificate directory.
+    public function setSslCaPath($sslCaPath)
+    {
+        $this->sslCaPath = $sslCaPath;
     }
 
     //Specify whether to disable SSL verification.
@@ -225,6 +380,13 @@ class Prince
         $this->insecure = $insecure;
     }
     
+    //Specify whether to disable disable parallel downloads.
+    //noParallelDownloads: If set to true, parallel downloads are disabled.
+    public function setNoParallelDownloads($noParallelDownloads)
+    {
+        $this->noParallelDownloads = $noParallelDownloads;  
+    }
+
     //Specify the root directory for absolute filenames. This can be used
     //when converting a local file that uses absolute paths to refer to web
     //resources. For example, /images/logo.jpg can be 
@@ -259,12 +421,31 @@ class Prince
         $this->noArtificialFonts = $noArtificialFonts;
     }
 
+    //Specify whether to use force identity encoding.
+    public function setForceIdentityEncoding($forceIdentityEncoding)
+    {
+        $this->forceIdentityEncoding = $forceIdentityEncoding;
+    }
+
     // Specify whether compression should be applied to the output PDF file.
     // Compression will be applied by default unless explicitly disabled.
     // compress: False to disable PDF compression.
     public function setCompress($compress)
     {
         $this->compress = $compress;
+    }
+
+    //Specify the ICC profile to use.
+    //$pdfOutputIntent is the ICC profile to be used.
+    public function setPDFOutputIntent($pdfOutputIntent)
+    {
+        $this->pdfOutputIntent = $pdfOutputIntent;    
+    }
+
+    //Specify the PDF profile to use.
+    public function setPDFProfile($pdfProfile)
+    {
+        $this->pdfProfile = $pdfProfile;
     }
 
     // Specify the document title for PDF metadata.
@@ -285,82 +466,22 @@ class Prince
         $this->pdfAuthor = $pdfAuthor;
     }
 
-    // Specify the document keywords for PDF metadata.
+    //Specify the document keywords for PDF metadata.
     public function setPDFKeywords($pdfKeywords)
     {
         $this->pdfKeywords = $pdfKeywords;
     }
 
-    // Specify the document creator for PDF metadata.
+    //Specify the document creator for PDF metadata.
     public function setPDFCreator($pdfCreator)
     {
         $this->pdfCreator = $pdfCreator;
     }
    
-    //Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
-    public function setAuthMethod($authMethod)
+    //Specify the media type (eg. print, screen).
+    public function setMedia($media)
     {
-    	  if(strcasecmp($authMethod, 'basic') == 0)
-    	  {
-   	  	$this->authMethod = 'basic';
-   	  }
-   	  else if(strcasecmp($authMethod, 'digest') == 0)
-   	  {
-   	  	$this->authMethod = 'digest';
-   	  }
-   	  else if(strcasecmp($authMethod, 'ntlm') == 0)
-   	  {
-   	  	$this->authMethod = 'ntlm';
-   	  } 
-   	  else if(strcasecmp($authMethod, 'negotiate') == 0)
-   	  {
-   	  	$this->authMethod = 'negotiate';
-   	  }
-   	  else
-   	  {
-   	  	$this->authMethod = '';
-   	  }
-    }
-    
-    //Specify username for HTTP authentication.
-    public function setAuthUser($authUser)
-    {
-    	 $this->authUser = $authUser;
-    }
-    
-    //Specify password for HTTP authentication.
-    public function setAuthPassword($authPassword)
-    {
-    	 $this->authPassword = $authPassword;
-    }
-    
-    //Only send USER:PASS to this server.
-    public function setAuthServer($authServer)
-    {
-       $this->authServer = $authServer;
-    }
-    
-    //Only send USER:PASS for this scheme. (HTTP, HTTPS)
-    public function setAuthScheme($authScheme)
-    {
-    	  if(strcasecmp($authScheme, 'http') == 0)
-    	  {
-    	 	$this->authScheme = 'http';
-    	  }
-    	  else if(strcasecmp($authScheme, 'https') == 0)
-    	  {
-    	 	$this->authScheme = 'https';
-    	  }
-    	  else
-    	  {
-    	 	$this->authScheme = '';
-    	  }
-    }
-    
-    //Do not authenticate with named servers until asked.
-    public function setNoAuthPreemptive($noAuthPreemptive)
-    {
-    	 $this->noAuthPreemptive = $noAuthPreemptive;
+        $this->media = $media;
     }
 
     //Specify the page size (eg. A4).
@@ -373,6 +494,18 @@ class Prince
     public function setPageMargin($pageMargin)
     {
     	 $this->pageMargin = $pageMargin;
+    }
+
+    //Specify whether to ignore author style sheets.
+    public function setNoAuthorStyle($noAuthorStyle)
+    {
+        $this->noAuthorStyle = $noAuthorStyle;
+    }
+
+    //Specify whether to ignore default style sheets.
+    public function setNoDefaultStyle($noDefaultStyle)
+    {
+        $this->noDefaultStyle = $noDefaultStyle;
     }
 
     // Specify whether encryption should be applied to the output PDF file.
@@ -558,7 +691,7 @@ class Prince
 
     private function getCommandLine()
     {
-        $cmdline = '"' . $this->exePath . '" ' . $this->styleSheets . $this->scripts . $this->fileAttachments;
+        $cmdline = '"' . $this->exePath . '" ' . $this->styleSheets . $this->scripts . $this->fileAttachments . $this->remaps;
 
         if (strcasecmp($this->inputType, 'auto') == 0)
         {
@@ -582,30 +715,64 @@ class Prince
         {
             $cmdline .= '--no-xinclude ';
         }
-
-        if ($this->httpUser != '')
+        else
         {
-            $cmdline .= '--http-user="' . $this->httpUser . '" ';
+            $cmdline .= '--xinclude ';
         }
 
-        if ($this->httpPassword != '')
+        if ($this->xmlExternalEntities == true)
         {
-            $cmdline .= '--http-password="' . $this->httpPassword . '" ';
+            $cmdline .= '--xml-external-entities ';
+        }
+
+        if ($this->noLocalFiles == true)
+        {
+            $cmdline .= '--no-local-files ';
         }
         
-        if($this->httpProxy != '')
+        if ($this->noNetwork == true)
         {
-                $cmdline .= '--http-proxy="' . $this->httpProxy . '" ';
+            $cmdline .= '--no-network ';
+        }
+
+        if ($this->httpProxy != '')
+        {
+            $cmdline .= '--http-proxy="' . $this->httpProxy . '" ';
+        }
+
+        if ($this->httpTimeout !='')
+        {
+            $cmdline .= '--http-timeout="' . $this->httpTimeout . '" ';
         }
         
-        if($this->httpTimeout != '')
+        if ($this->cookie != '')
         {
-                $cmdline .= '--http-timeout="' . $this->httpTimeout . '" ';
+            $cmdline .= '--cookie="' . $this->cookie . '" ';    
         }
-        
-        if($this->insecure)
+
+        if ($this->cookieJar != '')
+        {
+            $cmdline .= '--cookiejar="' . $this->cookieJar . '" ';
+        }
+
+        if ($this->sslCaCert != '')
+        {
+            $cmdline .= '--ssl-cacert="' . $this->sslCaCert . '" ';
+        }
+
+        if ($this->sslCaPath != '')
+        {
+            $cmdline .= '--ssl-capath="' . $this->sslCaPath . '" ';
+        }
+
+        if ($this->insecure)
         {
                 $cmdline .= '--insecure ';
+        }
+
+        if ($this->noParallelDownloads)
+        {
+                $cmdline .= '--no-parallel-downloads ';
         }
 
         if ($this->logFile != '')
@@ -613,17 +780,32 @@ class Prince
             $cmdline .= '--log="' . $this->logFile . '" ';
         }
 
-        if($this->fileRoot != '')
+        if($this->verbose)
+        {
+            $cmdline .= '--verbose ';
+        }
+
+        if($this->debug)
+        {
+            $cmdline .= '--debug ';
+        }
+
+        if($this->noWarnCss)
+        {
+            $cmdline .= '--no-warn-css ';
+        }
+
+        if ($this->fileRoot != '')
         {
                  $cmdline .= '--fileroot="' . $this->fileRoot . '" ';
         }
         
-        if($this->licenseFile != '')
+        if ($this->licenseFile != '')
         {
                 $cmdline .= '--license-file="' . $this->licenseFile . '" ';
         }
         
-        if($this->licenseKey != '')
+        if ($this->licenseKey != '')
         {
                 $cmdline .= '--license-key="' . $this->licenseKey . '" ';
         }
@@ -643,49 +825,79 @@ class Prince
             $cmdline .= '--no-artificial-fonts ';
         }
         
-        if($this->authMethod != '')
+        if ($this->authMethod != '')
         {
         	$cmdline .=  '--auth-method="' . $this->cmdlineArgEscape($this->authMethod) . '" ';
         }
         
-        if($this->authUser != '')
+        if ($this->authUser != '')
         {
         	$cmdline .= '--auth-user="' . $this->cmdlineArgEscape($this->authUser) . '" ';
         }
         
-        if($this->authPassword != '')
+        if ($this->authPassword != '')
         {
         	$cmdline .= '--auth-password="' . $this->cmdlineArgEscape($this->authPassword) . '" ';
         }
         
-        if($this->authServer != '')
+        if ($this->authServer != '')
         {
         	$cmdline .= '--auth-server="' . $this->cmdlineArgEscape($this->authServer) . '" ';
         }
         
-        if($this->authScheme != '')
+        if ($this->authScheme != '')
         {
         	$cmdline .= '--auth-scheme="' . $this->cmdlineArgEscape($this->authScheme) . '" ';
         }
         
-        if($this->noAuthPreemptive)
+        if ($this->noAuthPreemptive)
         {
         	$cmdline .= '--no-auth-preemptive ';
         }
         
-        if($this->pageSize != '')
+        if ($this->media != '')
+        {
+            $cmdline .= '--media="' . $this->cmdlineArgEscape($this->media) . '" ';
+        }
+
+        if ($this->pageSize != '')
         {
         	$cmdline .= '--page-size="' . $this->cmdlineArgEscape($this->pageSize) . '" ';
         }
         
-        if($this->pageMargin != '')
+        if ($this->pageMargin != '')
         {
         	$cmdline .= '--page-margin="' . $this->cmdlineArgEscape($this->pageMargin) . '" ';
         }
+
+        if ($this->noAuthorStyle == true)
+        {
+            $cmdline .= '--no-author-style ';
+        }
+
+        if ($this->noDefaultStyle == true)
+        {
+            $cmdline .= '--no-default-style ';
+        }
         
+        if ($this->forceIdentityEncoding == true)
+        {
+            $cmdline .= '--force-identity-encoding ';
+        }
+
         if ($this->compress == false)
         {
             $cmdline .= '--no-compress ';
+        }
+
+        if ($this->pdfOutputIntent != '')
+        {
+            $cmdline .= '--pdf-output-intent="' . $this->cmdlineArgEscape($this->pdfOutputIntent) . '" ';
+        }
+
+        if ($this->pdfProfile != '')
+        {
+            $cmdline .= '--pdf-profile="' . $this->cmdlineArgEscape($this->pdfProfile) . '" ';
         }
 
         if ($this->pdfTitle != '')
@@ -718,7 +930,7 @@ class Prince
             $cmdline .= '--encrypt ' . $this->encryptInfo;
         }
         
-        if($this->options != '')
+        if ($this->options != '')
         {
         	$cmdline .= $this->cmdlineArgEscape($this->options) . ' ';
         }
