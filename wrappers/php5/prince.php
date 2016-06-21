@@ -73,7 +73,7 @@ class Prince
         $this->baseURL = '';
         $this->doXInclude = false;
         $this->xmlExternalEntities = false;
-        $this->noLocalFiles = true;
+        $this->noLocalFiles = false;
         $this->remaps = '';
         $this->noNetwork = false;
         $this->authUser = '';
