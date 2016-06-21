@@ -272,7 +272,7 @@ public class Prince : IPrince
         mNoParallelDownloads = false;
         mXInclude = false;
         mXmlExternalEntities = false;
-        mNoLocalFiles = true;
+        mNoLocalFiles = false;
         mEmbedFonts = true;
         mSubsetFonts = true;
         mForceIdentityEncoding = false;
@@ -1305,7 +1305,6 @@ public class PrinceControl : Prince
         json.field("javascript", mJavaScript);
         json.field("xinclude", mXInclude);
         json.field("xml-external-entities", mXmlExternalEntities);
-        json.field("no-local-files", mNoLocalFiles);
         json.field("default-style", !mNoDefaultStyle);
         json.field("author-style", !mNoAuthorStyle);
         
