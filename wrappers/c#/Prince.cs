@@ -1072,7 +1072,7 @@ public class Prince : IPrince
         return arg;
     }
 
-    private string escape(string arg)
+    protected string escape(string arg)
     {
         return cmdline_arg_escape_2(cmdline_arg_escape_1(arg));
     }
@@ -1231,7 +1231,7 @@ public class PrinceControl : Prince
 
     /** Get the version string for the running Prince process.
      */
-    public string getVersion()
+    public string GetVersion()
     {
         return mVersion;
     }
@@ -1240,7 +1240,7 @@ public class PrinceControl : Prince
      * Start a Prince control process that can be used for multiple
      * consecutive document conversions.
      */
-    public void start()
+    public void Start()
     {
         if (mProcess != null)
         {
@@ -1273,7 +1273,7 @@ public class PrinceControl : Prince
     }
 
 
-    public void stop()
+    public void Stop()
     {
         if (mProcess == null)
         {
@@ -1291,13 +1291,12 @@ public class PrinceControl : Prince
         outputFromPrince.Close();
     }
 
-    public string getJobJSON()
+    public string GetJobJSON(string[] src)
     {
         Json json = new Json();
 
         json.beginObj();
-        
-        
+       
         json.beginObj("input");
         if (!string.IsNullOrEmpty(mInputType)) json.field("type", mInputType);
         if (!string.IsNullOrEmpty(mBaseURL)) json.field("base", mBaseURL);
@@ -1307,7 +1306,19 @@ public class PrinceControl : Prince
         json.field("xml-external-entities", mXmlExternalEntities);
         json.field("default-style", !mNoDefaultStyle);
         json.field("author-style", !mNoAuthorStyle);
-        
+
+        if (src != null)
+        {
+            json.beginList("src");
+            for (int i = 0; i < src.Length; i++)
+            {
+                json.value(escape(src[i]));
+            }
+            json.endList();
+
+            json.field("job-resource-count", 0);
+        }
+
         if(!string.IsNullOrEmpty(mStyleSheets))
         {
             json.beginList("styles");
@@ -1382,19 +1393,24 @@ public class PrinceControl : Prince
     }
 
 
-    public bool convert(Stream xmlInput, Stream pdfOutput)
+    public new bool Convert(Stream xmlInput, Stream pdfOutput)
     {
         MemoryStream mstream = new MemoryStream();
 
-        copyInputToOutput(xmlInput, mstream);
+        CopyInputToOutput(xmlInput, mstream);
 
         byte[] input = mstream.ToArray();
 
-        return convert(input, pdfOutput);
+        return Convert(input, null, pdfOutput);
+    }
+
+    public bool ConvertMultiple(string[] inputDocs, Stream pdfoutput)
+    {
+        return Convert(null, inputDocs , pdfoutput);
     }
 
 
-    public bool convert(byte[] xmlInput, Stream pdfOutput)
+    public bool Convert(byte[] xmlInput, string[] src,  Stream pdfOutput)
     {
         if (mProcess == null)
         {
@@ -1404,9 +1420,16 @@ public class PrinceControl : Prince
         StreamWriter inputToPrince = mProcess.StandardInput;
         StreamReader outputFromPrince = mProcess.StandardOutput;
 
-        Chunk.writeChunk(inputToPrince.BaseStream, "job", getJobJSON());
-        Chunk.writeChunk(inputToPrince.BaseStream, "dat", xmlInput);
-        
+        if(src == null)
+        {
+            Chunk.writeChunk(inputToPrince.BaseStream, "job", GetJobJSON(src));
+            Chunk.writeChunk(inputToPrince.BaseStream, "dat", xmlInput);
+        }
+        else
+        {
+            Chunk.writeChunk(inputToPrince.BaseStream, "job", GetJobJSON(src));
+        }
+
         inputToPrince.Flush();
 
         Chunk chunk = Chunk.readChunk(outputFromPrince);
@@ -1434,7 +1457,7 @@ public class PrinceControl : Prince
     }
 
 
-    public static void copyInputToOutput(Stream input, MemoryStream output)
+    public static void CopyInputToOutput(Stream input, MemoryStream output)
     {
         const int BUFSIZE = 65536;
         byte[] buf = new byte[BUFSIZE];
