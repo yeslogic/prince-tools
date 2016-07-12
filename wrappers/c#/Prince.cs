@@ -1291,7 +1291,7 @@ public class PrinceControl : Prince
         outputFromPrince.Close();
     }
 
-    public string GetJobJSON(string[] src)
+    private string GetJobJSON(string[] src)
     {
         Json json = new Json();
 
@@ -1315,8 +1315,6 @@ public class PrinceControl : Prince
                 json.value(escape(src[i]));
             }
             json.endList();
-
-            json.field("job-resource-count", 0);
         }
 
         if(!string.IsNullOrEmpty(mStyleSheets))
@@ -1355,7 +1353,11 @@ public class PrinceControl : Prince
             json.endList();
         }
         json.endObj();
-        
+
+        if (src != null)
+        {
+            json.field("job-resource-count", 0);
+        }
       
         json.beginObj("pdf");
         json.field("embed-fonts", mEmbedFonts);
@@ -1410,7 +1412,7 @@ public class PrinceControl : Prince
     }
 
 
-    public bool Convert(byte[] xmlInput, string[] src,  Stream pdfOutput)
+    private bool Convert(byte[] xmlInput, string[] src,  Stream pdfOutput)
     {
         if (mProcess == null)
         {
