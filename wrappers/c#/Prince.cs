@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Collections;
 
 public interface IPrince
 {
@@ -1210,6 +1211,8 @@ public class PrinceControl : Prince
 {
     private Process mProcess;
     private string mVersion;
+    private ArrayList jobResources;
+    private ArrayList documents;
 
     /** Constructor for PrinceControl.
      * @param exePath is the path of the Prince executable.
@@ -1217,6 +1220,8 @@ public class PrinceControl : Prince
     public PrinceControl(string exePath)
         : base(exePath)
     {
+        jobResources = new ArrayList();
+        documents = new ArrayList();
     }
 
     /** Constructor for PrinceControl.
@@ -1227,6 +1232,8 @@ public class PrinceControl : Prince
     public PrinceControl(string exePath, PrinceEvents events)
         : base(exePath, events)
     {
+        jobResources = new ArrayList();
+        documents = new ArrayList();
     }
 
     /** Get the version string for the running Prince process.
@@ -1291,7 +1298,7 @@ public class PrinceControl : Prince
         outputFromPrince.Close();
     }
 
-    private string GetJobJSON(string[] src)
+    private string GetJobJSON()
     {
         Json json = new Json();
 
@@ -1307,15 +1314,13 @@ public class PrinceControl : Prince
         json.field("default-style", !mNoDefaultStyle);
         json.field("author-style", !mNoAuthorStyle);
 
-        if (src != null)
+        json.beginList("src");
+        foreach (string doc in documents)
         {
-            json.beginList("src");
-            for (int i = 0; i < src.Length; i++)
-            {
-                json.value(escape(src[i]));
-            }
-            json.endList();
+            json.value(doc);
         }
+        json.endList();
+
 
         if(!string.IsNullOrEmpty(mStyleSheets))
         {
@@ -1354,10 +1359,8 @@ public class PrinceControl : Prince
         }
         json.endObj();
 
-        if (src != null)
-        {
-            json.field("job-resource-count", 0);
-        }
+        json.field("job-resource-count", jobResources.Count);
+       
       
         json.beginObj("pdf");
         json.field("embed-fonts", mEmbedFonts);
@@ -1394,25 +1397,69 @@ public class PrinceControl : Prince
         return json.toString();
     }
 
+    public void AddStyleSheet(byte[] cssBytes)
+    {
+        jobResources.Add(cssBytes);
+        AddStyleSheet("job-resource:" + (jobResources.Count - 1).ToString()); 
+    }
 
-    public new bool Convert(Stream xmlInput, Stream pdfOutput)
+    public void AddScript(byte[] scriptBytes)
+    {
+        jobResources.Add(scriptBytes);
+        AddScript("job-resource:" + (jobResources.Count - 1).ToString());
+    }
+
+    public void AddFileAttachment(byte[] fileBytes)
+    {
+        jobResources.Add(fileBytes);
+        AddFileAttachment("job-resource:" + (jobResources.Count - 1).ToString());
+    }
+
+
+    private void AddResource(byte[] doc)
+    {
+        jobResources.Add(doc);
+        documents.Add("job-resource:" + (jobResources.Count - 1).ToString());
+    }
+
+    //Reads inputDoc from a stream and writes pdfOutput to another stream.
+    public new bool Convert(Stream inputDoc, Stream pdfOutput)
     {
         MemoryStream mstream = new MemoryStream();
 
-        CopyInputToOutput(xmlInput, mstream);
+        CopyInputToOutput(inputDoc, mstream);
 
         byte[] input = mstream.ToArray();
 
-        return Convert(input, null, pdfOutput);
+        AddResource(input);
+
+        return Convert(pdfOutput);
     }
 
-    public bool ConvertMultiple(string[] inputDocs, Stream pdfoutput)
+    //The argument inputDocs is a list of byte arrays(byte[]) representing the input documents to be converted.
+    public bool Convert(ArrayList inputDocs, Stream pdfOutput)
     {
-        return Convert(null, inputDocs , pdfoutput);
+        foreach (byte[] doc in inputDocs)
+        {
+            AddResource(doc);
+        }
+
+        return Convert(pdfOutput);
+    }
+
+    //The argument inputDocs is an array of strings representing the filenames of the documents to be converted.
+    public bool Convert(string[] inputDocs, Stream pdfOutput)
+    {
+        foreach (string doc in inputDocs)
+        {
+            documents.Add(doc);
+        }
+
+        return Convert(pdfOutput);
     }
 
 
-    private bool Convert(byte[] xmlInput, string[] src,  Stream pdfOutput)
+    private bool Convert(Stream pdfOutput)
     {
         if (mProcess == null)
         {
@@ -1422,15 +1469,14 @@ public class PrinceControl : Prince
         StreamWriter inputToPrince = mProcess.StandardInput;
         StreamReader outputFromPrince = mProcess.StandardOutput;
 
-        if(src == null)
+  
+        Chunk.writeChunk(inputToPrince.BaseStream, "job", GetJobJSON());
+
+        foreach(byte[] resource in jobResources)
         {
-            Chunk.writeChunk(inputToPrince.BaseStream, "job", GetJobJSON(src));
-            Chunk.writeChunk(inputToPrince.BaseStream, "dat", xmlInput);
+            Chunk.writeChunk(inputToPrince.BaseStream, "dat", resource);
         }
-        else
-        {
-            Chunk.writeChunk(inputToPrince.BaseStream, "job", GetJobJSON(src));
-        }
+
 
         inputToPrince.Flush();
 
