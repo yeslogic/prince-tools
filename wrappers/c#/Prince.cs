@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Collections;
+using System.Collections.Generic;
 
 public interface IPrince
 {
@@ -1211,8 +1211,8 @@ public class PrinceControl : Prince
 {
     private Process mProcess;
     private string mVersion;
-    private ArrayList jobResources;
-    private ArrayList documents;
+    private List<byte[]> jobResources;
+    private List<string> documents;
 
     /** Constructor for PrinceControl.
      * @param exePath is the path of the Prince executable.
@@ -1220,8 +1220,8 @@ public class PrinceControl : Prince
     public PrinceControl(string exePath)
         : base(exePath)
     {
-        jobResources = new ArrayList();
-        documents = new ArrayList();
+        jobResources = new List<byte[]>();
+        documents = new List<string>();
     }
 
     /** Constructor for PrinceControl.
@@ -1232,8 +1232,8 @@ public class PrinceControl : Prince
     public PrinceControl(string exePath, PrinceEvents events)
         : base(exePath, events)
     {
-        jobResources = new ArrayList();
-        documents = new ArrayList();
+        jobResources = new List<byte[]>();
+        documents = new List<string>();
     }
 
     /** Get the version string for the running Prince process.
@@ -1345,20 +1345,7 @@ public class PrinceControl : Prince
             }
             json.endList();
         }
-
-        if (!string.IsNullOrEmpty(mFileAttachments))
-        {
-            json.beginList("attachments");
-            string[] separators = new string[] { "--attach=\"", "\" --attach=\"", "\" " };
-            string[] result = mFileAttachments.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string s in result)
-            {
-                json.value(s);
-            }
-            json.endList();
-        }
         json.endObj();
-
         json.field("job-resource-count", jobResources.Count);
        
       
@@ -1381,6 +1368,18 @@ public class PrinceControl : Prince
             json.field("disallow-copy", mDisallowCopy);
             json.field("disallow-annotate", mDisallowAnnotate);
             json.endObj();
+        }
+
+        if (!string.IsNullOrEmpty(mFileAttachments))
+        {
+            json.beginList("attach");
+            string[] separators = new string[] { "--attach=\"", "\" --attach=\"", "\" " };
+            string[] result = mFileAttachments.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string s in result)
+            {
+                json.value(s);
+            }
+            json.endList();
         }
         json.endObj();
         
@@ -1437,7 +1436,7 @@ public class PrinceControl : Prince
     }
 
     //The argument inputDocs is a list of byte arrays(byte[]) representing the input documents to be converted.
-    public bool Convert(ArrayList inputDocs, Stream pdfOutput)
+    public bool Convert(List<byte[]> inputDocs, Stream pdfOutput)
     {
         foreach (byte[] doc in inputDocs)
         {
