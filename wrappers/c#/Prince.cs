@@ -1213,6 +1213,14 @@ public class PrinceControl : Prince
     private string mVersion;
     private List<byte[]> jobResources;
     private List<string> documents;
+    private List<Attachment> attachments;
+
+    private class Attachment
+    {
+        public string url { get; set; }
+        public string filename { get; set; }
+        public string description { get; set; }
+    }
 
     /** Constructor for PrinceControl.
      * @param exePath is the path of the Prince executable.
@@ -1222,6 +1230,7 @@ public class PrinceControl : Prince
     {
         jobResources = new List<byte[]>();
         documents = new List<string>();
+        attachments = new List<Attachment>();
     }
 
     /** Constructor for PrinceControl.
@@ -1234,6 +1243,7 @@ public class PrinceControl : Prince
     {
         jobResources = new List<byte[]>();
         documents = new List<string>();
+        attachments = new List<Attachment>();
     }
 
     /** Get the version string for the running Prince process.
@@ -1373,11 +1383,28 @@ public class PrinceControl : Prince
         if (!string.IsNullOrEmpty(mFileAttachments))
         {
             json.beginList("attach");
+
             string[] separators = new string[] { "--attach=\"", "\" --attach=\"", "\" " };
             string[] result = mFileAttachments.Split(separators, StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in result)
             {
                 json.value(s);
+            }
+
+            foreach (Attachment att in attachments)
+            {
+                json.beginObj();
+                json.field("url", att.url);
+                if (!string.IsNullOrEmpty(att.filename))
+                {
+                    json.field("filename", att.filename);
+
+                    if (!string.IsNullOrEmpty(att.description))
+                    {
+                        json.field("description", att.description);
+                    }
+                }
+                json.endObj();
             }
             json.endList();
         }
@@ -1408,12 +1435,16 @@ public class PrinceControl : Prince
         AddScript("job-resource:" + (jobResources.Count - 1).ToString());
     }
 
-    public void AddFileAttachment(byte[] fileBytes)
+    public void AddFileAttachment(byte[] fileBytes, string filename = "", string description = "")
     {
         jobResources.Add(fileBytes);
-        AddFileAttachment("job-resource:" + (jobResources.Count - 1).ToString());
+        attachments.Add(new Attachment()
+                        {
+                            url = "job-resource:" + (jobResources.Count - 1).ToString(),
+                            filename = filename,
+                            description = description
+                        });
     }
-
 
     private void AddResource(byte[] doc)
     {
