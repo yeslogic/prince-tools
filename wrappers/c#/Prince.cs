@@ -32,6 +32,7 @@ public interface IPrince
     void SetCookieJar(string cookieJar);
     void SetSslCaCert(string sslCaCert);
     void SetSslCaPath(string sslCaPath);
+    void SetSslVersion(string sslVersion);
     void SetInsecure(bool insecure);
     void SetNoParallelDownloads(bool noParallelDownloads);
     void SetLog(string logFile);
@@ -48,9 +49,10 @@ public interface IPrince
     void SetSubsetFonts(bool embedSubset);
     void SetForceIdentityEncoding(bool forceIdentityEncoding);
     void SetCompress(bool compress);
-    void SetPDFOutputIntent(string pdfOutputIntent);
+    void SetPDFOutputIntent(string pdfOutputIntent, bool convertColors = false);
     void SetPDFProfile(string pdfProfile);
     void SetNoArtificialFonts(bool noArtificialFonts);
+    void SetFallbackCmykProfile(string fallbackCmykProfile);
     void SetPDFTitle(string pdfTitle);
     void SetPDFSubject(string pdfSubject);
     void SetPDFAuthor(string pdfAuthor);
@@ -207,6 +209,7 @@ public class Prince : IPrince
     private string mCookieJar;
     private string mSslCaCert;
     private string mSslCaPath;
+    private string mSslVersion;
     private bool mInsecure;
     private bool mNoParallelDownloads;
     private string mAuthMethod;
@@ -231,6 +234,8 @@ public class Prince : IPrince
     protected bool mSubsetFonts;
     protected bool mForceIdentityEncoding;
     protected bool mCompress;
+    protected bool mConvertColors;
+    protected string mFallbackCmykProfile;
 
     protected string mPdfTitle;
     protected string mPdfSubject;
@@ -278,6 +283,7 @@ public class Prince : IPrince
         mSubsetFonts = true;
         mForceIdentityEncoding = false;
         mCompress = true;
+        mConvertColors = false;
         mNoArtificialFonts = false;
         mNoAuthPreemptive = false;
         mNoAuthorStyle = false;
@@ -397,6 +403,11 @@ public class Prince : IPrince
         mSslCaPath = sslCaPath;
     }
 
+    public void SetSslVersion(string sslVersion)
+    {
+        mSslVersion = sslVersion;
+    }
+
     public void SetInsecure(bool insecure)
     {
         mInsecure = insecure;
@@ -482,9 +493,10 @@ public class Prince : IPrince
         mCompress = compress;
     }
 
-    public void SetPDFOutputIntent(string pdfOutputIntent)
+    public void SetPDFOutputIntent(string pdfOutputIntent, bool convertColors = false)
     {
         mPDFOutputIntent = pdfOutputIntent;
+        mConvertColors = convertColors;
     }
 
     public void SetPDFProfile(string pdfProfile)
@@ -495,6 +507,11 @@ public class Prince : IPrince
     public void SetNoArtificialFonts(bool noArtificialFonts)
     {
         mNoArtificialFonts = noArtificialFonts;
+    }
+
+    public void SetFallbackCmykProfile(string fallbackCmykProfile)
+    {
+        mFallbackCmykProfile = fallbackCmykProfile;
     }
 
     public void SetPDFTitle(string pdfTitle)
@@ -832,6 +849,7 @@ public class Prince : IPrince
         if (!string.IsNullOrEmpty(mCookieJar)) { baseCommandLine += "--cookiejar=\"" + escape(mCookieJar) + "\" "; }
         if (!string.IsNullOrEmpty(mSslCaCert)) { baseCommandLine += "--ssl-cacert=\"" + escape(mSslCaCert) + "\" "; }
         if (!string.IsNullOrEmpty(mSslCaPath)) { baseCommandLine += "--ssl-capath=\"" + escape(mSslCaPath) + "\" "; }
+        if (!string.IsNullOrEmpty(mSslVersion)) { baseCommandLine += "--ssl-version=\"" + escape(mSslVersion) + "\" "; }
         if (mInsecure) { baseCommandLine += "--insecure "; }
         if (mNoParallelDownloads) { baseCommandLine += "--no-parallel-downloads "; }
         if (!string.IsNullOrEmpty(mLogFile)) { baseCommandLine += "--log=\"" + escape(mLogFile) + "\" "; }
@@ -872,8 +890,16 @@ public class Prince : IPrince
         }
 
         if (!string.IsNullOrEmpty(mPDFProfile)) { jobCommandLine += "--pdf-profile=\"" + escape(mPDFProfile) + "\" "; }
-        if (!string.IsNullOrEmpty(mPDFOutputIntent)) { jobCommandLine += "--pdf-output-intent=\"" + escape(mPDFOutputIntent) + "\" "; }
+        if (!string.IsNullOrEmpty(mPDFOutputIntent)) 
+        { 
+            jobCommandLine += "--pdf-output-intent=\"" + escape(mPDFOutputIntent) + "\" ";
+            if (mConvertColors)
+            {
+                jobCommandLine += "--convert-colors ";
+            }
+        }
         if (mNoArtificialFonts) { jobCommandLine += "--no-artificial-fonts "; }
+        if (!string.IsNullOrEmpty(mFallbackCmykProfile)) { jobCommandLine += "--fallback-cmyk-profile=\"" + escape(mFallbackCmykProfile) + "\" "; }
         if (!string.IsNullOrEmpty(mPdfTitle)) { jobCommandLine += "--pdf-title=\"" + escape(mPdfTitle) + "\" "; }
         if (!string.IsNullOrEmpty(mPdfSubject)) { jobCommandLine += "--pdf-subject=\"" + escape(mPdfSubject) + "\" "; }
         if (!string.IsNullOrEmpty(mPdfAuthor)) { jobCommandLine += "--pdf-author=\"" + escape(mPdfAuthor) + "\" "; }
@@ -1363,8 +1389,16 @@ public class PrinceControl : Prince
         json.field("embed-fonts", mEmbedFonts);
         json.field("subset-fonts", mSubsetFonts);
         if (!string.IsNullOrEmpty(mPDFProfile)) json.field("pdf-profile", mPDFProfile);
-        if (!string.IsNullOrEmpty(mPDFOutputIntent)) json.field("pdf-output-intent", mPDFOutputIntent);
+        if (!string.IsNullOrEmpty(mPDFOutputIntent))
+        {
+            json.field("pdf-output-intent", mPDFOutputIntent);
+            if (mConvertColors)
+            {
+                json.field("convert-colors", mConvertColors);
+            }
+        }
         json.field("artificial-fonts", !mNoArtificialFonts);
+        if (!string.IsNullOrEmpty(mFallbackCmykProfile)) json.field("fallback-cmyk-profile", mFallbackCmykProfile);
         json.field("force-identity-encoding", mForceIdentityEncoding);
         json.field("compress", mCompress);
         if (mEncrypt)
