@@ -32,6 +32,7 @@ class Prince
     private $cookieJar;
     private $sslCaCert;
     private $sslCaPath;
+    private $sslVersion;
     private $insecure;
     private $noParallelDownloads;
     private $logFile;
@@ -45,6 +46,8 @@ class Prince
     private $forceIdentityEncoding;
     private $compress;
     private $pdfOutputIntent;
+    private $convertColors;
+    private $fallbackCmykProfile;
     private $pdfProfile;
     private $pdfTitle;
     private $pdfSubject;
@@ -88,6 +91,7 @@ class Prince
         $this->cookieJar = '';
         $this->sslCaCert = '';
         $this->sslCaPath = '';
+        $this->sslVersion = '';
         $this->insecure = false;
         $this->noParallelDownloads = false;
         $this->logFile = '';
@@ -101,6 +105,8 @@ class Prince
         $this->forceIdentityEncoding = false;
         $this->compress = true;
         $this->pdfOutputIntent = '';
+        $this->convertColors = false;
+        $this->fallbackCmykProfile = '';
         $this->pdfProfile = '';
         $this->pdfTitle = '';
         $this->pdfSubject = '';
@@ -373,6 +379,12 @@ class Prince
         $this->sslCaPath = $sslCaPath;
     }
 
+    //Specify an SSL/TLS version to use.
+    public function setSslVersion($sslVersion)
+    {
+        $this->sslVersion = $sslVersion;
+    }
+
     //Specify whether to disable SSL verification.
     //insecure: If set to true, SSL verification is disabled. (not recommended)
     public function setInsecure($insecure)
@@ -436,10 +448,18 @@ class Prince
     }
 
     //Specify the ICC profile to use.
+    //Also optionally specify whether to convert colors to output intent color space.
     //$pdfOutputIntent is the ICC profile to be used.
-    public function setPDFOutputIntent($pdfOutputIntent)
+    public function setPDFOutputIntent($pdfOutputIntent, $convertColors = false)
     {
-        $this->pdfOutputIntent = $pdfOutputIntent;    
+        $this->pdfOutputIntent = $pdfOutputIntent;  
+        $this->convertColors = $convertColors;  
+    }
+
+    //Specify fallback ICC profile for uncalibrated CMYK.
+    public function setFallbackCmykProfile($fallbackCmykProfile)
+    {
+        $this->fallbackCmykProfile = $fallbackCmykProfile;
     }
 
     //Specify the PDF profile to use.
@@ -765,6 +785,11 @@ class Prince
             $cmdline .= '--ssl-capath="' . $this->sslCaPath . '" ';
         }
 
+        if ($this->sslVersion != '')
+        {
+            $cmdline .= '--ssl-version="' . $this->sslVersion . '" ';
+        }
+
         if ($this->insecure)
         {
                 $cmdline .= '--insecure ';
@@ -893,6 +918,16 @@ class Prince
         if ($this->pdfOutputIntent != '')
         {
             $cmdline .= '--pdf-output-intent="' . $this->cmdlineArgEscape($this->pdfOutputIntent) . '" ';
+
+            if ($this->convertColors == true)
+            {
+                $cmdline .= '--convert-colors ';
+            }
+        }
+
+        if ($this->fallbackCmykProfile != '')
+        {
+            $cmdline .= '--fallback-cmyk-profile="'. $this->cmdlineArgEscape($this->fallbackCmykProfile) . '" ';
         }
 
         if ($this->pdfProfile != '')
