@@ -71,14 +71,14 @@ public interface IPrince
     void SetNODefaultStyle(bool noDefaultStyle);
     void SetEncrypt(bool encrypt);
     void SetOptions(string options);
-    bool Convert(Stream xmlInput, Stream pdfOutput);
-    bool Convert(Stream xmlInput, string pdfPath);
-    bool Convert(string xmlPath, Stream pdfOutput);
-    bool Convert(string xmlPath, string pdfPath);
-    bool Convert(string xmlPath);
-    bool ConvertMemoryStream(MemoryStream xmlInput, Stream pdfOutput);
-    bool ConvertMultiple(string[] xmlPaths, string pdfPath);
-    bool ConvertString(string xmlInput, Stream pdfOutput);
+    bool Convert(Stream xmlInput, Stream pdfOutput, List<string> dats = null);
+    bool Convert(Stream xmlInput, string pdfPath, List<string> dats = null);
+    bool Convert(string xmlPath, Stream pdfOutput, List<string> dats = null);
+    bool Convert(string xmlPath, string pdfPath, List<string> dats = null);
+    bool Convert(string xmlPath, List<string> dats = null);
+    bool ConvertMemoryStream(MemoryStream xmlInput, Stream pdfOutput, List<string> dats = null);
+    bool ConvertMultiple(string[] xmlPaths, string pdfPath, List<string> dats = null);
+    bool ConvertString(string xmlInput, Stream pdfOutput, List<string> dats = null);
 }
 
 /**
@@ -662,19 +662,19 @@ public class Prince : IPrince
 
 
 
-    public bool Convert(string xmlPath)
+    public bool Convert(string xmlPath, List<string> dats = null)
     {
         string args = getArgs("normal") + "\"" + escape(xmlPath) + "\"";
-        return Convert1(args);
+        return Convert1(args, dats);
     }
 
-    public bool Convert(string xmlPath, string pdfPath)
+    public bool Convert(string xmlPath, string pdfPath, List<string> dats = null)
     {
         string args = getArgs("normal") + "\"" + escape(xmlPath) + "\" -o \"" + escape(pdfPath) + "\"";
-        return Convert1(args);
+        return Convert1(args, dats);
     }
 
-    public bool ConvertMultiple(string[] xmlPaths, string pdfPath)
+    public bool ConvertMultiple(string[] xmlPaths, string pdfPath, List<string> dats = null)
     {
         string docPaths = "";
 
@@ -685,10 +685,10 @@ public class Prince : IPrince
 
         string args = getArgs("normal") + docPaths + " -o \"" + escape(pdfPath) + "\"";
 
-        return Convert1(args);
+        return Convert1(args, dats);
     }
 
-    public bool Convert(string xmlPath, Stream pdfOutput)
+    public bool Convert(string xmlPath, Stream pdfOutput, List<string> dats = null)
     {
         if (!pdfOutput.CanWrite)
             throw new ApplicationException("The pdfOutput stream is not writable");
@@ -707,10 +707,10 @@ public class Prince : IPrince
         }
 
         prs.StandardOutput.Close();
-        return (ReadMessages(prs.StandardError) == "success");
+        return (ReadMessages(prs.StandardError, dats) == "success");
     }
 
-    public bool Convert(Stream xmlInput, string pdfPath)
+    public bool Convert(Stream xmlInput, string pdfPath, List<string> dats = null)
     {
         if (!xmlInput.CanRead)
             throw new ApplicationException("The xmlInput stream is not readable");
@@ -730,10 +730,10 @@ public class Prince : IPrince
         prs.StandardInput.Close();
         prs.StandardOutput.Close();
 
-        return (ReadMessages(prs.StandardError) == "success");
+        return (ReadMessages(prs.StandardError, dats) == "success");
     }
 
-    public bool Convert(Stream xmlInput, Stream pdfOutput)
+    public bool Convert(Stream xmlInput, Stream pdfOutput, List<string> dats = null)
     {
         if (!xmlInput.CanRead)
             throw new ApplicationException("The xmlInput stream is not readable");
@@ -762,10 +762,10 @@ public class Prince : IPrince
         }
         prs.StandardOutput.Close();
 
-        return (ReadMessages(prs.StandardError) == "success");
+        return (ReadMessages(prs.StandardError, dats) == "success");
     }
 
-    public bool ConvertMemoryStream(MemoryStream xmlInput, Stream pdfOutput)
+    public bool ConvertMemoryStream(MemoryStream xmlInput, Stream pdfOutput, List<string> dats = null)
     {
         if (!pdfOutput.CanWrite)
             throw new ApplicationException("The pdfOutput stream is not writable");
@@ -786,10 +786,10 @@ public class Prince : IPrince
         }
         prs.StandardOutput.Close();
 
-        return (ReadMessages(prs.StandardError) == "success");
+        return (ReadMessages(prs.StandardError, dats) == "success");
     }
 
-    public bool ConvertString(string xmlInput, Stream pdfOutput)
+    public bool ConvertString(string xmlInput, Stream pdfOutput, List<string> dats = null)
     {
         if (!pdfOutput.CanWrite)
             throw new ApplicationException("The pdfOutput stream is not writable");
@@ -812,7 +812,7 @@ public class Prince : IPrince
         }
         prs.StandardOutput.Close();
 
-        return (ReadMessages(prs.StandardError) == "success");
+        return (ReadMessages(prs.StandardError, dats) == "success");
     }
 
 
@@ -916,10 +916,10 @@ public class Prince : IPrince
         return jobCommandLine;
     }
 
-    private bool Convert1(string args)
+    private bool Convert1(string args, List<string> dats)
     {
         Process pr = StartPrince(args);
-        return (pr != null && ReadMessages(pr.StandardError) == "success");
+        return (pr != null && ReadMessages(pr.StandardError, dats) == "success");
     }
 
     protected Process StartPrince(string args)
@@ -976,7 +976,7 @@ public class Prince : IPrince
     }
 
 
-    protected string ReadMessages(StreamReader strRdr)
+    protected string ReadMessages(StreamReader strRdr, List<string> dats)
     {
         //StreamReader stdErrFromPr = prs.StandardError;
         string line = strRdr.ReadLine();
@@ -993,6 +993,15 @@ public class Prince : IPrince
                 if((mEvents != null) && msgTag.Equals("msg|"))
                 {
                    handleMessage(msgBody);
+                }
+                else if ((dats != null) && msgTag.Equals("dat|"))
+                {
+                    string delimStr = "|";
+                    char[] delimiter = delimStr.ToCharArray();
+                    string[] dataParts = msgBody.Split(delimiter, 2);
+
+                    dats.Add(dataParts[0]);
+                    dats.Add(dataParts[1]);
                 }
                 else if (msgTag.Equals("fin|"))
                 {
@@ -1487,7 +1496,7 @@ public class PrinceControl : Prince
     }
 
     //Reads inputDoc from a stream and writes pdfOutput to another stream.
-    public new bool Convert(Stream inputDoc, Stream pdfOutput)
+    public new bool Convert(Stream inputDoc, Stream pdfOutput, List<string> dats = null)
     {
         MemoryStream mstream = new MemoryStream();
 
@@ -1497,33 +1506,33 @@ public class PrinceControl : Prince
 
         AddResource(input);
 
-        return Convert(pdfOutput);
+        return Convert(pdfOutput, dats);
     }
 
     //The argument inputDocs is a list of byte arrays(byte[]) representing the input documents to be converted.
-    public bool Convert(List<byte[]> inputDocs, Stream pdfOutput)
+    public bool Convert(List<byte[]> inputDocs, Stream pdfOutput, List<string> dats = null)
     {
         foreach (byte[] doc in inputDocs)
         {
             AddResource(doc);
         }
 
-        return Convert(pdfOutput);
+        return Convert(pdfOutput, dats);
     }
 
     //The argument inputDocs is an array of strings representing the filenames of the documents to be converted.
-    public bool Convert(string[] inputDocs, Stream pdfOutput)
+    public bool Convert(string[] inputDocs, Stream pdfOutput, List<string> dats = null)
     {
         foreach (string doc in inputDocs)
         {
             documents.Add(doc);
         }
 
-        return Convert(pdfOutput);
+        return Convert(pdfOutput, dats);
     }
 
 
-    private bool Convert(Stream pdfOutput)
+    private bool Convert(Stream pdfOutput, List<string> dats)
     {
         if (mProcess == null)
         {
@@ -1556,7 +1565,7 @@ public class PrinceControl : Prince
 
         if (chunk.GetTag().Equals("log"))
         {
-            return ReadMessages(new StreamReader(new MemoryStream(chunk.GetBytes()))).Equals("success");
+            return ReadMessages(new StreamReader(new MemoryStream(chunk.GetBytes())), dats).Equals("success");
         }
         else if (chunk.GetTag().Equals("err"))
         {
@@ -1719,3 +1728,4 @@ public class Json
     }
 
 }
+
