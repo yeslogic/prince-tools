@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
+
 public interface IPrince
 {
     void SetEncryptInfo(int keyBits,
@@ -71,14 +72,14 @@ public interface IPrince
     void SetNODefaultStyle(bool noDefaultStyle);
     void SetEncrypt(bool encrypt);
     void SetOptions(string options);
-    bool Convert(Stream xmlInput, Stream pdfOutput, List<string> dats = null);
-    bool Convert(Stream xmlInput, string pdfPath, List<string> dats = null);
-    bool Convert(string xmlPath, Stream pdfOutput, List<string> dats = null);
-    bool Convert(string xmlPath, string pdfPath, List<string> dats = null);
-    bool Convert(string xmlPath, List<string> dats = null);
-    bool ConvertMemoryStream(MemoryStream xmlInput, Stream pdfOutput, List<string> dats = null);
-    bool ConvertMultiple(string[] xmlPaths, string pdfPath, List<string> dats = null);
-    bool ConvertString(string xmlInput, Stream pdfOutput, List<string> dats = null);
+    bool Convert(Stream xmlInput, Stream pdfOutput, List<Tuple<string, string>> dats = null);
+    bool Convert(Stream xmlInput, string pdfPath, List<Tuple<string, string>> dats = null);
+    bool Convert(string xmlPath, Stream pdfOutput, List<Tuple<string, string>> dats = null);
+    bool Convert(string xmlPath, string pdfPath, List<Tuple<string, string>> dats = null);
+    bool Convert(string xmlPath, List<Tuple<string, string>> dats = null);
+    bool ConvertMemoryStream(MemoryStream xmlInput, Stream pdfOutput, List<Tuple<string, string>> dats = null);
+    bool ConvertMultiple(string[] xmlPaths, string pdfPath, List<Tuple<string, string>> dats = null);
+    bool ConvertString(string xmlInput, Stream pdfOutput, List<Tuple<string, string>> dats = null);
 }
 
 /**
@@ -662,19 +663,19 @@ public class Prince : IPrince
 
 
 
-    public bool Convert(string xmlPath, List<string> dats = null)
+    public bool Convert(string xmlPath, List<Tuple<string, string>> dats = null)
     {
         string args = getArgs("normal") + "\"" + escape(xmlPath) + "\"";
         return Convert1(args, dats);
     }
 
-    public bool Convert(string xmlPath, string pdfPath, List<string> dats = null)
+    public bool Convert(string xmlPath, string pdfPath, List<Tuple<string, string>> dats = null)
     {
         string args = getArgs("normal") + "\"" + escape(xmlPath) + "\" -o \"" + escape(pdfPath) + "\"";
         return Convert1(args, dats);
     }
 
-    public bool ConvertMultiple(string[] xmlPaths, string pdfPath, List<string> dats = null)
+    public bool ConvertMultiple(string[] xmlPaths, string pdfPath, List<Tuple<string, string>> dats = null)
     {
         string docPaths = "";
 
@@ -688,7 +689,7 @@ public class Prince : IPrince
         return Convert1(args, dats);
     }
 
-    public bool Convert(string xmlPath, Stream pdfOutput, List<string> dats = null)
+    public bool Convert(string xmlPath, Stream pdfOutput, List<Tuple<string, string>> dats = null)
     {
         if (!pdfOutput.CanWrite)
             throw new ApplicationException("The pdfOutput stream is not writable");
@@ -710,7 +711,7 @@ public class Prince : IPrince
         return (ReadMessages(prs.StandardError, dats) == "success");
     }
 
-    public bool Convert(Stream xmlInput, string pdfPath, List<string> dats = null)
+    public bool Convert(Stream xmlInput, string pdfPath, List<Tuple<string, string>> dats = null)
     {
         if (!xmlInput.CanRead)
             throw new ApplicationException("The xmlInput stream is not readable");
@@ -733,7 +734,7 @@ public class Prince : IPrince
         return (ReadMessages(prs.StandardError, dats) == "success");
     }
 
-    public bool Convert(Stream xmlInput, Stream pdfOutput, List<string> dats = null)
+    public bool Convert(Stream xmlInput, Stream pdfOutput, List<Tuple<string, string>> dats = null)
     {
         if (!xmlInput.CanRead)
             throw new ApplicationException("The xmlInput stream is not readable");
@@ -765,7 +766,7 @@ public class Prince : IPrince
         return (ReadMessages(prs.StandardError, dats) == "success");
     }
 
-    public bool ConvertMemoryStream(MemoryStream xmlInput, Stream pdfOutput, List<string> dats = null)
+    public bool ConvertMemoryStream(MemoryStream xmlInput, Stream pdfOutput, List<Tuple<string, string>> dats = null)
     {
         if (!pdfOutput.CanWrite)
             throw new ApplicationException("The pdfOutput stream is not writable");
@@ -789,7 +790,7 @@ public class Prince : IPrince
         return (ReadMessages(prs.StandardError, dats) == "success");
     }
 
-    public bool ConvertString(string xmlInput, Stream pdfOutput, List<string> dats = null)
+    public bool ConvertString(string xmlInput, Stream pdfOutput, List<Tuple<string, string>> dats = null)
     {
         if (!pdfOutput.CanWrite)
             throw new ApplicationException("The pdfOutput stream is not writable");
@@ -916,7 +917,7 @@ public class Prince : IPrince
         return jobCommandLine;
     }
 
-    private bool Convert1(string args, List<string> dats)
+    private bool Convert1(string args, List<Tuple<string, string>> dats)
     {
         Process pr = StartPrince(args);
         return (pr != null && ReadMessages(pr.StandardError, dats) == "success");
@@ -976,7 +977,7 @@ public class Prince : IPrince
     }
 
 
-    protected string ReadMessages(StreamReader strRdr, List<string> dats)
+    protected string ReadMessages(StreamReader strRdr, List<Tuple<string, string>> dats)
     {
         //StreamReader stdErrFromPr = prs.StandardError;
         string line = strRdr.ReadLine();
@@ -1000,8 +1001,7 @@ public class Prince : IPrince
                     char[] delimiter = delimStr.ToCharArray();
                     string[] dataParts = msgBody.Split(delimiter, 2);
 
-                    dats.Add(dataParts[0]);
-                    dats.Add(dataParts[1]);
+                    dats.Add(new Tuple<string, string>(dataParts[0], dataParts[1]));
                 }
                 else if (msgTag.Equals("fin|"))
                 {
@@ -1496,7 +1496,7 @@ public class PrinceControl : Prince
     }
 
     //Reads inputDoc from a stream and writes pdfOutput to another stream.
-    public new bool Convert(Stream inputDoc, Stream pdfOutput, List<string> dats = null)
+    public new bool Convert(Stream inputDoc, Stream pdfOutput, List<Tuple<string, string>> dats = null)
     {
         MemoryStream mstream = new MemoryStream();
 
@@ -1510,7 +1510,7 @@ public class PrinceControl : Prince
     }
 
     //The argument inputDocs is a list of byte arrays(byte[]) representing the input documents to be converted.
-    public bool Convert(List<byte[]> inputDocs, Stream pdfOutput, List<string> dats = null)
+    public bool Convert(List<byte[]> inputDocs, Stream pdfOutput, List<Tuple<string, string>> dats = null)
     {
         foreach (byte[] doc in inputDocs)
         {
@@ -1521,7 +1521,7 @@ public class PrinceControl : Prince
     }
 
     //The argument inputDocs is an array of strings representing the filenames of the documents to be converted.
-    public bool Convert(string[] inputDocs, Stream pdfOutput, List<string> dats = null)
+    public bool Convert(string[] inputDocs, Stream pdfOutput, List<Tuple<string, string>> dats = null)
     {
         foreach (string doc in inputDocs)
         {
@@ -1532,7 +1532,7 @@ public class PrinceControl : Prince
     }
 
 
-    private bool Convert(Stream pdfOutput, List<string> dats)
+    private bool Convert(Stream pdfOutput, List<Tuple<string, string>> dats)
     {
         if (mProcess == null)
         {
