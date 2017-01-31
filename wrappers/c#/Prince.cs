@@ -2,9 +2,17 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
 
+[assembly:AssemblyProduct("Prince")]
+[assembly:AssemblyVersion("2.0.0.0")]
+[assembly:AssemblyFileVersion("2.0.0.0")]
+[assembly:AssemblyDescription("Prince C# Wrapper")]
+[assembly:AssemblyTitle("Prince C# Wrapper")]
+[assembly:AssemblyCompany("YesLogic Pty. Ltd.")]
+[assembly:AssemblyCopyright("Copyright (C) 2006-2017 YesLogic Pty. Ltd.")]
 
 public interface IPrince
 {
