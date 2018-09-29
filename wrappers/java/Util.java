@@ -20,12 +20,12 @@ public class Util
      * @return The new Process.
      */
     public static Process invokeProcess(List<String> cmdline)
-	throws IOException
+        throws IOException
     {
-	String[] dummy = { };
-	String[] cmdlineArray = (String[]) cmdline.toArray(dummy);
+        String[] dummy = { };
+        String[] cmdlineArray = (String[]) cmdline.toArray(dummy);
 
-	return Runtime.getRuntime().exec(cmdlineArray);
+        return Runtime.getRuntime().exec(cmdlineArray);
     }
 
     /**
@@ -37,22 +37,22 @@ public class Util
      * @param output The OutputStream to write data to.
      */
     public static void copyInputToOutput(InputStream input, OutputStream output)
-	throws IOException
+        throws IOException
     {
-	final int BUFSIZE = 65536;
+        final int BUFSIZE = 65536;
         byte buf[] = new byte[BUFSIZE];
-	int bytesRead;
-	
-	do
-	{
-	    bytesRead = input.read(buf, 0, BUFSIZE);
-	    
+        int bytesRead;
+
+        do
+        {
+            bytesRead = input.read(buf, 0, BUFSIZE);
+
             if (bytesRead > 0)
-	    {
+            {
                 output.write(buf, 0, bytesRead);
-	    }
+            }
         }
-	while (bytesRead != -1);
+        while (bytesRead != -1);
     }
 }
 

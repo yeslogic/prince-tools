@@ -22,99 +22,99 @@ public class Chunk
 
     private Chunk(String tag, byte[] bytes)
     {
-	mTag = tag;
-	mBytes = bytes;
+        mTag = tag;
+        mBytes = bytes;
     }
 
     public String getTag()
     {
-	return mTag;
+        return mTag;
     }
 
     public byte[] getBytes()
     {
-	return mBytes;
+        return mBytes;
     }
 
     public String getString()
     {
-	return new String(mBytes, Charset.forName("UTF-8"));
+        return new String(mBytes, Charset.forName("UTF-8"));
     }
 
     public BufferedReader getReader()
     {
-	return new BufferedReader(new InputStreamReader(new ByteArrayInputStream(mBytes)));
+        return new BufferedReader(new InputStreamReader(new ByteArrayInputStream(mBytes)));
     }
 
     public static Chunk readChunk(InputStream input)
-	throws IOException
+        throws IOException
     {
-	byte[] tagBytes = new byte[3];
+        byte[] tagBytes = new byte[3];
 
         if (!readBytes(input, tagBytes))
         {
-	    throw new IOException("failed to read chunk tag");
+            throw new IOException("failed to read chunk tag");
         }
 
-	String tag = new String(tagBytes, Charset.forName("ASCII"));
+        String tag = new String(tagBytes, Charset.forName("ASCII"));
 
-	int b = input.read();
-	
-	if (b != ' ')
-	    throw new IOException("expected space after chunk tag");
-	
-	int length = 0;
-	int max_num_length = 9;
-	int num_length = 0;
+        int b = input.read();
 
-	for (; num_length < max_num_length+1; ++num_length)
-	{
-	    b = input.read();
+        if (b != ' ')
+            throw new IOException("expected space after chunk tag");
 
-	    if (b == '\n') break;
+        int length = 0;
+        int max_num_length = 9;
+        int num_length = 0;
 
-	    if (b < '0' || b > '9')
-		throw new IOException("unexpected character in chunk length");
+        for (; num_length < max_num_length+1; ++num_length)
+        {
+            b = input.read();
 
-	    length *= 10;
-	    length += b - '0';
-	}
+            if (b == '\n') break;
 
-	if (num_length < 1 || num_length > max_num_length)
-	    throw new IOException("invalid chunk length");
-	
-	byte[] dataBytes = new byte[length];
+            if (b < '0' || b > '9')
+                throw new IOException("unexpected character in chunk length");
+
+            length *= 10;
+            length += b - '0';
+        }
+
+        if (num_length < 1 || num_length > max_num_length)
+            throw new IOException("invalid chunk length");
+
+        byte[] dataBytes = new byte[length];
 
         if (!readBytes(input, dataBytes))
         {
-	    throw new IOException("failed to read chunk data");
+            throw new IOException("failed to read chunk data");
         }
 
-	b = input.read();
+        b = input.read();
 
-	if (b != '\n') throw new IOException("expected newline after chunk data");
+        if (b != '\n') throw new IOException("expected newline after chunk data");
 
-	return new Chunk(tag, dataBytes);
+        return new Chunk(tag, dataBytes);
     }
 
     private static boolean readBytes(InputStream input, byte[] buf)
         throws IOException
     {
         int length = buf.length;
-	int offset = 0;
+        int offset = 0;
 
-	while (length > 0)
-	{
-	    int count = input.read(buf, offset, length);
+        while (length > 0)
+        {
+            int count = input.read(buf, offset, length);
 
-	    if (count < 0) return false;
+            if (count < 0) return false;
 
-	    if (count > length)
-		throw new IOException("unexpected read overrun");
+            if (count > length)
+                throw new IOException("unexpected read overrun");
 
-	    length -= count;
-	    offset += count;
-	}
+            length -= count;
+            offset += count;
+        }
 
         return true;
     }
@@ -137,19 +137,19 @@ public class Chunk
     */
 
     public static void writeChunk(OutputStream output, String tag, String data)
-	throws IOException
+        throws IOException
     {
-	writeChunk(output, tag, data.getBytes(Charset.forName("UTF-8")));
+        writeChunk(output, tag, data.getBytes(Charset.forName("UTF-8")));
     }
 
     public static void writeChunk(OutputStream output, String tag, byte[] data)
-	throws IOException
+        throws IOException
     {
-	String s = tag + " " + data.length + "\n";
+        String s = tag + " " + data.length + "\n";
 
-	output.write(s.getBytes(Charset.forName("UTF-8")));
-	output.write(data);
-	output.write('\n');
+        output.write(s.getBytes(Charset.forName("UTF-8")));
+        output.write(data);
+        output.write('\n');
     }
 }
 

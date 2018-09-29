@@ -51,7 +51,7 @@ public class Prince
     protected boolean mSubsetFonts;
     protected boolean mForceIdentityEncoding;
     protected boolean mCompress;
-    
+
     // Encryption settings
     protected boolean mEncrypt;
     protected int mKeyBits;
@@ -72,9 +72,9 @@ public class Prince
      */
     public Prince(String exePath)
     {
-	init(exePath, null);
+        init(exePath, null);
     }
-    
+
     /** Constructor for Prince.
      * @param exePath The path of the Prince executable. (For example, this
      * may be <code>C:\Program&#xA0;Files\Prince\engine\bin\prince.exe</code>
@@ -84,56 +84,56 @@ public class Prince
      */
     public Prince(String exePath, PrinceEvents events)
     {
-	init(exePath, events);
+        init(exePath, events);
     }
 
     private void init(String exePath, PrinceEvents events)
     {
-	mEvents = events;
-	mExePath = exePath;
-	mStyleSheets = new ArrayList<String>();
-	mScripts = new ArrayList<String>();
+        mEvents = events;
+        mExePath = exePath;
+        mStyleSheets = new ArrayList<String>();
+        mScripts = new ArrayList<String>();
 
-	// Input settings
-	mInputType = "auto";
-	mBaseURL = null;
-	mFileRoot = null;
-	mJavaScript = false;
-	mXInclude = true;
+        // Input settings
+        mInputType = "auto";
+        mBaseURL = null;
+        mFileRoot = null;
+        mJavaScript = false;
+        mXInclude = true;
 
-	// Network settings
-	mNetwork = true;
-	mHttpUsername = null;
-	mHttpPassword = null;
-	mHttpProxy = null;
+        // Network settings
+        mNetwork = true;
+        mHttpUsername = null;
+        mHttpPassword = null;
+        mHttpProxy = null;
 
-	// Log settings
-	mLogFile = null;
-	mVerbose = false;
-	mDebug = false;
-	
-	// PDF settings
+        // Log settings
+        mLogFile = null;
+        mVerbose = false;
+        mDebug = false;
+
+        // PDF settings
         mPDFProfile = null;
         mPDFOutputIntent = null;
         mFallbackCMYKProfile = null;
         mPDFXMP = null;
-	mEmbedFonts = true;
-	mSubsetFonts = true;
+        mEmbedFonts = true;
+        mSubsetFonts = true;
         mForceIdentityEncoding = false;
-	mCompress = true;
-	
-	// Encryption settings
-	mEncrypt = false;
-	mKeyBits = 40;
-	mUserPassword = "";
-	mOwnerPassword = "";
-	mDisallowPrint = false;
-	mDisallowModify = false;
-	mDisallowCopy = false;
-	mDisallowAnnotate = false;
+        mCompress = true;
 
-	// Other command-line options
-	mOptions = null;
+        // Encryption settings
+        mEncrypt = false;
+        mKeyBits = 40;
+        mUserPassword = "";
+        mOwnerPassword = "";
+        mDisallowPrint = false;
+        mDisallowModify = false;
+        mDisallowCopy = false;
+        mDisallowAnnotate = false;
+
+        // Other command-line options
+        mOptions = null;
     }
 
     /**
@@ -142,9 +142,9 @@ public class Prince
      */
     public void addStyleSheet(String cssPath)
     {
-	mStyleSheets.add(cssPath);
+        mStyleSheets.add(cssPath);
     }
-    
+
     /**
      * Clear all of the CSS style sheets.
      */
@@ -159,9 +159,9 @@ public class Prince
      */
     public void addScript(String jsPath)
     {
-	mScripts.add(jsPath);
+        mScripts.add(jsPath);
     }
-    
+
     /**
      * Clear all of the JavaScript scripts.
      */
@@ -186,7 +186,7 @@ public class Prince
      */
     public void setHTML(boolean html)
     {
-	mInputType = (html ? "html" : "xml");
+        mInputType = (html ? "html" : "xml");
     }
 
     /**
@@ -205,7 +205,7 @@ public class Prince
      */
     public void setInputType(String inputType)
     {
-	mInputType = inputType;
+        mInputType = inputType;
     }
 
     /**
@@ -219,7 +219,7 @@ public class Prince
      */
     public void setLog(String logfile)
     {
-	mLogFile = logfile;
+        mLogFile = logfile;
     }
 
     /**
@@ -228,7 +228,7 @@ public class Prince
      */
     public void setVerbose(boolean verbose)
     {
-	mVerbose = verbose;
+        mVerbose = verbose;
     }
 
     /**
@@ -237,7 +237,7 @@ public class Prince
      */
     public void setDebug(boolean debug)
     {
-	mDebug = debug;
+        mDebug = debug;
     }
 
     /**
@@ -250,7 +250,7 @@ public class Prince
      */
     public void setBaseURL(String baseurl)
     {
-	mBaseURL = baseurl;
+        mBaseURL = baseurl;
     }
 
     /**
@@ -262,7 +262,7 @@ public class Prince
      */
     public void setFileRoot(String fileRoot)
     {
-	mFileRoot = fileRoot;
+        mFileRoot = fileRoot;
     }
 
     /**
@@ -273,7 +273,7 @@ public class Prince
      */
     public void setJavaScript(boolean javascript)
     {
-	mJavaScript = javascript;
+        mJavaScript = javascript;
     }
 
     /**
@@ -284,7 +284,7 @@ public class Prince
      */
     public void setXInclude(boolean xinclude)
     {
-	mXInclude = xinclude;
+        mXInclude = xinclude;
     }
 
     /**
@@ -295,7 +295,7 @@ public class Prince
      */
     public void setNetwork(boolean network)
     {
-	mNetwork = network;
+        mNetwork = network;
     }
 
     /**
@@ -304,7 +304,7 @@ public class Prince
      */
     public void setHttpUsername(String username)
     {
-	mHttpUsername = username;
+        mHttpUsername = username;
     }
 
     /**
@@ -313,7 +313,7 @@ public class Prince
      */
     public void setHttpPassword(String password)
     {
-	mHttpPassword = password;
+        mHttpPassword = password;
     }
 
     /**
@@ -322,7 +322,7 @@ public class Prince
      */
     public void setHttpProxy(String proxy)
     {
-	mHttpProxy = proxy;
+        mHttpProxy = proxy;
     }
 
     /**
@@ -332,7 +332,7 @@ public class Prince
      */
     public void setPDFProfile(String profile)
     {
-	mPDFProfile = profile;
+        mPDFProfile = profile;
     }
 
     /**
@@ -342,7 +342,7 @@ public class Prince
      */
     public void setPDFOutputIntent(String outputIntent)
     {
-	mPDFOutputIntent = outputIntent;
+        mPDFOutputIntent = outputIntent;
     }
 
     /**
@@ -353,7 +353,7 @@ public class Prince
      */
     public void setFallbackCMYKProfile(String fallbackProfile)
     {
-	mFallbackCMYKProfile = fallbackProfile;
+        mFallbackCMYKProfile = fallbackProfile;
     }
 
     /**
@@ -363,7 +363,7 @@ public class Prince
      */
     public void setPDFXMP(String xmpFile)
     {
-	mPDFXMP = xmpFile;
+        mPDFXMP = xmpFile;
     }
 
     /**
@@ -373,7 +373,7 @@ public class Prince
      */
     public void setEmbedFonts(boolean embedFonts)
     {
-	mEmbedFonts = embedFonts;
+        mEmbedFonts = embedFonts;
     }
 
     /**
@@ -384,7 +384,7 @@ public class Prince
      */
     public void setSubsetFonts(boolean subsetFonts)
     {
-	mSubsetFonts = subsetFonts;
+        mSubsetFonts = subsetFonts;
     }
 
     /**
@@ -393,7 +393,7 @@ public class Prince
      */
     public void setForceIdentityEncoding(boolean forceIdentityEncoding)
     {
-	mForceIdentityEncoding = forceIdentityEncoding;
+        mForceIdentityEncoding = forceIdentityEncoding;
     }
 
     /**
@@ -403,7 +403,7 @@ public class Prince
      */
     public void setCompress(boolean compress)
     {
-	mCompress = compress;
+        mCompress = compress;
     }
 
     /**
@@ -413,9 +413,9 @@ public class Prince
      */
     public void setEncrypt(boolean encrypt)
     {
-	mEncrypt = encrypt;
+        mEncrypt = encrypt;
     }
-    
+
     /**
      * Set the parameters used for PDF encryption. Calling this method will
      * also enable PDF encryption, equivalent to calling
@@ -442,38 +442,38 @@ public class Prince
                                boolean disallowCopy,
                                boolean disallowAnnotate)
     {
-	if (keyBits != 40 && keyBits != 128)
-	{
-	    throw new IllegalArgumentException(
-		    "invalid value for keyBits: "+keyBits+
-		    " (must be 40 or 128)");
-	}
-	
-	mEncrypt = true;
-	mKeyBits = keyBits;
-	mUserPassword = userPassword;
-	mOwnerPassword = ownerPassword;
-	mDisallowPrint = disallowPrint;
-	mDisallowModify = disallowModify;
-	mDisallowCopy = disallowCopy;
-	mDisallowAnnotate = disallowAnnotate;
+        if (keyBits != 40 && keyBits != 128)
+        {
+            throw new IllegalArgumentException(
+                    "invalid value for keyBits: "+keyBits+
+                    " (must be 40 or 128)");
+        }
+
+        mEncrypt = true;
+        mKeyBits = keyBits;
+        mUserPassword = userPassword;
+        mOwnerPassword = ownerPassword;
+        mDisallowPrint = disallowPrint;
+        mDisallowModify = disallowModify;
+        mDisallowCopy = disallowCopy;
+        mDisallowAnnotate = disallowAnnotate;
     }
-    
+
     /**
      * Specify additional Prince command-line options.
      * @param option Additional command-line option, or null.
      */
     public void setOptions(String option)
     {
-	if (option != null)
-	{
-	    String[] options = { option };
-	    mOptions = options;
-	}
-	else
-	{
-	    mOptions = null;
-	}
+        if (option != null)
+        {
+            String[] options = { option };
+            mOptions = options;
+        }
+        else
+        {
+            mOptions = null;
+        }
     }
 
     /**
@@ -482,14 +482,14 @@ public class Prince
      */
     public void setOptions(String[] options)
     {
-	if (options != null)
-	{
-	    mOptions = options;
-	}
-	else
-	{
-	    mOptions = null;
-	}
+        if (options != null)
+        {
+            mOptions = options;
+        }
+        else
+        {
+            mOptions = null;
+        }
     }
 
     /**
@@ -500,18 +500,18 @@ public class Prince
      * @return True if a PDF file was generated successfully.
      */
     public boolean convert(String xmlPath)
-	throws IOException
+        throws IOException
     {
-	List<String> cmdline = getJobCommandLine();
+        List<String> cmdline = getJobCommandLine();
 
-	cmdline.add("--structured-log=normal");
-	cmdline.add(xmlPath);
-        
-	Process process = Util.invokeProcess(cmdline);
-	
-	return readMessagesFromStderr(process);
+        cmdline.add("--structured-log=normal");
+        cmdline.add(xmlPath);
+
+        Process process = Util.invokeProcess(cmdline);
+
+        return readMessagesFromStderr(process);
     }
-    
+
     /**
      * Convert an XML or HTML file to a PDF file.
      * @param xmlPath The filename of the input XML or HTML document.
@@ -519,17 +519,17 @@ public class Prince
      * @return True if a PDF file was generated successfully.
      */
     public boolean convert(String xmlPath, String pdfPath)
-	throws IOException
+        throws IOException
     {
-	List<String> cmdline = getJobCommandLine();
+        List<String> cmdline = getJobCommandLine();
 
-	cmdline.add("--structured-log=normal");
-	cmdline.add(xmlPath);
-	cmdline.add("--output="+pdfPath);
-        
-	Process process = Util.invokeProcess(cmdline);
-	
-	return readMessagesFromStderr(process);
+        cmdline.add("--structured-log=normal");
+        cmdline.add(xmlPath);
+        cmdline.add("--output="+pdfPath);
+
+        Process process = Util.invokeProcess(cmdline);
+
+        return readMessagesFromStderr(process);
     }
 
     /**
@@ -539,22 +539,22 @@ public class Prince
      * @return True if a PDF file was generated successfully.
      */
     public boolean convertMultiple(List xmlPaths, String pdfPath)
-	throws IOException
+        throws IOException
     {
-	List<String> cmdline = getJobCommandLine();
+        List<String> cmdline = getJobCommandLine();
 
-	cmdline.add("--structured-log=normal");
-	cmdline.add("--output="+pdfPath);
+        cmdline.add("--structured-log=normal");
+        cmdline.add("--output="+pdfPath);
 
-	for (int i = 0; i < xmlPaths.size(); ++i)
-	{
-	    String xmlPath = (String) xmlPaths.get(i);
-	    cmdline.add(xmlPath);
-	}
-        
-	Process process = Util.invokeProcess(cmdline);
-	
-	return readMessagesFromStderr(process);
+        for (int i = 0; i < xmlPaths.size(); ++i)
+        {
+            String xmlPath = (String) xmlPaths.get(i);
+            cmdline.add(xmlPath);
+        }
+
+        Process process = Util.invokeProcess(cmdline);
+
+        return readMessagesFromStderr(process);
     }
 
     /**
@@ -567,28 +567,28 @@ public class Prince
      * @return True if a PDF file was generated successfully.
      */
     public boolean convert(String xmlPath, OutputStream pdfOutput)
-	throws IOException
+        throws IOException
     {
-	List<String> cmdline = getJobCommandLine();
+        List<String> cmdline = getJobCommandLine();
 
-	cmdline.add("--structured-log=buffered");
-	cmdline.add(xmlPath);
-	cmdline.add("-o");
-	cmdline.add("-");
+        cmdline.add("--structured-log=buffered");
+        cmdline.add(xmlPath);
+        cmdline.add("-o");
+        cmdline.add("-");
 
-	Process process = Util.invokeProcess(cmdline);
+        Process process = Util.invokeProcess(cmdline);
 
-	InputStream outputFromPrince = process.getInputStream();
+        InputStream outputFromPrince = process.getInputStream();
 
-	// copy the PDF output from Prince stdout
-	Util.copyInputToOutput(outputFromPrince, pdfOutput);
+        // copy the PDF output from Prince stdout
+        Util.copyInputToOutput(outputFromPrince, pdfOutput);
 
-	// close Prince stdout
+        // close Prince stdout
         outputFromPrince.close();
 
-	return readMessagesFromStderr(process);
+        return readMessagesFromStderr(process);
     }
-    
+
     /**
      * Convert an XML or HTML file to a PDF file. This method is useful for
      * servlets as it allows Prince to write the PDF output directly to the
@@ -604,31 +604,31 @@ public class Prince
      * @return True if a PDF file was generated successfully.
      */
     public boolean convert(InputStream xmlInput, OutputStream pdfOutput)
-	throws IOException
+        throws IOException
     {
-	List<String> cmdline = getJobCommandLine();
+        List<String> cmdline = getJobCommandLine();
 
-	cmdline.add("--structured-log=buffered");
-	cmdline.add("-");
+        cmdline.add("--structured-log=buffered");
+        cmdline.add("-");
 
-	Process process = Util.invokeProcess(cmdline);
+        Process process = Util.invokeProcess(cmdline);
 
-	OutputStream inputToPrince = process.getOutputStream();
-	InputStream outputFromPrince = process.getInputStream();
+        OutputStream inputToPrince = process.getOutputStream();
+        InputStream outputFromPrince = process.getInputStream();
 
-	// copy the XML input to Prince stdin
-	Util.copyInputToOutput(xmlInput, inputToPrince);
+        // copy the XML input to Prince stdin
+        Util.copyInputToOutput(xmlInput, inputToPrince);
 
-	// close Prince stdin
-	inputToPrince.close();
+        // close Prince stdin
+        inputToPrince.close();
 
-	// copy the PDF output from Prince stdout
-	Util.copyInputToOutput(outputFromPrince, pdfOutput);
+        // copy the PDF output from Prince stdout
+        Util.copyInputToOutput(outputFromPrince, pdfOutput);
 
-	// close Prince stdout
+        // close Prince stdout
         outputFromPrince.close();
 
-	return readMessagesFromStderr(process);
+        return readMessagesFromStderr(process);
     }
 
     /**
@@ -641,29 +641,29 @@ public class Prince
      * @return True if a PDF file was generated successfully.
      */
     public boolean convertString(String html, String pdfPath)
-	throws IOException
+        throws IOException
     {
-	List<String> cmdline = getJobCommandLine();
+        List<String> cmdline = getJobCommandLine();
 
-	cmdline.add("--structured-log=buffered");
+        cmdline.add("--structured-log=buffered");
         cmdline.add("-");
-	cmdline.add("--output="+pdfPath);
+        cmdline.add("--output="+pdfPath);
 
-	Process process = Util.invokeProcess(cmdline);
+        Process process = Util.invokeProcess(cmdline);
 
-	OutputStream inputToPrince = process.getOutputStream();
-	InputStream outputFromPrince = process.getInputStream();
+        OutputStream inputToPrince = process.getOutputStream();
+        InputStream outputFromPrince = process.getInputStream();
 
-	// copy the HTML to Prince stdin
+        // copy the HTML to Prince stdin
         inputToPrince.write(html.getBytes(Charset.forName("UTF-8")));
 
-	// close Prince stdin
-	inputToPrince.close();
+        // close Prince stdin
+        inputToPrince.close();
 
-	// close Prince stdout
+        // close Prince stdout
         outputFromPrince.close();
 
-	return readMessagesFromStderr(process);
+        return readMessagesFromStderr(process);
     }
 
     /**
@@ -681,31 +681,31 @@ public class Prince
      * @return True if a PDF file was generated successfully.
      */
     public boolean convertString(String html, OutputStream pdfOutput)
-	throws IOException
+        throws IOException
     {
-	List<String> cmdline = getJobCommandLine();
+        List<String> cmdline = getJobCommandLine();
 
-	cmdline.add("--structured-log=buffered");
-	cmdline.add("-");
+        cmdline.add("--structured-log=buffered");
+        cmdline.add("-");
 
-	Process process = Util.invokeProcess(cmdline);
+        Process process = Util.invokeProcess(cmdline);
 
-	OutputStream inputToPrince = process.getOutputStream();
-	InputStream outputFromPrince = process.getInputStream();
+        OutputStream inputToPrince = process.getOutputStream();
+        InputStream outputFromPrince = process.getInputStream();
 
-	// copy the HTML to Prince stdin
+        // copy the HTML to Prince stdin
         inputToPrince.write(html.getBytes(Charset.forName("UTF-8")));
 
-	// close Prince stdin
-	inputToPrince.close();
+        // close Prince stdin
+        inputToPrince.close();
 
-	// copy the PDF output from Prince stdout
-	Util.copyInputToOutput(outputFromPrince, pdfOutput);
+        // copy the PDF output from Prince stdout
+        Util.copyInputToOutput(outputFromPrince, pdfOutput);
 
-	// close Prince stdout
+        // close Prince stdout
         outputFromPrince.close();
 
-	return readMessagesFromStderr(process);
+        return readMessagesFromStderr(process);
     }
 
     /**
@@ -718,51 +718,51 @@ public class Prince
      */
     protected List<String> getBaseCommandLine()
     {
-	List<String> cmdline = new ArrayList<String>();
+        List<String> cmdline = new ArrayList<String>();
 
-	cmdline.add(mExePath);
+        cmdline.add(mExePath);
 
-	if (mFileRoot != null)
-	{
-	    cmdline.add("--fileroot="+mFileRoot);
-	}
+        if (mFileRoot != null)
+        {
+            cmdline.add("--fileroot="+mFileRoot);
+        }
 
-	if (!mNetwork)
-	{
-	    cmdline.add("--no-network");
-	}
+        if (!mNetwork)
+        {
+            cmdline.add("--no-network");
+        }
 
-	if (mHttpUsername != null)
-	{
-	    cmdline.add("--http-user="+mHttpUsername);
-	}
+        if (mHttpUsername != null)
+        {
+            cmdline.add("--http-user="+mHttpUsername);
+        }
 
-	if (mHttpPassword != null)
-	{
-	    cmdline.add("--http-password="+mHttpPassword);
-	}
+        if (mHttpPassword != null)
+        {
+            cmdline.add("--http-password="+mHttpPassword);
+        }
 
-	if (mHttpProxy != null)
-	{
-	    cmdline.add("--http-proxy="+mHttpProxy);
-	}
+        if (mHttpProxy != null)
+        {
+            cmdline.add("--http-proxy="+mHttpProxy);
+        }
 
-	if (mLogFile != null)
-	{
-	    cmdline.add("--log="+mLogFile);
-	}
+        if (mLogFile != null)
+        {
+            cmdline.add("--log="+mLogFile);
+        }
 
-	if (mVerbose)
-	{
-	    cmdline.add("--verbose");
-	}
+        if (mVerbose)
+        {
+            cmdline.add("--verbose");
+        }
 
-	if (mDebug)
-	{
-	    cmdline.add("--debug");
-	}
+        if (mDebug)
+        {
+            cmdline.add("--debug");
+        }
 
-	return cmdline;
+        return cmdline;
     }
 
     /**
@@ -775,39 +775,39 @@ public class Prince
      */
     protected List<String> getJobCommandLine()
     {
-	List<String> cmdline = getBaseCommandLine();
+        List<String> cmdline = getBaseCommandLine();
 
-	for (int i = 0; i < mStyleSheets.size(); ++i)
-	{
-	    String cssPath = (String) mStyleSheets.get(i);
-	    cmdline.add("--style=" + cssPath);
-	}
+        for (int i = 0; i < mStyleSheets.size(); ++i)
+        {
+            String cssPath = (String) mStyleSheets.get(i);
+            cmdline.add("--style=" + cssPath);
+        }
 
-	for (int i = 0; i < mScripts.size(); ++i)
-	{
-	    String jsPath = (String) mScripts.get(i);
-	    cmdline.add("--script=" + jsPath);
-	}
+        for (int i = 0; i < mScripts.size(); ++i)
+        {
+            String jsPath = (String) mScripts.get(i);
+            cmdline.add("--script=" + jsPath);
+        }
 
-	if (mInputType != null && !mInputType.equals("auto"))
-	{
-	    cmdline.add("--input="+mInputType);
-	}
+        if (mInputType != null && !mInputType.equals("auto"))
+        {
+            cmdline.add("--input="+mInputType);
+        }
 
-	if (mBaseURL != null)
-	{
-	    cmdline.add("--baseurl="+mBaseURL);
-	}
+        if (mBaseURL != null)
+        {
+            cmdline.add("--baseurl="+mBaseURL);
+        }
 
-	if (mJavaScript)
-	{
-	    cmdline.add("--javascript");
-	}
+        if (mJavaScript)
+        {
+            cmdline.add("--javascript");
+        }
 
-	if (!mXInclude)
-	{
-	    cmdline.add("--no-xinclude");
-	}
+        if (!mXInclude)
+        {
+            cmdline.add("--no-xinclude");
+        }
 
         if (mPDFProfile != null)
         {
@@ -829,71 +829,71 @@ public class Prince
             cmdline.add("--pdf-xmp="+mPDFXMP);
         }
 
-	if (!mEmbedFonts)
-	{
-	    cmdline.add("--no-embed-fonts");
-	}
+        if (!mEmbedFonts)
+        {
+            cmdline.add("--no-embed-fonts");
+        }
 
-	if (!mSubsetFonts)
-	{
-	    cmdline.add("--no-subset-fonts");
-	}
-	
-	if (mForceIdentityEncoding)
-	{
-	    cmdline.add("--force-identity-encoding");
-	}
+        if (!mSubsetFonts)
+        {
+            cmdline.add("--no-subset-fonts");
+        }
 
-	if (!mCompress)
-	{
-	    cmdline.add("--no-compress");
-	}
-	
-	if (mEncrypt)
-	{
-	    cmdline.add("--encrypt");
-	    cmdline.add("--key-bits=" + mKeyBits);
+        if (mForceIdentityEncoding)
+        {
+            cmdline.add("--force-identity-encoding");
+        }
 
-	    if (mUserPassword != null && !mUserPassword.equals(""))
-	    {
-		cmdline.add("--user-password=" + mUserPassword);
-	    }
+        if (!mCompress)
+        {
+            cmdline.add("--no-compress");
+        }
 
-	    if (mOwnerPassword != null && !mOwnerPassword.equals(""))
-	    {
-		cmdline.add("--owner-password=" + mOwnerPassword);
-	    }
+        if (mEncrypt)
+        {
+            cmdline.add("--encrypt");
+            cmdline.add("--key-bits=" + mKeyBits);
 
-	    if (mDisallowPrint)
-	    {
-		cmdline.add("--disallow-print");
-	    }
+            if (mUserPassword != null && !mUserPassword.equals(""))
+            {
+                cmdline.add("--user-password=" + mUserPassword);
+            }
 
-	    if (mDisallowModify)
-	    {
-		cmdline.add("--disallow-modify");
-	    }
+            if (mOwnerPassword != null && !mOwnerPassword.equals(""))
+            {
+                cmdline.add("--owner-password=" + mOwnerPassword);
+            }
 
-	    if (mDisallowCopy)
-	    {
-		cmdline.add("--disallow-copy");
-	    }
+            if (mDisallowPrint)
+            {
+                cmdline.add("--disallow-print");
+            }
 
-	    if (mDisallowAnnotate)
-	    {
-		cmdline.add("--disallow-annotate");
-	    }
-	}
+            if (mDisallowModify)
+            {
+                cmdline.add("--disallow-modify");
+            }
 
-	if (mOptions != null)
-	{
-	    for (String option : mOptions)
-	    {
-		cmdline.add(option);
-	    }
-	}
+            if (mDisallowCopy)
+            {
+                cmdline.add("--disallow-copy");
+            }
 
-	return cmdline;
+            if (mDisallowAnnotate)
+            {
+                cmdline.add("--disallow-annotate");
+            }
+        }
+
+        if (mOptions != null)
+        {
+            for (String option : mOptions)
+            {
+                cmdline.add(option);
+            }
+        }
+
+        return cmdline;
     }
 
     /**
@@ -904,50 +904,50 @@ public class Prince
      * @return True if Prince finished successfully.
      */
     private boolean readMessagesFromStderr(Process process)
-	throws IOException
+        throws IOException
     {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
-	return readMessages(reader);
+        return readMessages(reader);
     }
 
     protected boolean readMessages(BufferedReader reader)
-	throws IOException
+        throws IOException
     {
         String result = "";
         String line = reader.readLine();
 
         while (line != null)
-	{
-	    if (line.length() >= 4)
-	    {
-		String msgTag = line.substring(0, 4);
-		String msgBody = line.substring(4);
-	    
-		if (mEvents != null && msgTag.equals("msg|"))
-		{
-		    handleMessage(msgBody);
-		}
-		else if (msgTag.equals("fin|"))
-		{
-		    result = msgBody;
-		}
-		else
-		{
-		    // ignore unknown log messages
-		}
-	    }
-	    else
-	    {
-		// ignore too short log messages
-	    }
-	    
+        {
+            if (line.length() >= 4)
+            {
+                String msgTag = line.substring(0, 4);
+                String msgBody = line.substring(4);
+
+                if (mEvents != null && msgTag.equals("msg|"))
+                {
+                    handleMessage(msgBody);
+                }
+                else if (msgTag.equals("fin|"))
+                {
+                    result = msgBody;
+                }
+                else
+                {
+                    // ignore unknown log messages
+                }
+            }
+            else
+            {
+                // ignore too short log messages
+            }
+
             line = reader.readLine();
         }
 
         return result.equals("success");
     }
-    
+
     /**
      * Handle a log message. The message is interpreted and passed to the
      * PrinceEvents interface provided by the caller.
@@ -955,29 +955,29 @@ public class Prince
      */
     private void handleMessage(String msgBody)
     {
-	if (msgBody.length() >= 4)
-	{
-	    String msgType = msgBody.substring(0, 3);
-	    String tmpStr = msgBody.substring(4);
+        if (msgBody.length() >= 4)
+        {
+            String msgType = msgBody.substring(0, 3);
+            String tmpStr = msgBody.substring(4);
 
-	    int locOffset = tmpStr.indexOf('|');
-        
-	    if (locOffset != -1)
-	    {
-		String msgLocation = tmpStr.substring(0, locOffset);
-		String msgText = tmpStr.substring(locOffset);
+            int locOffset = tmpStr.indexOf('|');
 
-		mEvents.onMessage(msgType, msgLocation, msgText);
-	    }
-	    else
-	    {
-		// ignore incorrectly formatted messages
-	    }
-	}
-	else
-	{
-	    // ignore too short messages
-	}
+            if (locOffset != -1)
+            {
+                String msgLocation = tmpStr.substring(0, locOffset);
+                String msgText = tmpStr.substring(locOffset);
+
+                mEvents.onMessage(msgType, msgLocation, msgText);
+            }
+            else
+            {
+                // ignore incorrectly formatted messages
+            }
+        }
+        else
+        {
+            // ignore too short messages
+        }
     }
 }
 
