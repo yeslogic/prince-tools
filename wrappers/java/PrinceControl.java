@@ -1,4 +1,4 @@
-// Copyright (C) 2015 YesLogic Pty. Ltd.
+// Copyright (C) 2015, 2018 YesLogic Pty. Ltd.
 // All rights reserved.
 
 package com.princexml;
@@ -220,6 +220,22 @@ public class PrinceControl extends Prince
 		json.field("disallow-annotate", mDisallowAnnotate);
 		json.endObj();
 	    }
+            if (mPDFProfile != null)
+            {
+                json.field("pdf-profile", mPDFProfile);
+            }
+            if (mPDFOutputIntent != null)
+            {
+                json.field("pdf-output-intent", mPDFOutputIntent);
+            }
+            if (mFallbackCMYKProfile != null)
+            {
+                json.field("fallback-cmyk-profile", mFallbackCMYKProfile);
+            }
+            if (mPDFXMP != null)
+            {
+                json.field("pdf-xmp", mPDFXMP);
+            }
 	json.endObj();
 	json.endObj();
 

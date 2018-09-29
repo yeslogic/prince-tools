@@ -1,4 +1,4 @@
-// Copyright (C) 2005-2006, 2010, 2012, 2014-2015 YesLogic Pty. Ltd.
+// Copyright (C) 2005-2006, 2010, 2012, 2014-2015, 2018 YesLogic Pty. Ltd.
 // All rights reserved.
 
 package com.princexml;
@@ -43,6 +43,10 @@ public class Prince
     private boolean mDebug;
 
     // PDF settings
+    protected String mPDFProfile;
+    protected String mPDFOutputIntent;
+    protected String mFallbackCMYKProfile;
+    protected String mPDFXMP;
     protected boolean mEmbedFonts;
     protected boolean mSubsetFonts;
     protected boolean mForceIdentityEncoding;
@@ -109,6 +113,10 @@ public class Prince
 	mDebug = false;
 	
 	// PDF settings
+        mPDFProfile = null;
+        mPDFOutputIntent = null;
+        mFallbackCMYKProfile = null;
+        mPDFXMP = null;
 	mEmbedFonts = true;
 	mSubsetFonts = true;
         mForceIdentityEncoding = false;
@@ -315,6 +323,47 @@ public class Prince
     public void setHttpProxy(String proxy)
     {
 	mHttpProxy = proxy;
+    }
+
+    /**
+     * Specify the PDF profile.
+     * @param profile The PDF profile name, for example "PDF/A-1a", "PDF/X-4",
+     * or null if no specific PDF profile is required.
+     */
+    public void setPDFProfile(String profile)
+    {
+	mPDFProfile = profile;
+    }
+
+    /**
+     * Specify the PDF output intent ICC color profile.
+     * @param outputIntent The ICC color profile to use for the PDF output
+     * intent, or null if no specific output intent ICC profile is required.
+     */
+    public void setPDFOutputIntent(String outputIntent)
+    {
+	mPDFOutputIntent = outputIntent;
+    }
+
+    /**
+     * Specify the fallback CMYK ICC color profile.
+     * @param fallbackProfile The ICC color profile to use as a fallback for
+     * uncalibrated CMYK colors, or null if no specific fallback profile is
+     * required.
+     */
+    public void setFallbackCMYKProfile(String fallbackProfile)
+    {
+	mFallbackCMYKProfile = fallbackProfile;
+    }
+
+    /**
+     * Specify a PDF XMP metadata file.
+     * @param xmpFile The filename of the PDF XMP metadata file, or null if no
+     * PDF XMP metadata is required.
+     */
+    public void setPDFXMP(String xmpFile)
+    {
+	mPDFXMP = xmpFile;
     }
 
     /**
@@ -759,6 +808,26 @@ public class Prince
 	{
 	    cmdline.add("--no-xinclude");
 	}
+
+        if (mPDFProfile != null)
+        {
+            cmdline.add("--pdf-profile="+mPDFProfile);
+        }
+
+        if (mPDFOutputIntent != null)
+        {
+            cmdline.add("--pdf-output-intent="+mPDFOutputIntent);
+        }
+
+        if (mFallbackCMYKProfile != null)
+        {
+            cmdline.add("--fallback-cmyk-profile="+mFallbackCMYKProfile);
+        }
+
+        if (mPDFXMP != null)
+        {
+            cmdline.add("--pdf-xmp="+mPDFXMP);
+        }
 
 	if (!mEmbedFonts)
 	{
